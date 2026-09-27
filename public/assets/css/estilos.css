@@ -1,0 +1,14 @@
+@import url("base/variables.css");
+@import url("base/reinicio.css");
+@import url("estructura/sitio.css");
+@import url("componentes/interfaz.css");
+@import url("componentes/promociones.css");
+@import url("componentes/publicidad_dinamica.css");
+@import url("paginas/catalogo.css");
+@import url("paginas/producto.css");
+@import url("paginas/cuenta.css");
+@import url("paginas/carrito.css");
+@import url("paginas/comercio_inteligente.css");
+@import url("paginas/inicio.css?v=20260927-4");
+@import url("administrador/administrador.css");
+@import url("adaptable.css?v=20260927-7");

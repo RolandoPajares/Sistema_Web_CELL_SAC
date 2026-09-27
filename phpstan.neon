@@ -1,0 +1,9 @@
+parameters:
+    level: 6
+    paths:
+        - app
+        - tests
+    bootstrapFiles:
+        - bootstrap/funciones.php
+    tmpDir: storage/cache/phpstan
+    treatPhpDocTypesAsCertain: false

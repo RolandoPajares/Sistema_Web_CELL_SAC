@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Infraestructura\BaseDatos\EjecutorMigraciones;
+use App\Servicios\CreacionAdministradorServicio;
+
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
+$contenedor = require dirname(__DIR__) . '/bootstrap/aplicacion.php';
+$comando = $argv[1] ?? 'help';
+$rutaMigraciones = dirname(__DIR__) . '/database/migrations';
+
+try {
+    switch ($comando) {
+        case 'migrate':
+            $migraciones = $contenedor->obtener(EjecutorMigraciones::class)->migrar($rutaMigraciones);
+            echo $migraciones === [] ? "No hay migraciones pendientes.\n" : "Ejecutadas:\n- " . implode("\n- ", $migraciones) . "\n";
+            break;
+
+        case 'migrate:status':
+            foreach ($contenedor->obtener(EjecutorMigraciones::class)->estado($rutaMigraciones) as $fila) {
+                echo ($fila['ejecutada'] ? '[OK] ' : '[PENDIENTE] ') . $fila['migracion'] . PHP_EOL;
+            }
+            break;
+
+        case 'create:admin':
+            $nombre = $argv[2] ?? '';
+            $correo = $argv[3] ?? '';
+            $contrasena = $argv[4] ?? '';
+            if ($nombre === '' || $correo === '' || $contrasena === '') {
+                throw new InvalidArgumentException('Uso: php bin/console create:admin "Nombre" correo@dominio.com "clave-segura"');
+            }
+            $id = $contenedor->obtener(CreacionAdministradorServicio::class)->crear($nombre, $correo, $contrasena);
+            echo "Administrador creado con ID {$id}.\n";
+            break;
+
+        default:
+            echo "Comandos disponibles:\n  migrate\n  migrate:status\n  create:admin <nombre> <email> <clave>\n";
+    }
+} catch (Throwable $excepcion) {
+    fwrite(STDERR, 'Error: ' . $excepcion->getMessage() . PHP_EOL);
+    exit(1);
+}
