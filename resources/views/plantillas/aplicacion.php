@@ -26,7 +26,7 @@ $clasesCuerpo = \App\Soporte\Presentacion\CatalogoEstilos::clasesCuerpo(
     <meta name="description" content="Celulares y audífonos originales en Bagua. Catálogo, stock y atención de MD Technology Digital Cell.">
     <link rel="stylesheet" href="<?= e(asset('assets/css/estilos.css?v=20260927-8')) ?>">
     <?php foreach ($estilosContextuales as $archivoCss): ?>
-        <link rel="stylesheet" href="<?= e(asset($archivoCss . '?v=20260927-8')) ?>">
+        <link rel="stylesheet" href="<?= e(asset($archivoCss . '?v=' . ($archivoCss === 'assets/css/publico/inicio.css' ? '20260928-8' : ($archivoCss === 'assets/css/estructura/sitio.css' ? '20260928-1' : '20260927-8')))) ?>">
     <?php endforeach; ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
