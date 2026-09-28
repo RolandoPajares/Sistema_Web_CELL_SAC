@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Http\Respuestas\RespuestaRedireccion;
-use App\Http\Respuestas\Respuesta;
-use App\Soporte\Aplicacion;
-use App\Soporte\RepositorioConfiguracion;
+use App\Nucleo\Http\RespuestaRedireccion;
+use App\Nucleo\Http\Respuesta;
+use App\Nucleo\Aplicacion;
+use App\Soporte\Configuracion\RepositorioConfiguracion;
 use App\Soporte\Seguridad\GestorTokenCsrf;
 use App\Soporte\GeneradorUrl;
 use App\Soporte\Sesion\GestorSesion;
@@ -107,9 +107,9 @@ function product_visual(string $marca): string
 function active_campaigns(): array
 {
     try {
-        return app(\App\Servicios\CampaniaServicio::class)->ubicacionesActivas();
+        return app(\App\Servicios\Campanias\CampaniaServicio::class)->ubicacionesActivas();
     } catch (\Throwable $excepcion) {
-        app(\App\Infraestructura\Registros\RegistradorArchivo::class)->error('Falló la consulta de campañas.', [
+        app(\App\Soporte\Registros\RegistradorArchivo::class)->error('Falló la consulta de campañas.', [
             'message' => $excepcion->getMessage(),
         ]);
         return [];
@@ -132,7 +132,7 @@ function campaign_image(?string $ruta): string
 {
     $ruta = trim((string) $ruta);
     if ($ruta === '') {
-        return asset('assets/img/exhibicion1.jpg');
+        return asset('assets/img/publico/inicio/banners/exhibicion1.jpg');
     }
     if (preg_match('#^https?://#i', $ruta) === 1) {
         return $ruta;

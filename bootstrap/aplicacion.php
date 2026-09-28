@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-use App\Http\Enrutamiento\Enrutador;
-use App\Contratos\GestorTransaccionesInterfaz;
-use App\Infraestructura\BaseDatos\Conexion;
-use App\Infraestructura\Registros\RegistradorArchivo;
-use App\DAO\PedidoDAO;
-use App\DAO\ProductoDAO;
-use App\DAO\UsuarioDAO;
-use App\Repositorios\Contratos\RepositorioPedidoInterfaz;
-use App\Repositorios\Contratos\RepositorioProductoInterfaz;
-use App\Repositorios\Contratos\RepositorioUsuarioInterfaz;
-use App\Soporte\Aplicacion;
-use App\Soporte\RepositorioConfiguracion;
-use App\Soporte\Contenedor;
-use App\Soporte\Entorno;
+use App\Nucleo\Enrutamiento\Enrutador;
+use App\Nucleo\BaseDatos\GestorTransaccionesInterfaz;
+use App\Nucleo\BaseDatos\Conexion;
+use App\Soporte\Registros\RegistradorArchivo;
+use App\DAO\Pedidos\PedidoDAO;
+use App\DAO\Productos\ProductoDAO;
+use App\DAO\Usuarios\UsuarioDAO;
+use App\DAO\Contratos\RepositorioPedidoInterfaz;
+use App\DAO\Contratos\RepositorioProductoInterfaz;
+use App\DAO\Contratos\RepositorioUsuarioInterfaz;
+use App\Nucleo\Aplicacion;
+use App\Soporte\Configuracion\RepositorioConfiguracion;
+use App\Nucleo\Contenedor;
+use App\Nucleo\Entorno;
 use App\Soporte\Seguridad\GestorTokenCsrf;
 use App\Soporte\Seguridad\LimitadorSolicitudes;
 use App\Soporte\Sesion\GestorSesion;

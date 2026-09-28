@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Infraestructura\BaseDatos\Conexion;
-use App\Repositorios\Contratos\RepositorioPedidoInterfaz;
-use App\Repositorios\Contratos\RepositorioProductoInterfaz;
-use App\Servicios\CarritoServicio;
-use App\Servicios\ProcesoCompraServicio;
-use App\Servicios\ProductoServicio;
-use App\Soporte\RepositorioConfiguracion;
-use App\Dominio\Productos\FiltroProducto;
+use App\Nucleo\BaseDatos\Conexion;
+use App\DAO\Contratos\RepositorioPedidoInterfaz;
+use App\DAO\Contratos\RepositorioProductoInterfaz;
+use App\Servicios\Compra\CarritoServicio;
+use App\Servicios\Compra\ProcesoCompraServicio;
+use App\Servicios\Productos\ProductoServicio;
+use App\Soporte\Configuracion\RepositorioConfiguracion;
+use App\DTO\Productos\FiltroProducto;
 use App\Soporte\Sesion\GestorSesion;
 use PHPUnit\Framework\TestCase;
 use PDO;

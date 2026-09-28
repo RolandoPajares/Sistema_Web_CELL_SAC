@@ -1,0 +1,11 @@
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cart-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+}

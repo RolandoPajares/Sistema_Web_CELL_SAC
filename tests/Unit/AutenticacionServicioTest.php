@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Repositorios\Contratos\RepositorioUsuarioInterfaz;
-use App\Servicios\AutenticacionServicio;
+use App\DAO\Contratos\RepositorioUsuarioInterfaz;
+use App\Servicios\Autenticacion\AutenticacionServicio;
 use App\Soporte\Excepciones\ExcepcionAutenticacion;
 use App\Soporte\Sesion\GestorSesion;
 use PHPUnit\Framework\TestCase;

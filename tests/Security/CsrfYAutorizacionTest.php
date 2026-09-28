@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Security;
 
-use App\Http\Middleware\AdministradorMiddleware;
-use App\Http\Middleware\CsrfMiddleware;
-use App\Http\Solicitud;
-use App\Http\Respuestas\Respuesta;
+use App\Middleware\AdministradorMiddleware;
+use App\Middleware\CsrfMiddleware;
+use App\Nucleo\Http\Solicitud;
+use App\Nucleo\Http\Respuesta;
 use App\Soporte\Seguridad\GestorTokenCsrf;
 use App\Soporte\Sesion\GestorSesion;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +24,7 @@ final class CsrfYAutorizacionTest extends TestCase
         $intermediario = new CsrfMiddleware(new GestorTokenCsrf(new GestorSesion()));
         $respuesta = $intermediario->manejar(
             new Solicitud('POST', '/cart', [], [], []),
-            static fn (): Respuesta => new Respuesta('ok')
+            static fn(): Respuesta => new Respuesta('ok')
         );
 
         self::assertSame(419, $respuesta->estado());
@@ -35,7 +35,7 @@ final class CsrfYAutorizacionTest extends TestCase
         $_SESSION['user'] = ['id' => 1, 'rol' => 'cliente_minorista'];
         $respuesta = (new AdministradorMiddleware())->manejar(
             new Solicitud('GET', '/admin', [], [], []),
-            static fn (): Respuesta => new Respuesta('admin')
+            static fn(): Respuesta => new Respuesta('admin')
         );
 
         self::assertSame(403, $respuesta->estado());

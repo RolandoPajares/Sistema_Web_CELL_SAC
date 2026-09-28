@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Soporte\Entorno;
+use App\Nucleo\Entorno;
 
 return [
     'host' => Entorno::obtener('DB_HOST', '127.0.0.1'),

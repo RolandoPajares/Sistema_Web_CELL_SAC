@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Http\Enrutamiento\Enrutador;
-use App\Http\Solicitud;
-use App\Soporte\Aplicacion;
+use App\Nucleo\Enrutamiento\Enrutador;
+use App\Nucleo\Http\Solicitud;
+use App\Nucleo\Aplicacion;
 use App\Soporte\Autorizacion\AccesoRol;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -115,7 +115,7 @@ final class NavegacionRolesTest extends TestCase
         self::assertSame('panel/movimientos-stock', AccesoRol::destino('compras_logistica', 'movimientos-stock'));
     }
 
-    private function get(string $ruta): \App\Http\Respuestas\Respuesta
+    private function get(string $ruta): \App\Nucleo\Http\Respuesta
     {
         return $this->enrutador->despachar(new Solicitud('GET', $ruta, [], [], []));
     }

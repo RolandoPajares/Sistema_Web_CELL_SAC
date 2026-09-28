@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Soporte\Entorno;
+use App\Nucleo\Entorno;
 
 return [
     'name' => Entorno::obtener('APP_NAME', 'MD Technology Digital Cell'),

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Http\Enrutamiento\Enrutador;
-use App\Soporte\Aplicacion;
+use App\Nucleo\Enrutamiento\Enrutador;
+use App\Nucleo\Aplicacion;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -13,6 +13,22 @@ use ReflectionClass;
 
 final class ArquitecturaTest extends TestCase
 {
+    public function testApplicationUsesOnlyTheExpectedTopLevelLayers(): void
+    {
+        $rutaAplicacion = dirname(__DIR__, 2) . '/app';
+        $capas = array_values(array_filter(
+            scandir($rutaAplicacion) ?: [],
+            static fn (string $entrada): bool => $entrada !== '.' && $entrada !== '..'
+                && is_dir($rutaAplicacion . '/' . $entrada)
+        ));
+        sort($capas, SORT_STRING);
+
+        self::assertSame(
+            ['Controladores', 'DAO', 'DTO', 'Middleware', 'Nucleo', 'Servicios', 'Soporte', 'Validacion'],
+            $capas
+        );
+    }
+
     public function testManualPsr4AutoloaderIsRegisteredAndFunctional(): void
     {
         $clase = 'App\\Soporte\\Excepciones\\ExcepcionNoEncontrado';
@@ -81,7 +97,7 @@ final class ArquitecturaTest extends TestCase
     public function testControllersAndServicesContainNoDirectSqlExecution(): void
     {
         $rutaAplicacion = dirname(__DIR__, 2) . '/app';
-        foreach ([$rutaAplicacion . '/Http', $rutaAplicacion . '/Servicios'] as $directorio) {
+        foreach ([$rutaAplicacion . '/Controladores', $rutaAplicacion . '/Servicios'] as $directorio) {
             foreach ($this->phpFiles($directorio) as $archivo) {
                 $codigoFuente = file_get_contents($archivo);
                 self::assertIsString($codigoFuente);
@@ -97,11 +113,24 @@ final class ArquitecturaTest extends TestCase
 
     public function testProcesoCompraServiceDoesNotDependOnPdoInfrastructure(): void
     {
-        $codigoFuente = file_get_contents(dirname(__DIR__, 2) . '/app/Servicios/ProcesoCompraServicio.php');
+        $codigoFuente = file_get_contents(
+            dirname(__DIR__, 2) . '/app/Servicios/Compra/ProcesoCompraServicio.php'
+        );
         self::assertIsString($codigoFuente);
         self::assertStringNotContainsString('Conexion', $codigoFuente);
         self::assertDoesNotMatchRegularExpression('/\\bPDO\\b/', $codigoFuente);
         self::assertStringContainsString('GestorTransaccionesInterfaz', $codigoFuente);
+    }
+
+    public function testConexionKeepsSecurePdoOptions(): void
+    {
+        $codigoFuente = file_get_contents(
+            dirname(__DIR__, 2) . '/app/Nucleo/BaseDatos/Conexion.php'
+        );
+        self::assertIsString($codigoFuente);
+        self::assertStringContainsString('PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION', $codigoFuente);
+        self::assertStringContainsString('PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC', $codigoFuente);
+        self::assertStringContainsString('PDO::ATTR_EMULATE_PREPARES => false', $codigoFuente);
     }
 
     /** @return array<int, string> */

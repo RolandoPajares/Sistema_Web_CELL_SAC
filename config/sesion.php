@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Soporte\Entorno;
+use App\Nucleo\Entorno;
 
 return [
     'name' => 'md_technology_session',
