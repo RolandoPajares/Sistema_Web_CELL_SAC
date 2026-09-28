@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\CuentaController;
-use App\Http\Controllers\AutenticacionController;
-use App\Http\Controllers\CarritoController;
-use App\Http\Controllers\CampaniaController;
-use App\Http\Controllers\CatalogoController;
-use App\Http\Controllers\ProcesoCompraController;
-use App\Http\Controllers\InicioController;
-use App\Http\Controllers\PaginaController;
-use App\Http\Controllers\ProductoController;
-use App\Http\Controllers\ComercioInteligenteController;
-use App\Http\Middleware\AutenticacionMiddleware;
-use App\Http\Middleware\AccesoRutaRolMiddleware;
-use App\Http\Middleware\CsrfMiddleware;
-use App\Http\Middleware\LimiteSolicitudesMiddleware;
-use App\Http\Enrutamiento\Enrutador;
+use App\Controladores\Cuenta\CuentaController;
+use App\Controladores\Autenticacion\AutenticacionController;
+use App\Controladores\Compra\CarritoController;
+use App\Controladores\Campanias\CampaniaController;
+use App\Controladores\Catalogo\CatalogoController;
+use App\Controladores\Compra\ProcesoCompraController;
+use App\Controladores\Publico\InicioController;
+use App\Controladores\Publico\PaginaController;
+use App\Controladores\Productos\ProductoController;
+use App\Controladores\ComercioInteligente\ComercioInteligenteController;
+use App\Middleware\AutenticacionMiddleware;
+use App\Middleware\AccesoRutaRolMiddleware;
+use App\Middleware\CsrfMiddleware;
+use App\Middleware\LimiteSolicitudesMiddleware;
+use App\Nucleo\Enrutamiento\Enrutador;
 
 return static function (Enrutador $enrutador): void {
     $enrutador->post('/campaigns/{id}/track', [CampaniaController::class, 'registrarEvento'], [CsrfMiddleware::class]);

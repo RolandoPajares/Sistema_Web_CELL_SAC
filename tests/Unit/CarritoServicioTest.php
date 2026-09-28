@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Repositorios\Contratos\RepositorioProductoInterfaz;
-use App\Servicios\CarritoServicio;
-use App\Servicios\ProductoServicio;
-use App\Dominio\Productos\FiltroProducto;
+use App\DAO\Contratos\RepositorioProductoInterfaz;
+use App\Servicios\Compra\CarritoServicio;
+use App\Servicios\Productos\ProductoServicio;
+use App\DTO\Productos\FiltroProducto;
 use App\Soporte\Sesion\GestorSesion;
 use PHPUnit\Framework\TestCase;
 

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\DAO\ProductoDAO;
-use App\Http\Solicitud;
-use App\Http\Enrutamiento\Enrutador;
-use App\Infraestructura\BaseDatos\Conexion;
-use App\Soporte\Aplicacion;
+use App\DAO\Productos\ProductoDAO;
+use App\Nucleo\Http\Solicitud;
+use App\Nucleo\Enrutamiento\Enrutador;
+use App\Nucleo\BaseDatos\Conexion;
+use App\Nucleo\Aplicacion;
 use App\Soporte\Seguridad\GestorTokenCsrf;
 use PHPUnit\Framework\TestCase;
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\PanelRolController;
-use App\Http\Middleware\CsrfMiddleware;
-use App\Http\Middleware\RolMiddleware;
-use App\Http\Enrutamiento\Enrutador;
+use App\Controladores\Panel\PanelRolController;
+use App\Middleware\CsrfMiddleware;
+use App\Middleware\RolMiddleware;
+use App\Nucleo\Enrutamiento\Enrutador;
 
 return static function (Enrutador $enrutador): void {
     $protegida = [RolMiddleware::class];

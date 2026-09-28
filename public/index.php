@@ -9,10 +9,10 @@ if (PHP_SAPI === 'cli-server') {
     }
 }
 
-use App\Http\Solicitud;
-use App\Http\ManejadorExcepciones;
-use App\Http\Middleware\EncabezadosSeguridadMiddleware;
-use App\Http\Enrutamiento\Enrutador;
+use App\Nucleo\Http\Solicitud;
+use App\Nucleo\Http\ManejadorExcepciones;
+use App\Middleware\EncabezadosSeguridadMiddleware;
+use App\Nucleo\Enrutamiento\Enrutador;
 
 $contenedor = require __DIR__ . '/../bootstrap/aplicacion.php';
 

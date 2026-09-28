@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\PanelAdministradorController;
-use App\Http\Controllers\AdministradorCampaniaController;
-use App\Http\Controllers\AdministradorPedidoController;
-use App\Http\Controllers\AdministradorProductoController;
-use App\Http\Controllers\AdministradorUsuarioController;
-use App\Http\Middleware\AdministradorMiddleware;
-use App\Http\Middleware\CsrfMiddleware;
-use App\Http\Enrutamiento\Enrutador;
+use App\Controladores\Panel\PanelAdministradorController;
+use App\Controladores\Campanias\AdministradorCampaniaController;
+use App\Controladores\Pedidos\AdministradorPedidoController;
+use App\Controladores\Productos\AdministradorProductoController;
+use App\Controladores\Usuarios\AdministradorUsuarioController;
+use App\Middleware\AdministradorMiddleware;
+use App\Middleware\CsrfMiddleware;
+use App\Nucleo\Enrutamiento\Enrutador;
 
 return static function (Enrutador $enrutador): void {
     $administrador = [AdministradorMiddleware::class];

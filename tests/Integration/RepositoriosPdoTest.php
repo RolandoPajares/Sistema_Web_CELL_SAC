@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use App\Infraestructura\BaseDatos\Conexion;
-use App\Infraestructura\BaseDatos\EjecutorMigraciones;
-use App\DAO\PedidoDAO;
-use App\DAO\ProductoDAO;
-use App\DAO\UsuarioDAO;
-use App\Soporte\RepositorioConfiguracion;
-use App\Dominio\Productos\FiltroProducto;
-use App\Servicios\ProductoServicio;
+use App\Nucleo\BaseDatos\Conexion;
+use App\Nucleo\BaseDatos\EjecutorMigraciones;
+use App\DAO\Pedidos\PedidoDAO;
+use App\DAO\Productos\ProductoDAO;
+use App\DAO\Usuarios\UsuarioDAO;
+use App\Soporte\Configuracion\RepositorioConfiguracion;
+use App\DTO\Productos\FiltroProducto;
+use App\Servicios\Productos\ProductoServicio;
 use PHPUnit\Framework\TestCase;
 
 final class RepositoriosPdoTest extends TestCase
@@ -102,7 +102,7 @@ final class RepositoriosPdoTest extends TestCase
         $productos = new ProductoDAO($this->conexion);
         $correo = bin2hex(random_bytes(8)) . '@example.test';
         $nombreProducto = 'Should not exist ' . bin2hex(random_bytes(4));
-        $forzarFallo = static fn (): bool => hrtime(true) > 0;
+        $forzarFallo = static fn(): bool => hrtime(true) > 0;
 
         try {
             $this->conexion->transaccion(static function () use (

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Http\Solicitud;
-use App\Http\Enrutamiento\Enrutador;
-use App\Soporte\Aplicacion;
-use App\Servicios\ProductoServicio;
+use App\Nucleo\Http\Solicitud;
+use App\Nucleo\Enrutamiento\Enrutador;
+use App\Nucleo\Aplicacion;
+use App\Servicios\Productos\ProductoServicio;
 use PHPUnit\Framework\TestCase;
 
 final class RutasPublicasTest extends TestCase

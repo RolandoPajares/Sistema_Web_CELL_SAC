@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Http\Solicitud;
-use App\Http\Solicitudes\SolicitudProducto;
+use App\Nucleo\Http\Solicitud;
+use App\Validacion\Productos\SolicitudProducto;
 use App\Soporte\Excepciones\ExcepcionValidacion;
 use PHPUnit\Framework\TestCase;
 
