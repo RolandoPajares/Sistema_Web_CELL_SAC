@@ -10,9 +10,7 @@ use App\Servicios\Campanias\CampaniaServicio;
 
 final class CampaniaController
 {
-    public function __construct(private CampaniaServicio $campanias)
-    {
-    }
+    public function __construct(private CampaniaServicio $campanias) {}
 
     public function registrarEvento(Solicitud $solicitud): Respuesta
     {
