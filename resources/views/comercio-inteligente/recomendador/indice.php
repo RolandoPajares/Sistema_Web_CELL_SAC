@@ -17,15 +17,23 @@
     </div>
 </section>
 
-<section class="smart-page">
-    <div class="container">
-        <form class="smart-form panel" method="get">
+<section class="container smartmatch-contenido">
+    <!-- ===== 2. Formulario de búsqueda (se envía por GET porque solo consulta, no guarda nada) ===== -->
+    <form class="smartmatch-form" method="get" id="buscar">
+        <div class="smartmatch-form-titulo">
+            <i class="bi bi-sliders"></i>
+            <div>
+                <h2>Cuéntanos qué buscas</h2>
+                <p>Completa los tres datos y presiona el botón.</p>
+            </div>
+        </div>
+        <div class="smartmatch-campos">
             <label>
-                Presupuesto máximo
+                <span><i class="bi bi-cash-coin"></i> Presupuesto máximo (S/)</span>
                 <input class="input" type="number" name="budget" min="300" step="50" value="<?= e($presupuesto ?: '') ?>" placeholder="Ej. 1500">
             </label>
             <label>
-                Uso principal
+                <span><i class="bi bi-phone"></i> Uso principal</span>
                 <select name="use">
                     <option value="study" <?= $uso === 'study' ? 'selected' : '' ?>>Estudio</option>
                     <option value="gaming" <?= $uso === 'gaming' ? 'selected' : '' ?>>Gaming</option>
@@ -35,7 +43,7 @@
                 </select>
             </label>
             <label>
-                Prioridad
+                <span><i class="bi bi-star"></i> Prioridad</span>
                 <select name="priority">
                     <option value="valor" <?= $prioridad === 'valor' ? 'selected' : '' ?>>Calidad/precio</option>
                     <option value="rendimiento" <?= $prioridad === 'rendimiento' ? 'selected' : '' ?>>Rendimiento</option>
@@ -43,32 +51,33 @@
                     <option value="camara" <?= $prioridad === 'camara' ? 'selected' : '' ?>>Cámara</option>
                 </select>
             </label>
-            <button class="btn btn-primary">Encontrar mi celular</button>
-        </form>
+            <button class="btn btn-primary"><i class="bi bi-search"></i> Encontrar mi celular</button>
+        </div>
+    </form>
 
-        <?php if ($resultados): ?>
-            <div class="smart-results">
-                <?php foreach ($resultados as $indice => $producto): ?>
-                    <article class="smart-card panel">
-                        <div class="smart-rank">#<?= $indice + 1 ?></div>
-                        <div>
-                            <span class="eyebrow"><?= e($producto['marca']) ?></span>
-                            <h3><?= e($producto['nombre']) ?></h3>
-                            <div class="match-ring"><?= (int) $producto['coincidencia'] ?>%</div>
-                            <p class="price"><?= money($producto['precio']) ?></p>
-                            <ul>
-                                <?php foreach ($producto['razones'] as $razon): ?>
-                                    <li>✓ <?= e($razon) ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                            <div class="smart-actions">
-                                <a class="btn btn-primary" href="<?= e(url('products/' . (int) $producto['id'])) ?>">Ver equipo</a>
-                                <a class="btn btn-ghost" href="<?= e(url('smart/compare?ids=' . (int) $producto['id'])) ?>">Comparar</a>
-                            </div>
+    <!-- resultados (se rediseñan en el siguiente paso) -->
+    <?php if ($resultados): ?>
+        <div class="smart-results">
+            <?php foreach ($resultados as $indice => $producto): ?>
+                <article class="smart-card panel">
+                    <div class="smart-rank">#<?= $indice + 1 ?></div>
+                    <div>
+                        <span class="eyebrow"><?= e($producto['marca']) ?></span>
+                        <h3><?= e($producto['nombre']) ?></h3>
+                        <div class="match-ring"><?= (int) $producto['coincidencia'] ?>%</div>
+                        <p class="price"><?= money($producto['precio']) ?></p>
+                        <ul>
+                            <?php foreach ($producto['razones'] as $razon): ?>
+                                <li>✓ <?= e($razon) ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <div class="smart-actions">
+                            <a class="btn btn-primary" href="<?= e(url('products/' . (int) $producto['id'])) ?>">Ver equipo</a>
+                            <a class="btn btn-ghost" href="<?= e(url('smart/compare?ids=' . (int) $producto['id'])) ?>">Comparar</a>
                         </div>
-                    </article>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-    </div>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 </section>

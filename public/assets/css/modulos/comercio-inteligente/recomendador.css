@@ -129,3 +129,85 @@
 .smartmatch-hero-imagen img {
   width: 100%;
 }
+
+/* ---------- 2. Formulario ---------- */
+.smartmatch-contenido {
+  padding: 0 0 70px;
+}
+
+.smartmatch-form {
+  margin-top: -30px; /* sube un poco sobre el banner */
+  overflow: hidden;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid #e3e8f5;
+  box-shadow: 0 15px 35px rgba(30, 27, 75, 0.1);
+  scroll-margin-top: 100px;
+}
+
+/* franja morada/azul con el título */
+.smartmatch-form-titulo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 28px;
+  color: #fff;
+  background: linear-gradient(120deg, #6d28d9, #4f46e5, #1356e8);
+}
+
+.smartmatch-form-titulo > i {
+  padding: 11px 13px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 22px;
+}
+
+.smartmatch-form-titulo h2 {
+  margin: 0 0 3px;
+  color: #fff;
+}
+
+.smartmatch-form-titulo p {
+  margin: 0;
+  color: #e0e7ff;
+}
+
+.smartmatch-campos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) auto;
+  gap: 16px;
+  align-items: end;
+  padding: 24px 28px 28px;
+}
+
+.smartmatch-campos label {
+  display: grid;
+  gap: 8px;
+  font-weight: bold;
+  color: #1e1b4b;
+}
+
+.smartmatch-campos label i {
+  color: #6d28d9;
+}
+
+.smartmatch-campos input,
+.smartmatch-campos select {
+  width: 100%;
+  border-radius: 12px;
+  background: #f8f9ff;
+  border: 1.5px solid #dfe3f5;
+}
+
+.smartmatch-campos input:focus,
+.smartmatch-campos select:focus {
+  outline: none;
+  border-color: #6d28d9;
+  background: #fff;
+}
+
+.smartmatch-campos .btn {
+  padding: 13px 20px;
+  background: linear-gradient(120deg, #6d28d9, #1356e8);
+  border: 0;
+}
