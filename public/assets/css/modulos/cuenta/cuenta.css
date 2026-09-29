@@ -652,3 +652,44 @@
 .cuenta-resumen article:nth-child(2) > i { background: #e7f8f0; color: #0f9f6e; }
 .cuenta-resumen article:nth-child(3) > i { background: #fff4e0; color: #d97706; }
 .cuenta-resumen article:nth-child(4) > i { background: #fde8f1; color: #db2777; }
+
+/* ---------- Pedidos, accesos rápidos y recomendado ---------- */
+.cuenta-panel {
+  border-radius: 16px;
+}
+
+.pedido-producto > span {
+  background: #e6f3ff;
+  color: #1356e8;
+}
+
+.lista-pedidos-cuenta article:hover {
+  border-color: #22b8f0;
+}
+
+.cuenta-accesos a:hover {
+  background: #e6f3ff;
+}
+
+/* imagen de productos al fondo de la tarjeta "Recomendado para ti" */
+.cuenta-recomendado {
+  background: url("../../../img/publico/inicio/secciones/hero-devices.png") right -30px bottom -10px / 150px no-repeat, #eef6ff;
+}
+
+.cuenta-recomendado > div {
+  max-width: 70%;
+}
+
+.cuenta-recomendado h2 {
+  font-size: 20px;
+}
+
+@media (max-width: 780px) {
+  .cuenta-recomendado {
+    background: #eef6ff;
+  }
+
+  .cuenta-recomendado > div {
+    max-width: 100%;
+  }
+}
