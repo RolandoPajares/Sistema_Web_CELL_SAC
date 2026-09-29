@@ -1,3 +1,6 @@
+<!-- Se vuelve a cargar la hoja de estilos con otra versión para que el navegador no use la copia vieja guardada -->
+<link rel="stylesheet" href="<?= e(asset('assets/css/modulos/comercio-inteligente/recomendador.css?v=2')) ?>">
+
 <!-- ===== 1. Presentación de SmartMatch ===== -->
 <section class="smartmatch-hero">
     <div class="container smartmatch-hero-grid">
