@@ -65,29 +65,10 @@
             <a href="<?= e(url('catalog')) ?>" class="home-view-all">Ver todos los productos <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
         </div>
         <?php
-        $muestrasPortada = [
-            ['id' => 0, 'marca' => 'Apple', 'nombre' => 'iPhone 15 128GB', 'categoria' => 'Celular', 'precio' => 2999, 'existencias' => 8, 'etiqueta' => 'Más vendido', 'demo' => true],
-            ['id' => 0, 'marca' => 'Samsung', 'nombre' => 'Galaxy S24 256GB', 'categoria' => 'Celular', 'precio' => 2399, 'existencias' => 12, 'etiqueta' => 'Oferta', 'demo' => true],
-            ['id' => 0, 'marca' => 'Xiaomi', 'nombre' => 'Redmi Note 13 Pro', 'categoria' => 'Celular', 'precio' => 899, 'existencias' => 15, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'Motorola', 'nombre' => 'Moto G47 128GB', 'categoria' => 'Celular', 'precio' => 639, 'existencias' => 6, 'etiqueta' => 'Oferta', 'demo' => true],
-            ['id' => 0, 'marca' => 'Samsung', 'nombre' => 'Galaxy A55 128GB', 'categoria' => 'Celular', 'precio' => 1599, 'existencias' => 8, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'Apple', 'nombre' => 'iPhone 16 128GB', 'categoria' => 'Celular', 'precio' => 3299, 'existencias' => 5, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'Samsung', 'nombre' => 'Galaxy A35 256GB', 'categoria' => 'Celular', 'precio' => 1199, 'existencias' => 10, 'etiqueta' => 'Oferta', 'demo' => true],
-            ['id' => 0, 'marca' => 'Xiaomi', 'nombre' => 'Redmi Note 14 Pro 256GB', 'categoria' => 'Celular', 'precio' => 1199, 'existencias' => 14, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'Motorola', 'nombre' => 'Edge 50 Fusion 256GB', 'categoria' => 'Celular', 'precio' => 1499, 'existencias' => 4, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'HONOR', 'nombre' => 'X8c 256GB', 'categoria' => 'Celular', 'precio' => 999, 'existencias' => 7, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'Apple', 'nombre' => 'iPhone 15 Pro 256GB', 'categoria' => 'Celular', 'precio' => 4299, 'existencias' => 3, 'etiqueta' => 'Premium', 'demo' => true],
-            ['id' => 0, 'marca' => 'Samsung', 'nombre' => 'Galaxy S24 FE 256GB', 'categoria' => 'Celular', 'precio' => 2599, 'existencias' => 6, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'Xiaomi', 'nombre' => 'Redmi Note 13 256GB', 'categoria' => 'Celular', 'precio' => 699, 'existencias' => 18, 'etiqueta' => 'Oferta', 'demo' => true],
-            ['id' => 0, 'marca' => 'Motorola', 'nombre' => 'Moto G85 256GB', 'categoria' => 'Celular', 'precio' => 1099, 'existencias' => 9, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'HONOR', 'nombre' => 'X9c 256GB', 'categoria' => 'Celular', 'precio' => 1299, 'existencias' => 5, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'Apple', 'nombre' => 'iPhone 14 128GB', 'categoria' => 'Celular', 'precio' => 2399, 'existencias' => 8, 'etiqueta' => 'Oferta', 'demo' => true],
-            ['id' => 0, 'marca' => 'Samsung', 'nombre' => 'Galaxy A25 256GB', 'categoria' => 'Celular', 'precio' => 899, 'existencias' => 11, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'Xiaomi', 'nombre' => 'Redmi 13 256GB', 'categoria' => 'Celular', 'precio' => 499, 'existencias' => 13, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'Motorola', 'nombre' => 'Moto G55 256GB', 'categoria' => 'Celular', 'precio' => 799, 'existencias' => 7, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'HONOR', 'nombre' => '200 Lite 256GB', 'categoria' => 'Celular', 'precio' => 1399, 'existencias' => 4, 'etiqueta' => 'Oferta', 'demo' => true],
-        ];
-        $productosPortada = $muestrasPortada;
+
+        // Los destacados provienen exclusivamente de productos activos existentes en la base de datos.
+        $productosPortada = array_slice(is_array($productos ?? null) ? $productos : [], 0, 7);
+
         ?>
         <?php if ($productosPortada): ?>
             <div class="product-grid home-product-grid">
