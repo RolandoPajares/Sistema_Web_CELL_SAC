@@ -33,6 +33,13 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
             'INSERT INTO detalle_pedidos(pedido_id, producto_id, cantidad, precio_unitario) VALUES(?, ?, ?, ?)'
         );
         $sentencia->execute([$idPedido, $idProducto, $cantidad, $precio]);
+
+        // Toda compra en línea genera trazabilidad real de salida de inventario.
+        $usuario = $this->pdo()->prepare('SELECT usuario_id FROM pedidos WHERE id=?');
+        $usuario->execute([$idPedido]);
+        $usuarioId = (int) $usuario->fetchColumn();
+        $mov = $this->pdo()->prepare("INSERT INTO movimientos_inventario(producto_id,usuario_id,tipo_movimiento,cantidad,notas) VALUES(?,?,'salida',?,?)");
+        $mov->execute([$idProducto, $usuarioId ?: null, $cantidad, 'Venta en línea · Pedido #'.$idPedido]);
     }
 
     public function todosConUsuarios(): array

@@ -40,11 +40,22 @@ final class PanelRolController
             ]);
         }
 
+        $mesesDashboard = max(3, min(12, (int) ($solicitud->consulta('months') ?? 6)));
+        $dashboardCompras = $rol === 'compras_logistica'
+            ? $this->consultaSegura(fn (): array => $this->modulos->dashboardCompras($mesesDashboard), ['tendencia'=>[], 'proveedores'=>[]])
+            : ['tendencia'=>[], 'proveedores'=>[]];
+        $actividadCompras = $rol === 'compras_logistica' ? $this->consultaSegura(fn (): array => $this->modulos->actividadRecienteCompras(5), []) : [];
+        $prioridadesCompras = $rol === 'compras_logistica' ? $this->consultaSegura(fn (): array => $this->modulos->prioridadesCompras(), []) : [];
+
         return $this->vista->renderizar('modulos.panel.tablero', [
             'tituloPagina' => 'Panel ' . AccesoRol::label((string) ($usuario['rol'] ?? '')),
             'resumen' => $resumen,
             'interfaz' => CatalogoInterfaces::tablero($rol, $resumen),
             'navegacionRol' => AccesoRol::navigation((string) ($usuario['rol'] ?? '')),
+            'dashboardCompras' => $dashboardCompras,
+            'mesesDashboard' => $mesesDashboard,
+            'actividadCompras' => $actividadCompras,
+            'prioridadesCompras' => $prioridadesCompras,
         ], 'interno');
     }
 
@@ -166,6 +177,16 @@ final class PanelRolController
             'inventario' => ['titulo' => 'Control de inventario', 'descripcion' => 'Consulta existencias y registra entradas, salidas o ajustes mediante transacciones.', 'crud' => true, 'create_only' => true, 'campos' => ['producto_id' => ['type' => 'select-data', 'label' => 'Producto', 'required' => true], 'tipo_movimiento' => ['type' => 'select', 'label' => 'Movimiento', 'required' => true, 'options' => ['entrada' => 'Entrada', 'salida' => 'Salida', 'ajuste' => 'Ajuste']], 'cantidad' => ['type' => 'number', 'label' => 'Cantidad', 'required' => true, 'min' => 1], 'notas' => ['type' => 'textarea', 'label' => 'Motivo', 'required' => true, 'max' => 500]]],
             'pedidos' => ['titulo' => 'Pedidos', 'descripcion' => 'Consulta pedidos y actualiza su estado.', 'crud' => true, 'update_only' => true, 'campos' => ['estado' => ['type' => 'select', 'label' => 'Estado', 'required' => true, 'options' => ['Pendiente' => 'Pendiente', 'En proceso' => 'En proceso', 'Enviado' => 'Enviado', 'Entregado' => 'Entregado', 'Cancelado' => 'Cancelado']]]],
             'pedidos-mayoristas' => ['titulo' => 'Pedidos mayoristas', 'descripcion' => 'Seguimiento de pedidos B2B.', 'crud' => true, 'update_only' => true, 'campos' => ['estado' => ['type' => 'select', 'label' => 'Estado', 'required' => true, 'options' => ['Pendiente' => 'Pendiente', 'En proceso' => 'En proceso', 'Enviado' => 'Enviado', 'Entregado' => 'Entregado', 'Cancelado' => 'Cancelado']]]],
+            'preparacion-pedidos' => ['titulo' => 'Pedidos por preparar', 'descripcion' => 'Pedidos en línea de clientes minoristas y mayoristas pendientes de preparación.', 'crud' => true, 'update_only' => true, 'campos' => ['estado' => ['type' => 'select', 'label' => 'Estado del pedido', 'required' => true, 'options' => ['Pendiente'=>'Pendiente','Empacado'=>'Empacado','Completado'=>'Completado']]]],
+            'logistica-mayorista' => ['titulo'=>'Logística mayorista','descripcion'=>'Packing list y datos logísticos de pedidos mayoristas.','crud'=>true,'update_only'=>true,'campos'=>[
+                'estado'=>['type'=>'select','label'=>'Estado','required'=>true,'options'=>['Pendiente'=>'Pendiente','Empacado'=>'Empacado','Completado'=>'Completado']],
+                'exportador'=>['type'=>'text','label'=>'Exportador / remitente','max'=>160], 'direccion_exportador'=>['type'=>'text','label'=>'Dirección del exportador','max'=>255], 'contacto_exportador'=>['type'=>'text','label'=>'Contacto del exportador','max'=>160],
+                'direccion_consignatario'=>['type'=>'text','label'=>'Dirección del importador / consignatario','max'=>255], 'contacto_consignatario'=>['type'=>'text','label'=>'Contacto del consignatario','max'=>160],
+                'factura_numero'=>['type'=>'text','label'=>'N.º factura comercial','max'=>80], 'factura_fecha'=>['type'=>'date','label'=>'Fecha factura'], 'orden_compra'=>['type'=>'text','label'=>'Orden de compra','max'=>80], 'carta_credito'=>['type'=>'text','label'=>'Carta de crédito','max'=>100],
+                'fecha_emision'=>['type'=>'date','label'=>'Fecha de emisión'], 'pais_origen'=>['type'=>'text','label'=>'País de origen','max'=>100], 'lugar_carga'=>['type'=>'text','label'=>'Puerto / lugar de carga','max'=>160], 'puerto_descarga'=>['type'=>'text','label'=>'Puerto de descarga','max'=>160], 'direccion_entrega'=>['type'=>'text','label'=>'Dirección de entrega final','max'=>255],
+                'descripcion_mercancia'=>['type'=>'textarea','label'=>'Descripción de mercancía','max'=>1000], 'codigo_hs'=>['type'=>'text','label'=>'Código HS','max'=>40], 'cantidad_unidades'=>['type'=>'number','label'=>'Cantidad de unidades','min'=>0],
+                'bultos'=>['type'=>'text','label'=>'Identificación de bultos','max'=>160], 'tipo_embalaje'=>['type'=>'text','label'=>'Tipo de embalaje','max'=>100], 'dimensiones'=>['type'=>'text','label'=>'Dimensiones (L × A × H)','max'=>120], 'volumen_m3'=>['type'=>'number','label'=>'Volumen m³','min'=>0], 'peso_neto'=>['type'=>'number','label'=>'Peso neto (kg)','min'=>0], 'peso_bruto'=>['type'=>'number','label'=>'Peso bruto (kg)','min'=>0]
+            ]],
         ];
 
         if (isset($configuraciones[$modulo])) {
@@ -175,7 +196,7 @@ final class PanelRolController
         $titulos = [
             'productos' => 'Productos', 'ventas' => 'Ventas', 'publicidad' => 'Publicidad y campañas', 'campanias' => 'MD Ads y campañas',
             'usuarios' => 'Usuarios y roles', 'reportes' => 'Reportes gerenciales', 'auditoria' => 'Auditoría e historial',
-            'preparacion-pedidos' => 'Preparación de pedidos', 'alertas-stock' => 'Alertas de stock', 'seguimiento-comercial' => 'Seguimiento comercial',
+            'preparacion-pedidos' => 'Preparación de pedidos', 'movimientos-stock' => 'Movimientos de stock', 'logistica-mayorista' => 'Logística mayorista', 'alertas-stock' => 'Alertas de stock', 'seguimiento-comercial' => 'Seguimiento comercial',
             'garantias' => 'Gestión de garantías', 'devoluciones' => 'Gestión de devoluciones', 'reclamaciones' => 'Gestión de reclamaciones',
             'contenido' => 'Contenido digital', 'promociones' => 'Promociones', 'destacados' => 'Productos destacados', 'segmentacion' => 'Segmentación',
             'leads' => 'Gestión de leads', 'analitica' => 'Analítica visual', 'perfil' => 'Mi perfil', 'historial' => 'Historial',

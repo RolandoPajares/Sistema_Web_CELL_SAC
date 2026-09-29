@@ -1,39 +1,32 @@
 <?php
-$columnas = $interfaz['columnas'] ?: ['Código', 'Nombre', 'Fecha', 'Responsable', 'Estado'];
-$nombres = ['Distribuidora Andina SAC', 'Comercial Nova SAC', 'TechSolutions Perú', 'Inversiones Globales', 'Grupo Empresarial R&G', 'ElectroSur SAC', 'Soluciones Digitales EIRL', 'Retail Center'];
+$clave=(string)($interfaz['clave']??'');
+$esProductos=$clave==='productos';
+$esMovimientos=$clave==='movimientos-stock';
+$esAlertas=$clave==='alertas-stock';
+$filas=$registros ?? [];
+if($esProductos){$columnas=['sku'=>'SKU','producto'=>'Producto','categoria'=>'Categoría','precio'=>'Precio','stock'=>'Stock','estado'=>'Estado'];}
+elseif($esMovimientos){$columnas=['codigo'=>'Código','producto'=>'Producto','movimiento'=>'Movimiento','cantidad'=>'Cantidad','responsable'=>'Responsable','motivo'=>'Motivo','fecha'=>'Fecha'];}
+elseif($esAlertas){$columnas=['sku'=>'SKU','producto'=>'Producto','categoria'=>'Categoría','stock_actual'=>'Stock actual','stock_minimo'=>'Stock mínimo'];}
+else{$columnas=[]; if($filas){foreach(array_keys($filas[0]) as $c){if($c!=='id')$columnas[$c]=ucfirst(str_replace('_',' ',$c));}}}
 ?>
-<section class="panel modulo-filtros">
-    <label><i class="bi bi-search"></i><input type="search" placeholder="Buscar en <?= e(mb_strtolower($interfaz['titulo'])) ?>..."></label>
-    <button type="button"><i class="bi bi-funnel"></i> Todos los estados <i class="bi bi-chevron-down"></i></button>
-    <button type="button"><i class="bi bi-calendar3"></i> Últimos 30 días <i class="bi bi-chevron-down"></i></button>
-    <button class="btn btn-primary" type="button">Aplicar filtros</button>
+<?php if($esProductos): ?>
+<section class="panel modulo-filtros" data-module-filters>
+ <label><i class="bi bi-search"></i><input type="search" placeholder="Buscar en gestión de productos..." data-filter-search></label>
+ <select class="module-filter-select" data-filter-status><option value="">Todos los estados</option><option>Publicado</option><option>Stock bajo</option><option>Borrador</option></select>
+ <button class="btn btn-primary" type="button" data-apply-filters>Aplicar filtros</button>
 </section>
-<div class="modulo-con-detalle">
-    <section class="panel tabla-mockup">
-        <div class="titulo-panel"><div><i class="bi <?= e($interfaz['icono']) ?>"></i><h2>Listado de <?= e(mb_strtolower($interfaz['titulo'])) ?></h2></div><button type="button"><i class="bi bi-download"></i> Exportar</button></div>
-        <div class="table-responsive"><table class="table"><thead><tr><?php foreach ($columnas as $columna) :
-            ?><th><?= e($columna) ?></th><?php
-                                                                      endforeach; ?><th>Acciones</th></tr></thead><tbody>
-        <?php foreach ($nombres as $indice => $nombre) :
-            ?><tr>
-            <?php foreach ($columnas as $posicion => $columna) : ?>
-                <?php $valor = match ($posicion) {
-                    0 => sprintf('%s-2025-%04d', mb_strtoupper(mb_substr($interfaz['clave'], 0, 3)), 48 - $indice), 1 => $nombre, 2 => $indice % 2 ? '10 Jun 2025' : '08 Jun 2025', 3 => 'S/ ' . number_format(1299 + ($indice * 850)), 4 => $indice % 3 ? 'Activo' : 'En proceso', default => $indice % 2 ? 'Completado' : 'Pendiente'
-                }; ?>
-                <td><?= $posicion >= 4 ? '<span class="estado estado--' . ($indice % 3 ? 'verde' : 'ambar') . '">' . e($valor) . '</span>' : e($valor) ?></td>
-            <?php endforeach; ?>
-            <td><button class="icon-btn" type="button" aria-label="Ver detalle"><i class="bi bi-three-dots"></i></button></td>
-        </tr>
-        <?php endforeach; ?>
-        </tbody></table></div>
-        <div class="paginacion-mockup"><span>Mostrando 1 - 8 de 48 registros</span><div><button>‹</button><button class="activo">1</button><button>2</button><button>3</button><button>›</button></div></div>
-    </section>
-    <aside class="panel detalle-mockup">
-        <div class="titulo-panel"><div><i class="bi bi-info-circle-fill"></i><h2>Detalle seleccionado</h2></div><button type="button"><i class="bi bi-x-lg"></i></button></div>
-        <div class="identidad-detalle"><span>DA</span><div><b>Distribuidora Andina SAC</b><small>Registro activo · Lima</small></div></div>
-        <div class="pestanas-mockup"><b>Información</b><span>Historial</span><span>Notas</span></div>
-        <dl class="datos-detalle"><div><dt>Responsable</dt><dd>Juan Pérez García</dd></div><div><dt>Correo</dt><dd>juan.perez@empresa.com</dd></div><div><dt>Teléfono</dt><dd>+51 987 654 321</dd></div><div><dt>Última actividad</dt><dd>10 Jun 2025, 10:24</dd></div></dl>
-        <div class="resumen-detalle"><article><i class="bi bi-bag-check"></i><b>24</b><small>Operaciones</small></article><article><i class="bi bi-cash-coin"></i><b>S/ 85,420</b><small>Acumulado</small></article></div>
-        <button class="btn btn-primary full-width" type="button">Actualizar estado</button>
-    </aside>
+<?php endif; ?>
+<div class="modulo-listado-real modulo-claro" data-filter-table>
+<section class="panel tabla-mockup">
+ <div class="titulo-panel"><div><i class="bi <?= e($interfaz['icono']??'bi-list') ?>"></i><h2><?= $esProductos?'Gestión de productos':($esMovimientos?'Movimientos reales de stock':($esAlertas?'Productos con stock menor a 3':'Listado')) ?></h2></div><button type="button" data-export-table><i class="bi bi-download"></i> Exportar</button></div>
+ <div class="table-responsive"><table class="table"><thead><tr><?php foreach($columnas as $label):?><th><?=e($label)?></th><?php endforeach;?><?php if($esAlertas):?><th>Actualizar stock</th><th>Proveedor</th><?php endif;?></tr></thead><tbody>
+ <?php if(!$filas):?><tr><td colspan="<?=count($columnas)+($esAlertas?2:0)?>">No hay registros disponibles.</td></tr><?php endif;?>
+ <?php foreach($filas as $r):?><tr data-filter-row data-record='<?=e(json_encode($r,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES))?>'>
+  <?php foreach($columnas as $key=>$label): $v=$r[$key]??'—';?><td><?php if(in_array($key,['estado','movimiento'],true)):?><span class="estado <?= in_array(mb_strtolower((string)$v),['publicado','entrada'],true)?'estado--verde':'estado--ambar' ?>"><?=e((string)$v)?></span><?php elseif($key==='precio'):?><?=money($v)?><?php else:?><?=e((string)$v)?><?php endif;?></td><?php endforeach;?>
+  <?php if($esAlertas):?><td><a class="btn btn-primary btn-sm" href="<?=e(url('panel/inventario'))?>#editor"><i class="bi bi-box-arrow-in-down"></i> Gestionar stock</a></td><td><button class="btn btn-outline btn-sm" type="button" data-provider-detail><i class="bi bi-person-lines-fill"></i> Ver contacto</button></td><?php endif;?>
+ </tr><?php endforeach;?>
+ <tr data-filter-empty hidden><td colspan="<?=count($columnas)+($esAlertas?2:0)?>">No hay registros que coincidan con los filtros.</td></tr>
+ </tbody></table></div>
+</section>
+<?php if($esAlertas):?><aside class="panel detalle-mockup" data-provider-panel hidden><div class="titulo-panel"><div><i class="bi bi-truck"></i><h2>Contacto del proveedor</h2></div><button type="button" data-close-provider><i class="bi bi-x-lg"></i></button></div><dl class="datos-detalle"><div><dt>Producto</dt><dd data-p-product>—</dd></div><div><dt>Proveedor</dt><dd data-p-name>—</dd></div><div><dt>Correo</dt><dd data-p-email>—</dd></div><div><dt>Teléfono</dt><dd data-p-phone>—</dd></div></dl><small>Si aparece “Sin proveedor asignado”, primero debe vincularse un proveedor al producto.</small></aside><?php endif;?>
 </div>
