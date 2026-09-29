@@ -1,15 +1,17 @@
 <?php
+// Selección visual por rol: las rutas y controladores permanecen intactos.
+if (in_array(user_role(), ['compras_logistica', 'marketing'], true)) {
+    require __DIR__ . '/_parciales/david/indice.php';
+    return;
+}
+?>
+<?php
 $campos = (array) ($configuracionModulo['campos'] ?? []);
 $esCrud = (bool) ($configuracionModulo['crud'] ?? false);
 $soloCrear = (bool) ($configuracionModulo['create_only'] ?? false);
 $soloActualizar = (bool) ($configuracionModulo['update_only'] ?? false);
 $editando = is_array($registroEdicion) && !$soloCrear;
 $desactivables = ['categorias', 'proveedores', 'clientes', 'clientes-mayoristas', 'cotizaciones', 'compras'];
-$columnasVisibles = match($modulo){
- 'preparacion-pedidos'=>['pedido','cliente','tipo_cliente','items','total','estado','fecha'],
- 'logistica-mayorista'=>['codigo','exportador','consignatario','factura','orden_compra','pais_origen','lugar_carga','puerto_descarga','entrega','mercancia','bultos','peso_neto_kg','peso_bruto_kg','estado'],
- default=>null
-};
 ?>
 <header class="admin-page-head">
     <div>
@@ -18,8 +20,12 @@ $columnasVisibles = match($modulo){
         <p><?= e($interfaz['descripcion']) ?></p>
     </div>
     <div class="acciones-cabecera">
-        <label class="boton-fecha" title="Seleccionar fecha"><i class="bi bi-calendar3"></i><span data-module-date-label>Hoy, <?= e(date('d M Y')) ?></span><i class="bi bi-chevron-down"></i><input class="dashboard-date-input" type="date" value="<?= e(date('Y-m-d')) ?>" data-module-date></label>
-        <?php if ($esCrud && !$soloActualizar) : ?><a class="btn btn-primary" href="#editor"><i class="bi bi-plus-lg"></i> Nuevo registro</a><?php endif; ?>
+        <button class="boton-fecha" type="button"><i class="bi bi-calendar3"></i> Hoy, <?= e(date('d M Y')) ?> <i class="bi bi-chevron-down"></i></button>
+        <?php if ($esCrud && !$soloActualizar) :
+            ?><a class="btn btn-primary" href="#editor"><i class="bi bi-plus-lg"></i> Nuevo registro</a><?php
+        else :
+            ?><button class="btn btn-primary" type="button"><i class="bi bi-plus-lg"></i> Nueva gestión</button><?php
+        endif; ?>
     </div>
 </header>
 
@@ -32,7 +38,7 @@ endif; ?>
 
 <div class="metricas-mockup module-kpis">
     <?php foreach ($interfaz['metricas'] as $indice => $metrica) : ?>
-        <article class="metrica-mockup <?= e($metrica['color']) ?>"><div class="metrica-icono"><i class="bi <?= e($metrica['icono']) ?>"></i></div><div><span><?= e($metrica['etiqueta']) ?></span><strong><?= e($metrica['valor']) ?></strong><small><b>↑ <?= 12 + ($indice * 4) ?>%</b> vs. periodo anterior</small></div></article>
+        <article class="metrica-mockup <?= e($metrica['color']) ?>"><div class="metrica-icono"><i class="bi <?= e($metrica['icono']) ?>"></i></div><div><span><?= e($metrica['etiqueta']) ?></span><strong><?= e($metrica['valor']) ?></strong><small><b>↑ <?= 12 + ($indice * 4) ?>%</b> vs. periodo anterior</small></div><svg class="mini-tendencia" viewBox="0 0 90 34"><polyline points="2,30 18,23 32,26 49,14 64,18 88,3"/></svg></article>
     <?php endforeach; ?>
 </div>
 
@@ -48,13 +54,15 @@ endif; ?>
                 <thead><tr>
                     <?php if ($registros !== []) : ?>
                         <?php foreach (array_keys($registros[0]) as $columna) : ?>
-                            <?php if (str_ends_with((string) $columna, '_id') || (is_array($columnasVisibles) && !in_array((string)$columna,$columnasVisibles,true))) { continue; } ?>
+                            <?php if (str_ends_with((string) $columna, '_id')) {
+                                continue;
+                            } ?>
                             <th><?= e(ucfirst(str_replace('_', ' ', (string) $columna))) ?></th>
                         <?php endforeach; ?>
                     <?php else :
                         ?><th>Información</th><?php
                     endif; ?>
-                    <?php if ($modulo !== 'inventario') : ?><th>Acciones</th><?php endif; ?>
+                    <th>Acciones</th>
                 </tr></thead>
                 <tbody>
                 <?php if ($registros === []) : ?>
@@ -63,7 +71,9 @@ endif; ?>
                 <?php foreach ($registros as $registro) : ?>
                     <tr>
                         <?php foreach ($registro as $columna => $valor) : ?>
-                            <?php if (str_ends_with((string) $columna, '_id') || (is_array($columnasVisibles) && !in_array((string)$columna,$columnasVisibles,true))) { continue; } ?>
+                            <?php if (str_ends_with((string) $columna, '_id')) {
+                                continue;
+                            } ?>
                             <td>
                                 <?php if (in_array($columna, ['activo', 'estado'], true)) : ?>
                                     <span class="status-pill"><?= e((string) $valor) ?></span>
@@ -74,10 +84,16 @@ endif; ?>
                                 endif; ?>
                             </td>
                         <?php endforeach; ?>
-                        <?php if ($modulo !== 'inventario') : ?><td class="table-actions">
-                            <?php if (!$soloCrear) : ?><a class="icon-btn" aria-label="Editar" href="<?= e(url('panel/' . $modulo) . '?edit=' . (int) $registro['id']) ?>#editor"><i class="bi bi-pencil"></i></a><?php endif; ?>
-                            <?php if (in_array($modulo, $desactivables, true)) : ?><form method="post" action="<?= e(url('panel/' . $modulo . '/' . (int) $registro['id'] . '/deactivate')) ?>" data-confirm="¿Deseas desactivar este registro?"><?= csrf_field() ?><button class="icon-btn danger" aria-label="Desactivar"><i class="bi bi-slash-circle"></i></button></form><?php endif; ?>
-                        </td><?php endif; ?>
+                        <td class="table-actions">
+                            <?php if (!$soloCrear) :
+                                ?><a class="icon-btn" aria-label="Editar" href="<?= e(url('panel/' . $modulo) . '?edit=' . (int) $registro['id']) ?>#editor"><i class="bi bi-pencil"></i></a><?php
+                            endif; ?>
+                            <?php if (in_array($modulo, $desactivables, true)) : ?>
+                                <form method="post" action="<?= e(url('panel/' . $modulo . '/' . (int) $registro['id'] . '/deactivate')) ?>" data-confirm="¿Deseas desactivar este registro?">
+                                    <?= csrf_field() ?><button class="icon-btn danger" aria-label="Desactivar"><i class="bi bi-slash-circle"></i></button>
+                                </form>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

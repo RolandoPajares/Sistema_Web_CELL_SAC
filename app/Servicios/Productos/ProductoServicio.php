@@ -60,15 +60,6 @@ final class ProductoServicio
         return $this->productos->buscarActivo($idProducto);
     }
 
-    /** @return array<string,mixed>|null */
-    public function detalleConVariantes(int $idProducto): ?array
-    {
-        if (method_exists($this->productos, 'detalleConVariantes')) {
-            return $this->productos->detalleConVariantes($idProducto);
-        }
-        return $this->buscarActivo($idProducto);
-    }
-
     /** @return array<int, array<string, mixed>> */
     public function todosParaAdministrador(): array
     {
@@ -146,45 +137,6 @@ final class ProductoServicio
 
         return 'deactivated';
     }
-
-    public function variantes(int $productoId): array
-    {
-        return method_exists($this->productos, 'variantes') ? $this->productos->variantes($productoId) : [];
-    }
-
-    public function crearVariante(int $productoId, string $nombre, string $codigo, int $stock): int
-    {
-        if (!method_exists($this->productos, 'crearVariante')) throw new \RuntimeException('Gestión de variantes no disponible.');
-        return $this->productos->crearVariante($productoId, $nombre, $codigo, $stock);
-    }
-
-    public function eliminarVariante(int $productoId, int $varianteId): array
-    {
-        if (!method_exists($this->productos, 'eliminarVariante')) throw new \RuntimeException('Gestión de variantes no disponible.');
-        return $this->productos->eliminarVariante($productoId, $varianteId);
-    }
-
-    public function agregarImagenVariante(int $varianteId, string $ruta): int
-    {
-        if (!method_exists($this->productos, 'agregarImagenVariante')) throw new \RuntimeException('Gestión de imágenes no disponible.');
-        return $this->productos->agregarImagenVariante($varianteId, $ruta);
-    }
-
-    public function eliminarImagenVariante(int $imagenId): ?string
-    {
-        if (!method_exists($this->productos, 'eliminarImagenVariante')) return null;
-        return $this->productos->eliminarImagenVariante($imagenId);
-    }
-
-    public function imagenesVariante(int $varianteId): array
-    {
-        return method_exists($this->productos, 'imagenesVariante') ? $this->productos->imagenesVariante($varianteId) : [];
-    }
-
-    public function imagenReferencia(int $productoId): ?string { return method_exists($this->productos,'imagenReferencia') ? $this->productos->imagenReferencia($productoId) : null; }
-    public function guardarImagenReferencia(int $productoId,string $ruta): ?string { return $this->productos->guardarImagenReferencia($productoId,$ruta); }
-    public function eliminarImagenReferencia(int $productoId): ?string { return $this->productos->eliminarImagenReferencia($productoId); }
-    public function guardarCaracteristicas(int $productoId,array $datos): void { if(method_exists($this->productos,'guardarCaracteristicas')) $this->productos->guardarCaracteristicas($productoId,$datos); }
 
     public function contarActivos(): int
     {

@@ -36,11 +36,6 @@ final class GeneradorUrl
 
     public function asset(string $ruta): string
     {
-        // Permite imagenes oficiales/referenciales alojadas externamente sin romper los assets locales.
-        if (preg_match('#^https?://#i', $ruta) === 1) {
-            return $ruta;
-        }
-
         return $this->generar(ltrim($ruta, '/'));
     }
 }

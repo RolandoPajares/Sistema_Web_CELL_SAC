@@ -1,0 +1,2504 @@
+{
+  "base": "pajares",
+  "archivos": [
+    {
+      "archivo": ".env",
+      "sha256": "74cfb6d0517664c8cef7e72e555f38fa1b88efc7f081be4d161f6790aed5fc6f",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": ".gitignore",
+      "sha256": "66989de03f100d61cd60126022d707027f10d49edbc75085bb5bc6ae4252012e",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "LEEME_INTEGRACION.md",
+      "sha256": "e82512ffd58066c62ba0fd3dc3c2c62693f5b570c210c43677b17d0e7601a2df",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "README.md",
+      "sha256": "fa4d63aaf30f4aac9de8bdb56632e54c3fa35c2c610c78c55ce69fd7b52cd87d",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Autenticacion/AutenticacionController.php",
+      "sha256": "0976a721c6ab51faec1f12bb78d0edfb3a1929cf9070c30529f5e9e16d28b838",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Campanias/AdministradorCampaniaController.php",
+      "sha256": "9b58f8a485a36f80399291e9ff080cb4493c7f8f78041e10bf7b11af2f7ff7d1",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Campanias/CampaniaController.php",
+      "sha256": "4985cf03fb36cea13b66caa9955ca9c5c2c2723d72795deaff41bc62254cd670",
+      "identico_a": [
+        "pajares",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Catalogo/CatalogoController.php",
+      "sha256": "f9daf876477c52d4b8367a1e8ca5ee29b87e5f302f621f94f13d7e524afe2c5d",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Categorias/CategoriaController.php",
+      "sha256": "1ffb7b357c0b6514bf41af50de7ffebffd619ddb2a6a5baa572a5ce08ad977a7",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Clientes/ClienteController.php",
+      "sha256": "1261afd71e3bbdebf873b5faff492f8bef51c12c2b22e571920df6788e178143",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/ComercioInteligente/ComercioInteligenteController.php",
+      "sha256": "291758749896db2b63c740fa0ee2458600effee65486474ff8b251664c25931b",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Compra/CarritoController.php",
+      "sha256": "a5d2e3618492578ebaeb4c7e9351429f578338338477b58a69d480b766cd7ae9",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Compra/ProcesoCompraController.php",
+      "sha256": "6d8ecfad0ea1356978a655b019df93347ce9ddaf6ba1f92d33f5e8ff9ea10b42",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Cuenta/CuentaController.php",
+      "sha256": "b5a2e472211060195d2c89e159acd0c931f125eeac749ee1eebb04221848cab0",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Inventario/InventarioController.php",
+      "sha256": "0f4353f607a35af0c29302df4c6c276119a07a6ee2a44dfd2d43088fa11eb627",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Panel/AdministradorFuturoController.php",
+      "sha256": "a765fb102936ec2ed45bae8c2e16896d4f475a61e28dff41c82f1b05b83c3469",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Panel/PanelAdministradorController.php",
+      "sha256": "32333ef8988345269c17aa83d4e24043e3c3dda5f72b2a895b72ba838a0e4dae",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Panel/PanelRolController.php",
+      "sha256": "9a917dbf4e9d25279d7911df21d92858dec8bbc00aa10cd16ba4aea19ef1fcb4",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Pedidos/AdministradorPedidoController.php",
+      "sha256": "9de47a52f6c0c46ef2c40e6e4716d1e9f87fc155f66144e9b1cc93d34c0d1ccc",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Productos/AdministradorProductoController.php",
+      "sha256": "b54b4b69259926049565497b85dfecee72e8f9a9c3627b68f6457c6605a65391",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Productos/ProductoController.php",
+      "sha256": "170d25f1e2bc2524b3313a712110acd089abad778fe06da8d329f2e3551813a6",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Proveedores/ProveedorController.php",
+      "sha256": "fc7c57177fc189e7c4f8d1fe2ed0155e94e3e448786b471379c493c5665f0931",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Publico/InicioController.php",
+      "sha256": "8f7d6ae539592b5952b2163d3bad1a8ffc67ccb8c659cb50119f36751764525b",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Publico/PaginaController.php",
+      "sha256": "96da8e6d12c80714b088910e14069f944ad12436d0440d196cba7e3c60d37609",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Usuarios/AdministradorUsuarioController.php",
+      "sha256": "20392190aa68ce9cf3b1ff05336dc54ee411e7cd9875a4b760b21e8900cd5bb7",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Controladores/Usuarios/CuentaAdministradorController.php",
+      "sha256": "4ff05eb4f0187213d698b4dfdd19abf5b785513baf88ea7f7ec07385cd144589",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Auditoria/RegistroAuditoriaDAO.php",
+      "sha256": "87be4e8fc49c069a77fdedb4ce4c389a6f2eef14b464f3c826b55cb0e8dbb07b",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Campanias/CampaniaDAO.php",
+      "sha256": "4a4e7aa24d3fcc52dd4646ca6c1bb8ec1222b03f1c80627a4f102c9d7cfdba0d",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Categorias/CategoriaDAO.php",
+      "sha256": "74c46b221fab9b5291b9c83c77dc86617e495dc2f18234441b4d0109874c62e0",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Clientes/ClienteDAO.php",
+      "sha256": "d3381fc53cd34efebd04c98ec3ed01fa47db8e8d1c882ecf5a1ea2b5b50a8f8b",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/ComercioInteligente/InteligenciaNegocioDAO.php",
+      "sha256": "f995736b5b7841887c4424de67089630b3cef9bab945db32cb12be88bd44fa3e",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Contacto/ContactoDAO.php",
+      "sha256": "656b7a22da2a7f44dad57fa495b027aa16f1775270d3628dcda3ff338a596ad0",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Contratos/RepositorioCategoriaInterfaz.php",
+      "sha256": "9e4d76e29a3a11f680fbecb44c885c21d54ede582351a3cb7ec56a4419bdfa2b",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Contratos/RepositorioClienteInterfaz.php",
+      "sha256": "fad4b1c694460b3b5cc519e0edbbb605dfcd77c41718264ced90577859f6470c",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Contratos/RepositorioInventarioInterfaz.php",
+      "sha256": "87752a4552f9159d6f88386a0cf87e9bcb7d1a812057bbb0517bb47d4c365bf6",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Contratos/RepositorioPedidoInterfaz.php",
+      "sha256": "a5055796d146fba8674330ec7bf1429b3afd8bb9713bc73a77e9f1ca52c60f67",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Contratos/RepositorioProductoInterfaz.php",
+      "sha256": "5318b8206c500d9cb6ff1f5ca97ab092e6df01f4566daaf93a0a46b263802961",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Contratos/RepositorioProveedorInterfaz.php",
+      "sha256": "5becc1e8aaf7013de345d4d20728a8a95820cfa009fdfc0bee6d8885723e9384",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Contratos/RepositorioUsuarioInterfaz.php",
+      "sha256": "e98cf23e498e8489df51749842efead95fca5f7577d8a7d187cc2764856c00bb",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Inventario/InventarioDAO.php",
+      "sha256": "59b488bd7834092f006927e830bf9c014edd9a00a2dc27f3857d9c4c03f050dc",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Panel/ModuloDAO.php",
+      "sha256": "bef816506f46d7c366b1e199402266f4aa42c965104ee150979692e96613c371",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Pedidos/PedidoDAO.php",
+      "sha256": "0686176d2b0b71ca10ef59b92ff9f736796ae54434188d8da2ad5d52304a75a3",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Productos/ProductoDAO.php",
+      "sha256": "34b8a6ca02080adb813bd679feea6fc0c7499070a682fde1bf8d5a09b9a7c9b3",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Proveedores/ProveedorDAO.php",
+      "sha256": "73afe85fb38369962b58fe45d76422f4ee55ab06b633943ddd2a6a7a45a253e3",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DAO/Usuarios/UsuarioDAO.php",
+      "sha256": "d72115709a3f29d5de003f28f4226de290eecb91ca0898bd5a3d5c521f49fc73",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/DTO/Productos/FiltroProducto.php",
+      "sha256": "f34d0e011227249900b18fe563cb5c392a6c9d2dce177a2d06c0c5f6f15395e9",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Middleware/AccesoRutaRolMiddleware.php",
+      "sha256": "598ff76dbc2c94f9391bbcb653eb60eb667bde7206d4a0b3f4e1aa6ce56941d8",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Middleware/AdministradorMiddleware.php",
+      "sha256": "657d0850d2428da3ed855f9d7b23cd607ddd492f1a8cdcd39f8a32b675aa3f47",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Middleware/AutenticacionMiddleware.php",
+      "sha256": "eb3b7836886c32dd372eca41d9a9ca7a5555c2d684cc25c959630f0d27c5b635",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Middleware/CsrfMiddleware.php",
+      "sha256": "9deb2a4feb624627590695f3531daf520f106f1a5720ee2f4f2cf431dec4793f",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Middleware/EncabezadosSeguridadMiddleware.php",
+      "sha256": "9b2cd17b49ebe8e02601009974dcfb7d80f6c3c616a90b55b1c53d21a039e470",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Middleware/LimiteSolicitudesMiddleware.php",
+      "sha256": "479fbc1417cf73cf7413b9105902c58cb2c086647ede20b52f634a5809b006a4",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Middleware/RolMiddleware.php",
+      "sha256": "64096e57712af211e0e4432785c782bd295f2e0dd99ee08d3a7eef94c8a03969",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/Aplicacion.php",
+      "sha256": "68bac8615214b436df6d2b8d12eb99aa2d18efa68f50f31e53f6243fa2be206f",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/BaseDatos/Conexion.php",
+      "sha256": "d3333954cd2870c16a4ae7843b32796ae1505353fa10a17456b07c7febd6646d",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/BaseDatos/EjecutorMigraciones.php",
+      "sha256": "74aed7ba45b3fadb77daef7e3ac385680af4d14925572dd02be1b5c108c8efbf",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/BaseDatos/GestorTransaccionesInterfaz.php",
+      "sha256": "ede064a9eb6cd096ab852fdabcf2a37f85627af22319c3ce3d9b0a8da4d17bdb",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/Contenedor.php",
+      "sha256": "0f6993b1880e646fa6a4e38986f3f0a1651b33b82ba7888151408c381cc3b28a",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/Enrutamiento/Enrutador.php",
+      "sha256": "332502b3e99d705c94af57accb04e1efb48102d9f0ad8713b239cd6f4f5c93af",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/Entorno.php",
+      "sha256": "0070d5b559a3449dcb9587c8525c5875f71c6934c0e4c55cb69ce5213fd482d6",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/Http/ManejadorExcepciones.php",
+      "sha256": "59f301f958d7b35ce8e82258a82b0df3ae602d1584ab8b96b61c45d9acf1c415",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/Http/Respuesta.php",
+      "sha256": "b8a6b374f1465bd7b3cf5dced1d6b96ade92db09efde2d8b91a2381174a9c2ac",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/Http/RespuestaRedireccion.php",
+      "sha256": "677d15afae34ae1f543bd98a711ef50a4fc439719bb615565e5f1059bdb661d9",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/Http/Solicitud.php",
+      "sha256": "36f38faa5efe385f266b916d2d1e0578c7cb4a3f0a3ac1628e82af0320d49b97",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Nucleo/Presentacion/Vista.php",
+      "sha256": "5f32d0ea7eb7a9e255c1f6df842c783f523d0f1c1c8cea17c182203cf68348b7",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Auditoria/AuditoriaServicio.php",
+      "sha256": "e1696206c6d1b5ec034734e32458c1870f560f19a64195e79f5dc5205d2f26c7",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Autenticacion/AutenticacionServicio.php",
+      "sha256": "df98dffa44614a4bc2e10ac79ff4fb2b129af2ebc2feeb0a7e71f4c95df7dc33",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Campanias/CampaniaServicio.php",
+      "sha256": "deae47912816646bb8fcb64cb8347ac1d897a235ec0c4cbcad99614b24f9993d",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Categorias/CategoriaServicio.php",
+      "sha256": "c15205562b1428ae0f43c9a5f3de68eaf5da621d88ecb333c8f493a98345bac3",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Clientes/ClienteServicio.php",
+      "sha256": "d32120d614e359f90b66e8974641377b07a4434ec07188a0c21bf93fef8d5be8",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/ComercioInteligente/ComercioInteligenteServicio.php",
+      "sha256": "847cb658b50a5a5f54b782cae1d3383fd29a8f8ada643b0d303cb9c888be1f09",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/ComercioInteligente/InteligenciaNegocioServicio.php",
+      "sha256": "22eb86d40084b91fc44c7418e902e47f2a738b9b891436514158a7599cf55877",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Compra/CarritoServicio.php",
+      "sha256": "222a6103e1c66f77f5ecef8b8739990f9c9ec8edf559d7f4caa4d9dc5e668567",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Compra/ProcesoCompraServicio.php",
+      "sha256": "7bdd192fa31cc252ec1008ad319600bf69849594f7694327b024dd8d46c2c7e3",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Inventario/InventarioServicio.php",
+      "sha256": "b4a26777c30c708a57d2cd3c2977351f9ad76bae779b66d7b5dff9bc5007cc11",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Panel/AsistenteAdministradorServicio.php",
+      "sha256": "0a4c1782fa36340f6ffaf3168696897b8e4a6a032c9310e1c35aa08896ac47d1",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Panel/PanelAdministradorServicio.php",
+      "sha256": "81a9a20ea038dce9ed4cb9bc47d17e06c3aa09dc23bd42522b3e780cd6138b68",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Pedidos/PedidoServicio.php",
+      "sha256": "206971a084566d2e9c189e2004fcfcc06a416493225d8619f810318a313fb2da",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Productos/ProductoServicio.php",
+      "sha256": "95c1f9c1fe6d9a68093e454a30abb7453a747104c15e5233c8395e3cacc5c5d0",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Proveedores/ProveedorServicio.php",
+      "sha256": "c57cb4ebeef254d169559c740208be10c68c3cbe579eee4bb1f79e97a2fd73b9",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Usuarios/CreacionAdministradorServicio.php",
+      "sha256": "b64cacc2f597c2cc2d6f85e3bd56264e2f40a652e4979168f853c226870ccc23",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Usuarios/CuentaAdministradorServicio.php",
+      "sha256": "934e6cea96d8622b22c2402561058dc6ece963bfbb6b89312fbbf641ceeadef8",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Servicios/Usuarios/UsuarioServicio.php",
+      "sha256": "7229a925276e2b7bf5c3614ace5476e1e0d3a4c32edf56948c4901eb969116b8",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Autorizacion/AccesoRol.php",
+      "sha256": "27b283f8b98b0c40fbf911cbe32d65f9657a6f0d4afc215e91c104f85dac8f9d",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Configuracion/RepositorioConfiguracion.php",
+      "sha256": "181237e37872fff450adb86db6dc694d1c09c9bf6637f7a5622b10d590141697",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Excepciones/ExcepcionAutenticacion.php",
+      "sha256": "d03f46f652e51c2c5c01f618b65135efc2b530e79122b80c6a08ac2d56a5ba49",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Excepciones/ExcepcionAutorizacion.php",
+      "sha256": "5f7a118759a9509c3d9496e25cd574839987dd11ff99c570a9947f4d864db72b",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Excepciones/ExcepcionNoEncontrado.php",
+      "sha256": "e623462a25883b19a09df35c433198d14d2623bedfab5df32cc42e743da74e7f",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Excepciones/ExcepcionStockInsuficiente.php",
+      "sha256": "7f7756e6de94948f0182dada92dae91874d672bdbf07f3f55f20475c95df498b",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Excepciones/ExcepcionValidacion.php",
+      "sha256": "4742cb8665920d7070008814c7294b86f42d3e2167f863089a0230fef478d47f",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/GeneradorUrl.php",
+      "sha256": "6572028bcda88b1ec98a8d8993d030f43d77ad9efdc345c15736d85b0e7b095a",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Mensajes/MensajeFlashServicio.php",
+      "sha256": "535d23e29f79aff962aa74c804c738940cd41c9a1615dad9fed248e5e7cbc6ee",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Presentacion/CatalogoEstilos.php",
+      "sha256": "5e9d8a970f6ad55b54f3cad30000062889c8c8185c12b6427fde7f6d62cd0eeb",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "app/Soporte/Presentacion/CatalogoInterfaces.php",
+      "sha256": "28467711640e672907fcb46c4ecb6442f53056fd3c73f82f592248308c1e18ec",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Productos/CategoriasProducto.php",
+      "sha256": "cdff4c83d828cde17409f8975dc08cc07cafcdc84c159efcf35b8503be2d5ca9",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Registros/RegistradorArchivo.php",
+      "sha256": "64b0ce883692828a191e444e97cd8544eb6b3eb87958efcb9721e5f91d2e6407",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Seguridad/GestorTokenCsrf.php",
+      "sha256": "399b862e65a4b00a624f8ba866325b40a57b77302687fc9a4d7cc6ebd5cfdfd3",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Seguridad/LimitadorSolicitudes.php",
+      "sha256": "9d84121f0a9eda4028472b0a882e1f25d0170253e8f84975a74c44d47624f696",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Soporte/Sesion/GestorSesion.php",
+      "sha256": "90d8cfc7368733d18e8a1ed9c494e8b0dc911da9a21d9b83b6d4f7f293351376",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Validacion/Autenticacion/SolicitudInicioSesion.php",
+      "sha256": "eaad5dc42d8259d831d400e1327a88ed076c63201ed827c6de91fd485ff35630",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Validacion/Autenticacion/SolicitudRegistro.php",
+      "sha256": "9168ea68522744d00ffb4498e905a656e5a633eeb5c3b457a101d8a5e38fe6ce",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Validacion/Categorias/SolicitudCategoria.php",
+      "sha256": "978ec98d73c269625794d55fe603f2acb35b10f8063770ef2e2197a0d6655a94",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Validacion/Clientes/SolicitudCliente.php",
+      "sha256": "b004d4f8d05ad84cc0f6383c43d7394b74f43bbc50e557c047108facafa794de",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Validacion/Inventario/SolicitudMovimientoInventario.php",
+      "sha256": "0dd5891a0b700525797e0453fb2fdb422d0d2e20a3d9c1444fb2c819b4b6e64c",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Validacion/Panel/SolicitudModulo.php",
+      "sha256": "987a7260531f0e8b5178b1baed252af84e012180b1266e3c4a07b5451e86fc80",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Validacion/Pedidos/SolicitudEstadoPedido.php",
+      "sha256": "d0b1276400c25b5f88e837756c0f469a7c804132fc53d0cb093c6f3d9edb1580",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Validacion/Productos/SolicitudProducto.php",
+      "sha256": "df3a5f53178c72a3acae0c12494b5d093127ec82a6615a5fe4cba6aebb6f4773",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "app/Validacion/Proveedores/SolicitudProveedor.php",
+      "sha256": "7bc5fe0e832c1423431e1718bb498e38e0e56f83ec9865878258ce8f69515b73",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "bootstrap/aplicacion.php",
+      "sha256": "5dda6f734eea7473ea89e5edf542f3c3b600316e547375f12cc045e203ddadec",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "bootstrap/funciones.php",
+      "sha256": "167f3b56c979fec7539e00d92af9aedad35d61fd9c608f53e5193570ef611ff5",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "config/aplicacion.php",
+      "sha256": "92b41d408cdba853264ad5d784247fcb4bbbcf7fd5ffda562fc8c5130201ee57",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "config/base_datos.php",
+      "sha256": "b0f5f0d5bee95d7fc366afa97ba52eb054d4452402b33628e4a43f4ea5585f3b",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "config/sesion.php",
+      "sha256": "947e4b4e139f37d82131e94944ae880dda937164d11f8beeb1a6588d566f8ae5",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "database/md_tecnologia_digital_cell_completa_2026-09-28.sql",
+      "sha256": "046e9315e124c8b21e36913231854771b1d41c4b0be90715184037b67727ca6e",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "database/migrations/2026_09_28_000002_integrar_categorias_productos.sql",
+      "sha256": "1bb809ffb6d131a262ab556f1a610570a8d5e0310b7b651acc5fdbb5e49b1c49",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "docs/ARQUITECTURA_IMAGENES.md",
+      "sha256": "ba7ff175be89a2f5093e9713ef371a816daf7e31c54221551174d7dc06e0a15f",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "docs/INFORME_INTEGRACION.md",
+      "sha256": "27fc373ae12f3e3ed863b1cbcbdc6521b4a48964b959cf52ac4ffe47176c7dfe",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "public/.htaccess",
+      "sha256": "b4437af0eff664f8a537b010c4cd8b3ae6d77a2c00c2af2e3a3523b32c332790",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/base/reinicio.css",
+      "sha256": "ecf9e437feafdbab318f80f5c21fde02e321fd34b59e47d09fc33a32dcf5c8b8",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/base/tipografia.css",
+      "sha256": "5703f1da9ed1e30ef0df0656c4c15f8ae974885d66ab8ba88af7209655c31713",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/base/variables.css",
+      "sha256": "b28f321d3d2eaf409250db4d3c75090b72a6a3ea43c66cab942a043c346543da",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/componentes/alertas.css",
+      "sha256": "7b1a421b02e1d18d663158ed1222175181f7a0fa09f0abf410c689de800cc178",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/componentes/badges.css",
+      "sha256": "423cb8854de3514bee2156eafb817ddf0e713a98119091330bbb1e3486fb03c6",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/componentes/botones.css",
+      "sha256": "991b455e851360a21b2e02ee857c46c61650fe3b8b44c983a369180da31b3a06",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/componentes/estados.css",
+      "sha256": "555038f6bdfa6f3c17c705f62289c341ff58408dce0e9cbb7c5106a67de96289",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/componentes/formularios.css",
+      "sha256": "4b217d8047b51a307017f3b60cfd8c76526b0c73cc86cd187c6cec3eb1820f79",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/componentes/precios.css",
+      "sha256": "38a014391d354936c541d79fdd9421e485a077fe9332ef6046130b24631b3885",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/componentes/promociones.css",
+      "sha256": "74726636f688963b1a022bc1592968deb1d6829f72ee70eb9a3d3e5ef68fb78a",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/componentes/publicidad_dinamica.css",
+      "sha256": "f898e5121f62022c88d4284b88f96062e1870d2cccf8b40fcc8e3952a1765f4c",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/componentes/tablas.css",
+      "sha256": "0e60acd1afe94285f09edffe22661ecb203212e926955a1e16192527d4655bb0",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/componentes/tarjetas.css",
+      "sha256": "f5b4456c8c0e9b94dfde766d89dc32bb4eab85b08fe01e74af5ebd6be3441e56",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/componentes/utilidades.css",
+      "sha256": "e5d77b1148cf66e051cb1a3093f27460462efafa7c5fae27dff170257a084fbb",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/david/catalogo.css",
+      "sha256": "99adcad6d4d462372954968c1bfc9e2ad32daa9e5ca401852cd73d91524e9c3c",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "public/assets/css/david/panel.css",
+      "sha256": "59985148ec15c395194c7cd9aede782612e940346124f3bcb5b5df1b23c8b0bb",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "public/assets/css/estilos.css",
+      "sha256": "2c5b30ad40ce6bfa529f44e056b0c7f7b22f153da5fed3b7335707166f10e994",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/estructura/layout.css",
+      "sha256": "3cf01c3d9bffc382bd6a0c2f90412456f32bbe3f294f6e170e1e7accfa350db1",
+      "identico_a": [
+        "pajares",
+        "david"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/estructura/navbar.css",
+      "sha256": "440e5ba0d59d1e3dc4d64d8e17caaddb69e1334f5d8fa06ebfcfb821fa5f698e",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/estructura/sitio.css",
+      "sha256": "008141c31694b0ee26c2c0a23f7949e496935ebc025a39107ba59ac0639fe593",
+      "identico_a": [
+        "pajares",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/comercio-inteligente/asistente-ia-interno.css",
+      "sha256": "457b2659b1771ec197352f4415cce023acd13f073a8aac59b12e6eaaf7762fa3",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/comercio-inteligente/asistente-ia.css",
+      "sha256": "195377d9c967730ff014b6d39df07ce46a3db7673d14fd6f2e76fbc8b66e26a8",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/comercio-inteligente/base.css",
+      "sha256": "da1585c0a5288585a2b9cc6412538ab29449063aad71835f521e9f0980a7101b",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/comercio-inteligente/carrito-inteligente.css",
+      "sha256": "e7db78fff62e60ac3d74c576c109e32d6a0d5ad93777e3a8a23bc29ce4b2a2fa",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/comercio-inteligente/comparador.css",
+      "sha256": "47f414b48b9af105a518e001a64efdbeb8ca383e32d79ea3bafab70de21e95b0",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/comercio-inteligente/optimizador.css",
+      "sha256": "02fc7766f3d90988176310464912981ce69dacaf4f8b610ec6654e26e3bae951",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/comercio-inteligente/recomendador.css",
+      "sha256": "e6984b66d9226f9ec68b1d4df9a59ee7a2058270858e8b1c6b15022e10755e32",
+      "identico_a": [
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/comunes/dashboard.css",
+      "sha256": "1612a1226658b0b8bd8205442990de5c3a2298fecdbdaf1ecaca1906c3a7f0fa",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/comunes/panel.css",
+      "sha256": "a971e1becc18652a3a75d51a6c43e928b3ebeeffb75c12dd46513816e665d125",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/cuenta/cuenta.css",
+      "sha256": "f6789c5f8c4e2db5d7d88c1cc27fb9adf3b0d5d8599f4656a40a92e0618e4774",
+      "identico_a": [
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/cuenta/perfil.css",
+      "sha256": "27b768835c77307ef29b283f42b9d5727f4a6ad502056fc07d441109516a799d",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/marketing/campanias.css",
+      "sha256": "3c4937c6d365265ee1a69245db457bd82b01f4135b307a160774835a7fcdd359",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/marketing/publicidad-inteligente.css",
+      "sha256": "3a800b248604f0120adb27af819371aff2ea8fc81385742bdc8b825d2692675c",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/mayorista/portal-mayorista.css",
+      "sha256": "7f3ab9b130a8af6c61acf8e90fc6fb1e891f8ca8fd09855cd40c091c3c4ecb8e",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/pedidos/pedidos.css",
+      "sha256": "2e83f56a55d2c0932dbfd930af7cac37383b02df4acd9ef302462848a25ade98",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/modulos/productos/productos.css",
+      "sha256": "8449f1932c1c921cdb70dfa5b0eda1e0121ed2ef5dbc7d9e726f1615efcf6afd",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/publico/autenticacion.css",
+      "sha256": "260ae05f818485da102d92571607a04f18d80514a7cab1500f86b5b6a5216e6c",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/publico/carrito.css",
+      "sha256": "5002f7d949760422cb135a176c082135112c5ae358209019ff8ace7ce397ae40",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/publico/catalogo.css",
+      "sha256": "25dab4f0f54e2cb2de880234447511f1acc726b7026a2264bc64c36024a96365",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/publico/contacto.css",
+      "sha256": "5e8ff7c9c1babf865c5ba1b7857e32e64d5c850ee4360dd95f73cea5e22434cd",
+      "identico_a": [
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/css/publico/inicio.css",
+      "sha256": "fbd1edf8971e00d60d0307810a41b17b70c94868506d9d05e108c0cb49a3d8f1",
+      "identico_a": [
+        "pajares",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/publico/producto.css",
+      "sha256": "9cc33a9db6a48b20f99b0a32e3432cea37a20411fa4e081da61544b4cb8d374b",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "public/assets/css/responsive/adaptable.css",
+      "sha256": "e07a66e780187d8b12dcb7e4682d4d539d86a86cd4b45c4e47717391c05aba26",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/roles/externos/cliente-mayorista.css",
+      "sha256": "0f06c09c5e6ef8f7dbcc78d1f08bd87206e85df7623c94f31955e9a067980e63",
+      "identico_a": [
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/css/roles/externos/cliente-minorista.css",
+      "sha256": "07a45939f184e248497e909cacbd4524949ae731239cfde07c6368bcfa703d9a",
+      "identico_a": [
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/css/roles/internos/administrador-cuenta.css",
+      "sha256": "eacb414353e21af9826178bde06f78078d946885867093d46657fd926eeb8129",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/roles/internos/administrador.css",
+      "sha256": "28df2c8456df2b5f9826115e2f9cb7de1fdae3cfa81bc61e2de888b201415e3d",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/roles/internos/compras-logistica.css",
+      "sha256": "f55f55a109ba1f633a56f563fc8cee71c9ea23463a9015f7bac7ff326b02c17c",
+      "identico_a": [
+        "david"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/css/roles/internos/marketing.css",
+      "sha256": "7fe15360ff3163ba6e75eaebaa3058474a598a37be529ef9069dd09b7c070260",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/roles/internos/ventas-mayoristas.css",
+      "sha256": "b3f4daffcd918f5b1e89c18133a8c8e0970126676f250ffbe39f84746f726edc",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/roles/internos/ventas-minoristas.css",
+      "sha256": "a223ee201bb44125a253230f068a4ffb3ff252154b6773a539919bbfd349c369",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/css/yaxon/nosotros.css",
+      "sha256": "753c43e2c55e4d297efdd81b06256fec629e385d73d2f483312d5ac5495e0562",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "public/assets/img/marca/logo.jpeg",
+      "sha256": "e2f1f58eb2507dae7d6f07e11c66721ee658e38cdadfa3d32c7809904c3db566",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/img/publico/inicio/banners/bannerInicio.png",
+      "sha256": "8d6869567b40c86edc2253d3c6265fe28ecb7e1bad3a7ccf920afa103f4f1eef",
+      "identico_a": [
+        "pajares",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/img/publico/inicio/banners/exhibicion1.jpg",
+      "sha256": "234e316bbbbb34c33881e961fda2d127aeaff94607403a17e309eac71b32ba0c",
+      "identico_a": [
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/img/publico/inicio/banners/exhibicion2.jpg",
+      "sha256": "4970fb7e92d8537b6a5f4f011ecd0f1cbd545752cf67cba64187fbd12f8df113",
+      "identico_a": [
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/img/publico/inicio/banners/exhibicion3.jpg",
+      "sha256": "57c2a74a4f0e62a602a05cd932dfafa54439ec328a0d9f89cf0944ff910f204a",
+      "identico_a": [
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/img/publico/inicio/banners/exhibicion4.jpg",
+      "sha256": "6a5677e061ffed78f2c0cd2bec42c3fe0e549acebfd8318e7af56629cec7f650",
+      "identico_a": [
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/img/publico/inicio/secciones/hero-devices.png",
+      "sha256": "bcaffd1f81798ea291626e0463c2710ebaa53448313a58f9bf676067861d8f49",
+      "identico_a": [
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/img/publico/nosotros/local.jpeg",
+      "sha256": "6e046a8346f0dfac438e0d6926e9e8012a13cd1784278a5e28a28a4dd4137a61",
+      "identico_a": [
+        "pajares",
+        "david"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/img/publico/nosotros/local.jpg",
+      "sha256": "8dd09ff096674d413780b7f5dea52980c9e9ee84fb374097b3ef43c4c9fc86b7",
+      "identico_a": [
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "public/assets/js/administrador.js",
+      "sha256": "60d68ea6b3a0eac8275a81b8f9257792bc748510edd921c6dcbed119bc47b770",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/js/aplicacion.js",
+      "sha256": "53bce9e3c2c082c10bcec584d2da1ca0690bbfedc698c1573eb7538e3b9b3bf2",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "public/assets/js/david/panel.js",
+      "sha256": "2d0924102480518638686413a8f1b6f477298683ae2f537b6da616d96efb50f6",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "public/assets/js/david/producto.js",
+      "sha256": "aaab172d9299e3467062fe6b2ea55506b4deff082964dcd48b6f060ad46f928d",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "public/index.php",
+      "sha256": "49ad78dc20c86d478f5a5c7edd487a7c696f0bcd1b7558a95aec067ebbec711f",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/comercio-inteligente/asistente-ia/indice.php",
+      "sha256": "c3cc8e316d7071cb0505434fed896dadaa4f8b88a8f4c486afa3a8a6c9ec0dd8",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/comercio-inteligente/asistente-ia/interno.php",
+      "sha256": "934cdf2e2be716fda0727b8c3e3f3710dd5a5d7f6648801d5f6ea0e700a04614",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/comercio-inteligente/comparador/indice.php",
+      "sha256": "98f2334e13b48bd104a39dbc732239f51e5008c21dbb3e547150444430e206e3",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/comercio-inteligente/optimizador/indice.php",
+      "sha256": "af614ba8446c8c14b23f327901c91f57cb1360e962fcad530186601356b0fb28",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/comercio-inteligente/publicidad/indice.php",
+      "sha256": "7387b4fae9f5ae6a7a0d508f46eb669a2804857101ee8303ec4aedf8616fd30a",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/comercio-inteligente/recomendador/indice.php",
+      "sha256": "61ac2f16b44f654538e5c27fd43b9d59daeb9d166c945ff7703e3c7ee8c4cdfc",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/componentes/administracion/asistente.php",
+      "sha256": "a92d2ede0cec5676e950ffe7995a01898362b82f492914661e6fa0aaafe50539",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/componentes/administracion/sidebar.php",
+      "sha256": "e03c61af44fdf987fe0648c335e5108b1147b3ae334cd934b0b6c0a3202a1a3e",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/componentes/administracion/tarjetas-kpi.php",
+      "sha256": "a34a6e933c811af8cb6b387198e8373e3ecb207f0ce2bd2741ba939f744248b0",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/componentes/administracion/topbar.php",
+      "sha256": "efc67fd501ca0a0a418e1cc21c1cf2284dad20601b4b7b7dd16e85c52a941ac0",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/componentes/encabezados/publico.php",
+      "sha256": "08b78846fd7eab2cce516645a3937569dd8705ddc4440c44d867d404d6d23665",
+      "identico_a": [
+        "pajares",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/componentes/navegacion/navbar-interno.php",
+      "sha256": "6ea2d4dc0edc61dec59a9fa8db321f4d8b395c2da0be8dd07d4b0f36c25c5cb8",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/componentes/navegacion/sidebar-interno.php",
+      "sha256": "95716ad8dbf41e8f0cba2e4251b57d084e4be1a5a6953c3798481455af6dbd17",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/componentes/pies/pie-pagina.php",
+      "sha256": "f1de552dfc22d8cc34c927850eadb881115e6fce989d0d75043e11c66deee646",
+      "identico_a": [
+        "pajares",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/componentes/publicidad-dinamica.php",
+      "sha256": "e81b42ce90a92529fd86b0289fe85992ad0c45128d54f20312cb9d1df747d109",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/componentes/tarjeta-producto.php",
+      "sha256": "047d770067109cd39e9fe77ddbfc967dadf53536f6ed656f5257042e6f74c817",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/errores/404.php",
+      "sha256": "b24b2a917f7328ef462e7336695ae44b1be1745b7979aae5a83c59c762cef86e",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/compra/carrito/indice.php",
+      "sha256": "0d0c12fd11dd28d1bef1b9979a7191d9391380c45f3899c61263e3efe6380d5d",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/compra/checkout/indice.php",
+      "sha256": "628e3d2f02d0a60f7bbb85668720c113db33b76c799c96888e0b432f40454827",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/cuenta/_parciales/lista-pedidos.php",
+      "sha256": "dcd24e7ebec6f6daff133d1747b2bdde002c2ca942dae8b24037b8ec58c40722",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/cuenta/cerrar-sesion.php",
+      "sha256": "8ca53bee01af365931c62bc62934a467cc3e2914891ebee823afa5a20c0c85a9",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/cuenta/indice.php",
+      "sha256": "c7db1a6f872c8ad9b5327a280215c579da2346531198923c17413266fdc86e09",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/cuenta/panel.php",
+      "sha256": "6d0ce696756ac55133a2271c8dc0d083e992d13e40ab98e0b1894d43ff2cb356",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/_parciales/david/indice.php",
+      "sha256": "7bacfb8a5af5c120b861dc74ab0d1881df6546defb7b99abe695660abca5e7c4",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/_parciales/david/tabla.php",
+      "sha256": "5581f32323d6848949868a012fe9c4fdc91495e518702033d541e67160da53ff",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/_parciales/david/tablero.php",
+      "sha256": "f9a24e29fe6d42ba221744ca3cc01d45fb97fa163bdcfe31aafdf10b6deca8c8",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/_parciales/tipos/analitica.php",
+      "sha256": "6a244365d209ea46f9c9adf5286992f80cc55e822e74d1403846c36e6af36634",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/_parciales/tipos/contenido.php",
+      "sha256": "e1e85f4285f69963b99a83b8b52ec70248a689da18b8555fdcfa1ca7826b0f94",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/_parciales/tipos/historial.php",
+      "sha256": "3969630d58295537845d23a069e9728254f3f1f5715300c5813b8b475caf2cc6",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/_parciales/tipos/kanban.php",
+      "sha256": "0ea5db125e5fad018317d1dd4d3650eda3818da64c0e3bc9ec55b39f6ae22891",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/_parciales/tipos/perfil.php",
+      "sha256": "65b6b532000382f3cb28c413f5692f361d6579c186faba8480d37124e6c9211a",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/_parciales/tipos/tabla.php",
+      "sha256": "3d72ef5523be23f7f54fbc8860851d67c806f30998dd87873b10174fb7f9f5ec",
+      "identico_a": [
+        "pajares",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/_parciales/tipos/tarjetas.php",
+      "sha256": "398f627b6271107c36ca41733669f470186086825bb8bda2b916fb10cb77be7a",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/indice.php",
+      "sha256": "6b0b0ca075d02692b063551730248c78cf6f4a8fe7ceca19d633388850790dec",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/modulos/panel/tablero.php",
+      "sha256": "a2d31eeeddfd3bca7da6b89d2bb27c689ce2f2d159330f75da4bdb3af25db2c4",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/plantillas/administrador.php",
+      "sha256": "6f1ce5a681a49adc4df07cedcdb07b38cdb43abb37f162e39c0678e2cce1ee32",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/plantillas/aplicacion.php",
+      "sha256": "ad264aa1491117f58db8693570889b1551a9ec84f78d7f064690acebef82d9d2",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/plantillas/interno.php",
+      "sha256": "09c9a1379e82dcee6f16348b82f48535189f1f902bc950ce055cb3b080bbb710",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/publico/autenticacion/iniciar-sesion.php",
+      "sha256": "fb05a65fe20165633ada41a87b1b04312406a60c881faa64bac8ceda4b363a2e",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/publico/autenticacion/registro.php",
+      "sha256": "89c2b8bfa9725083995510dac190eb7a7f1417b31c8d80d6f58101209b3b5665",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/publico/catalogo/_tarjeta-producto.php",
+      "sha256": "8c8243ded41217e4cf49a1026690e10883c3aafb80bd2623508f12d603ac6fcc",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/publico/catalogo/detalle.php",
+      "sha256": "efa552649583ea415ae3fbed387f5161a7a8461d3a84b7d3209e9349f916041a",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/publico/catalogo/indice.php",
+      "sha256": "7d92e00c5c736e22093f31cdbc11900b7244b90d99c29464f6c84e0869569658",
+      "identico_a": [],
+      "estado": "adaptado_o_nuevo"
+    },
+    {
+      "archivo": "resources/views/publico/contacto/indice.php",
+      "sha256": "443992a872c738c50d8b954345ff06c45e2a87cc457ca8ba73fd5786b1105044",
+      "identico_a": [
+        "sebastian"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "resources/views/publico/inicio/indice.php",
+      "sha256": "7c18a682cef8d4f88da9f0c45c24129ab2c757425fffdf841ccf649da4f4a9af",
+      "identico_a": [
+        "pajares",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/publico/nosotros/indice.php",
+      "sha256": "399bc7fdc8d84c76986c59d28df8cbaf33a9dedf1ddf7983b12153f1343d3ce5",
+      "identico_a": [
+        "yaxon"
+      ],
+      "estado": "importado"
+    },
+    {
+      "archivo": "resources/views/roles/externos/cliente-mayorista/portal-mayorista/indice.php",
+      "sha256": "5358786c8b4c24b773965f1bf940d5f3d024f3bc93330c9aa6cd61db8c253e45",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/auditoria/indice.php",
+      "sha256": "037198b71afbd3c6b9bd8533595d9f7123ba11c39230036f3a145c1d664dacea",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/campanias/indice.php",
+      "sha256": "42e0b5e5d3c8a6be1d554b80921fb429775c7a00580425e12e03b2fd328fcce3",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/crud/categorias.php",
+      "sha256": "8449d30990d2fb8e6ade77b468b9e83830c147437aa0a7ff587e68bedb018d53",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/crud/clientes.php",
+      "sha256": "10d7fc90af9405408f76bcdb78896eeff7f00534fb85c211e296afd616e537b7",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/crud/indice.php",
+      "sha256": "1dba696ec13424c9292033346d01d9b926c99a6be84c83cfd74d7da483203527",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/crud/proveedores.php",
+      "sha256": "9a2edb9d9e2005c54472901c69b6d884d5f36052e2546cc6a88d6de74b82463e",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/cuenta/indice.php",
+      "sha256": "111451588c19677ac677a82584cb302d6746cf1eb886fb1b2f7f58d35a10cfc4",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/futuro.php",
+      "sha256": "f923c93d7b5bf7dcd7cd3e36ed9f50281c28439b12eb9afcc967651d6bb84fb3",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/inventario/indice.php",
+      "sha256": "adac0924ac4575f8cb31754523e54b07e7668addf8d992d70ce579b657b3218e",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/pedidos/indice.php",
+      "sha256": "9dabc487ab7c46e7196c106bfc3ab9015c369934dc86d9c02a5ea054eca2f48e",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/productos/indice.php",
+      "sha256": "b6ed044306c79ed57b29fb23c3ec27ba3e54c1b088ad19b3cb8189840e591445",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/reportes/indice.php",
+      "sha256": "df59ef0aaf55174aa1c9848b0f793b4653d8ae9021a098441b1cdeca4077e56e",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/tablero.php",
+      "sha256": "1b109aea22510e4b9d1aa21959763d5b3063dc391d01dcfc5c8339f7caafb67a",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "resources/views/roles/internos/administrador/usuarios/indice.php",
+      "sha256": "608bbfdea11636f05baa2ac8502612bebc275f90944f8a94ebbe84c9a84e5980",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "routes/administrador.php",
+      "sha256": "76d5a0a2089dcc6da6ab27d3a7b96cec26b9b951c19d414096ca05f8a39e274b",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "routes/api.php",
+      "sha256": "d6b1cc349b92bf3b445393891a7c91c823fc49701456d748b7a35c54b0f44a9f",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "routes/publicas.php",
+      "sha256": "f9daf44fdd441faeca9379d4ddd352439435c522529f00bc44fe2ef22294bade",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "routes/roles.php",
+      "sha256": "e37e2766a2de9bfd6f82489bc27bc6ead4424d441125b0677ade5762104b7342",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Feature/AdministradorInterfazTest.php",
+      "sha256": "5f4109631cf676987d0b8a8b0b1ab3676cf0b7a59dafa757ab87d7ffb53757e1",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Feature/AdministradorModulosCrudTest.php",
+      "sha256": "56e9cea1ee740d796fc827d3f95f9fa8c70509ae37c48b80c63b3d578de349cf",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Feature/AdministradorProductoCrudTest.php",
+      "sha256": "e9cc9f057f30ca8d78f7cd4340c1d729ae4102250d11162a72a31f4db49633be",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Feature/InicioSesionRolesTest.php",
+      "sha256": "5572aa029d87538634f7f440c7bfe1cda64214736bdcafc61d854de041d2439c",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Feature/NavegacionRolesTest.php",
+      "sha256": "6cc490001cfcfdedee80f91f93a93a0270a090fb344872352faa9dbfeac2f2ed",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Feature/RutasPublicasTest.php",
+      "sha256": "7392291abb1cae9b70077095d7cd173fa82eb58b9153cc2d29ded903215efaef",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Integration/RepositoriosPdoTest.php",
+      "sha256": "bdb4c035168a6f6b30311668a1de808afe6634438d94529f07b03d567dde0370",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Security/CsrfYAutorizacionTest.php",
+      "sha256": "a1c87552537796bf97bd633ee221b1747e2150901a193ab6d2df589e6f7243dd",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Unit/AccesoRolTest.php",
+      "sha256": "bd10b4badd620a115a6f43fb33a3faaf710e77fb23e498a31580300446b2bc1c",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Unit/ArquitecturaTest.php",
+      "sha256": "980af39dd75e0d7277da77c3bf34fc3900febec143ff69a9c6fc6b75c2afe1db",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Unit/ArquitecturaVistasTest.php",
+      "sha256": "a1ace7a1082a9b7e8a505fdcf07fc6df0c92a9a070b76647554fe4247254cf44",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Unit/AutenticacionServicioTest.php",
+      "sha256": "c2d3a9ec9ac820c149b20abe27c8db4f5e0891f42b963fb6767bb55339324629",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Unit/CarritoServicioTest.php",
+      "sha256": "ca152efba1ce917b0f520fefbce8d936e2ef0554099b6cb2c65f060a4df2e305",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Unit/CatalogoEstilosTest.php",
+      "sha256": "de16d2fc7c62e847a9232001683c84dca3b1350b69f44dc0f50549ad38836a49",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Unit/CatalogoInterfacesTest.php",
+      "sha256": "914990bf3cbe541b936cad3037a9434d9cfc76b66bdddeb81787ab9357432ba0",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Unit/ProcesoCompraServicioTest.php",
+      "sha256": "2d5d03076da3d2f7c9022769f99385791ec38e966890f41d7dadec1e1e7fc7a5",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Unit/ProductoServicioTest.php",
+      "sha256": "99f36b4601b25e58f0b9e6e6e1249840f4441253d6f67521de634578558cdceb",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/Unit/SolicitudProductoTest.php",
+      "sha256": "53fc41f78746c728fcc39e4b15cdb790183128d9683cf69603f766a44bdaf437",
+      "identico_a": [
+        "pajares"
+      ],
+      "estado": "conservado"
+    },
+    {
+      "archivo": "tests/bootstrap.php",
+      "sha256": "2cf64fc90e7776a9a60581361d3ac5e49ac9fdec57014cc3769db36ed0f9ed50",
+      "identico_a": [
+        "pajares",
+        "david",
+        "yaxon",
+        "sebastian"
+      ],
+      "estado": "conservado"
+    }
+  ],
+  "sin_cambios_backend_sql": true,
+  "nota": "La igualdad entre autores no implica atribución exclusiva; consulte el informe para asignación y recursos extraídos."
+}

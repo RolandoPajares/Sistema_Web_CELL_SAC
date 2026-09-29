@@ -17,7 +17,7 @@ final class EncabezadosSeguridadMiddleware
         $respuesta->conEncabezado('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
         $respuesta->conEncabezado(
             'Content-Security-Policy',
-            "default-src 'self'; img-src 'self' data: https://www.apple.com https://image-stgus.samsung.com https://images.samsung.com https://www.samsung.com https://i02.appmifile.com https://*.mi.com https://p4-ofp.static.pub https://commons.wikimedia.org https://upload.wikimedia.org https://content.abt.com https://images.tcdn.com.br https://www.spigen.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; script-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'"
+            "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; script-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'"
         );
 
         if ($solicitud->esSegura()) {

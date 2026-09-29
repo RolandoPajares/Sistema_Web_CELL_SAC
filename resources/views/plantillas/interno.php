@@ -22,11 +22,11 @@ $clasesCuerpo = \App\Soporte\Presentacion\CatalogoEstilos::clasesCuerpo(
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="csrf-token" content="<?= e(csrf_token()) ?>">
     <title><?= e($tituloPagina ?? 'Panel') ?> | MD Technology</title>
-    <link rel="stylesheet" href="<?= e(asset('assets/css/estilos.css?v=20260929-2')) ?>">
+    <link rel="stylesheet" href="<?= e(asset('assets/css/estilos.css?v=20260927-8')) ?>">
     <?php foreach ($estilosContextuales as $archivoCss): ?>
-        <link rel="stylesheet" href="<?= e(asset($archivoCss . '?v=20260929-2')) ?>">
+        <link rel="stylesheet" href="<?= e(asset($archivoCss . '?v=20260927-8')) ?>">
     <?php endforeach; ?>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="<?= e(asset('assets/vendor/bootstrap-icons/bootstrap-icons.min.css')) ?>">
 </head>
 <body class="admin-body <?= e($clasesCuerpo) ?>">
 <div class="admin-layout">
@@ -39,5 +39,8 @@ $clasesCuerpo = \App\Soporte\Presentacion\CatalogoEstilos::clasesCuerpo(
 <div class="sidebar-backdrop" data-sidebar-close></div>
 <button id="toTop" class="to-top" aria-label="Subir"><i class="bi bi-arrow-up" aria-hidden="true"></i></button>
 <script src="<?= e(asset('assets/js/aplicacion.js')) ?>"></script>
+<?php if (in_array($rolActual, ['compras_logistica', 'marketing'], true)): ?>
+<script src="<?= e(asset('assets/js/david/panel.js')) ?>"></script>
+<?php endif; ?>
 </body>
 </html>

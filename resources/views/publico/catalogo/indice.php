@@ -33,7 +33,7 @@
         <?php if ($productos): ?>
             <div class="product-grid">
                 <?php foreach ($productos as $producto): ?>
-                    <?php require dirname(__DIR__, 2) . '/componentes/tarjeta-producto.php'; ?>
+                    <?php require __DIR__ . '/_tarjeta-producto.php'; ?>
                 <?php endforeach; ?>
             </div>
             <?php if ($paginacion['ultima_pagina'] > 1): ?>

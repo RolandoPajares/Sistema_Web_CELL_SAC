@@ -1,4 +1,11 @@
 <?php
+// Selección visual por rol: las rutas y controladores permanecen intactos.
+if (in_array(user_role(), ['compras_logistica', 'marketing'], true)) {
+    require __DIR__ . '/_parciales/david/tablero.php';
+    return;
+}
+?>
+<?php
 $usuario = current_user() ?? [];
 $rolTablero = \App\Soporte\Autorizacion\AccesoRol::normalize((string) ($usuario['rol'] ?? ''));
 $moduloAccion = match ($rolTablero) {
@@ -16,7 +23,7 @@ $moduloAccion = match ($rolTablero) {
         <p><?= e($interfaz['descripcion']) ?></p>
     </div>
     <div class="acciones-cabecera">
-        <label class="boton-fecha" title="Seleccionar fecha"><i class="bi bi-calendar3"></i><span data-dashboard-date-label>Hoy, <?= e(date('d M Y')) ?></span><i class="bi bi-chevron-down"></i><input class="dashboard-date-input" type="date" value="<?= e(date('Y-m-d')) ?>" data-dashboard-date></label>
+        <button class="boton-fecha" type="button"><i class="bi bi-calendar3"></i> Hoy, <?= e(date('d M Y')) ?> <i class="bi bi-chevron-down"></i></button>
         <a class="btn btn-primary" href="<?= e(url(\App\Soporte\Autorizacion\AccesoRol::destino($rolTablero, $moduloAccion))) ?>"><i class="bi bi-plus-lg"></i> Nueva operación</a>
     </div>
 </header>
@@ -26,44 +33,28 @@ $moduloAccion = match ($rolTablero) {
         <article class="metrica-mockup <?= e($metrica[3]) ?>">
             <div class="metrica-icono"><i class="bi <?= e($metrica[2]) ?>"></i></div>
             <div><span><?= e($metrica[0]) ?></span><strong><?= e($metrica[1]) ?></strong><small><b>↑ <?= 12 + ($indice * 5) ?>%</b> vs. periodo anterior</small></div>
+            <svg class="mini-tendencia" viewBox="0 0 90 34" role="img" aria-label="Tendencia positiva"><polyline points="2,30 18,23 32,26 49,14 64,18 88,3"/></svg>
         </article>
     <?php endforeach; ?>
 </div>
 
-<?php
-$datosCompras = is_array($dashboardCompras ?? null) ? $dashboardCompras : ['tendencia'=>[], 'proveedores'=>[]];
-$tendenciaCompras = $datosCompras['tendencia'] ?? [];
-$proveedoresDashboard = $datosCompras['proveedores'] ?? [];
-$maxCompra = 0.0;
-foreach ($tendenciaCompras as $punto) { $maxCompra = max($maxCompra, (float)($punto['total'] ?? 0)); }
-$totalProveedores = array_sum(array_map(static fn($x)=>(float)($x['total'] ?? 0), $proveedoresDashboard));
-$coloresDonut = ['#1687ff','#22c58b','#ffb72f','#8b4fe8'];
-$acumulado = 0.0; $segmentos = [];
-foreach ($proveedoresDashboard as $i=>$prov) { $pct=$totalProveedores>0 ? ((float)$prov['total']/$totalProveedores*100) : 0; $segmentos[]=$coloresDonut[$i%4].' '.$acumulado.'% '.($acumulado+$pct).'%'; $acumulado += $pct; }
-?>
-<div class="rejilla-analitica dashboard-compras" data-dashboard-compras>
-    <section class="panel panel-grafico panel-grafico--ancho panel-claro">
-        <div class="titulo-panel"><div><i class="bi bi-bar-chart-fill"></i><h2><?= e($interfaz['grafico_principal']) ?></h2><small>Valor real de compras registradas en el período seleccionado</small></div>
-            <select class="dashboard-period-select" data-dashboard-period aria-label="Período del gráfico">
-                <?php foreach ([3=>'Últimos 3 meses',6=>'Últimos 6 meses',12=>'Últimos 12 meses'] as $n=>$texto): ?><option value="<?= $n ?>" <?= (int)($mesesDashboard ?? 6)===$n?'selected':'' ?>><?= e($texto) ?></option><?php endforeach; ?>
-            </select>
-        </div>
-        <?php if ($tendenciaCompras): ?>
-        <div class="grafico-barras grafico-barras--dinamico" aria-label="Tendencia de compras reales">
-            <?php foreach ($tendenciaCompras as $punto): $altura=$maxCompra>0?max(12,(int)(((float)$punto['total']/$maxCompra)*145)):12; $fecha=DateTime::createFromFormat('Y-m',(string)$punto['periodo']); ?>
-                <span style="--altura:<?= $altura ?>px" title="S/ <?= e(number_format((float)$punto['total'],2,'.',',')) ?>"><b><?= e($fecha ? ['Jan'=>'Ene','Feb'=>'Feb','Mar'=>'Mar','Apr'=>'Abr','May'=>'May','Jun'=>'Jun','Jul'=>'Jul','Aug'=>'Ago','Sep'=>'Sep','Oct'=>'Oct','Nov'=>'Nov','Dec'=>'Dic'][$fecha->format('M')] : (string)$punto['periodo']) ?></b></span>
+<div class="rejilla-analitica">
+    <section class="panel panel-grafico panel-grafico--ancho">
+        <div class="titulo-panel"><div><i class="bi bi-bar-chart-fill"></i><h2><?= e($interfaz['grafico_principal']) ?></h2><small>Valor y evolución de los últimos seis meses</small></div><button type="button">Últimos 6 meses <i class="bi bi-chevron-down"></i></button></div>
+        <div class="grafico-barras" aria-label="Gráfico de evolución">
+            <?php foreach ([42, 58, 50, 72, 65, 91, 76, 96, 82, 100, 88, 112] as $indice => $altura) : ?>
+                <span style="--altura:<?= $altura ?>px"><b><?= e(['Ene','Feb','Mar','Abr','May','Jun'][$indice % 6]) ?></b></span>
             <?php endforeach; ?>
+            <svg viewBox="0 0 600 180" preserveAspectRatio="none"><polyline points="0,145 100,105 200,122 300,82 400,92 500,38 600,18"/></svg>
         </div>
-        <?php else: ?><div class="dashboard-empty"><i class="bi bi-bar-chart"></i><b>Sin compras registradas en este período</b><span>El gráfico se actualizará automáticamente al registrar compras.</span></div><?php endif; ?>
     </section>
-    <section class="panel panel-grafico panel-claro">
-        <div class="titulo-panel"><div><i class="bi bi-pie-chart-fill"></i><h2><?= e($interfaz['grafico_secundario']) ?></h2><small>Participación por monto comprado</small></div></div>
-        <?php if ($proveedoresDashboard): ?>
-        <div class="grafico-donut grafico-donut--datos" style="--donut:<?= e(implode(', ', $segmentos)) ?>"><div><b><?= count($proveedoresDashboard) ?></b><span>Proveedores</span></div></div>
-        <ul class="leyenda-donut"><?php foreach ($proveedoresDashboard as $i=>$prov): $pct=$totalProveedores>0?round((float)$prov['total']/$totalProveedores*100):0; ?><li><i style="background:<?= e($coloresDonut[$i%4]) ?>"></i><span><?= e((string)$prov['nombre']) ?></span><b><?= $pct ?>%</b></li><?php endforeach; ?></ul>
-        <?php else: ?><div class="dashboard-empty"><i class="bi bi-pie-chart"></i><b>Sin datos de proveedores</b><span>Se mostrará la distribución cuando existan compras asociadas.</span></div><?php endif; ?>
+    <section class="panel panel-grafico">
+        <div class="titulo-panel"><div><i class="bi bi-pie-chart-fill"></i><h2><?= e($interfaz['grafico_secundario']) ?></h2></div></div>
+        <div class="grafico-donut"><div><b><?= e((string) ($resumen['clientes'] ?? 56)) ?></b><span>Total</span></div></div>
+        <ul class="leyenda-donut"><li><i class="azul"></i> Tecnología <b>38%</b></li><li><i class="verde"></i> Accesorios <b>26%</b></li><li><i class="ambar"></i> Audio <b>18%</b></li><li><i class="violeta"></i> Otros <b>18%</b></li></ul>
     </section>
 </div>
+
 <section class="panel acciones-rapidas">
     <div class="titulo-panel"><div><i class="bi bi-lightning-charge-fill"></i><h2>Acciones rápidas</h2></div></div>
     <div>
@@ -76,18 +67,18 @@ foreach ($proveedoresDashboard as $i=>$prov) { $pct=$totalProveedores>0 ? ((floa
 <div class="rejilla-listados">
     <section class="panel tabla-resumen"><div class="titulo-panel"><div><i class="bi bi-clock-history"></i><h2>Actividad reciente</h2></div><a href="<?= e(url(\App\Soporte\Autorizacion\AccesoRol::destino($rolTablero, $moduloAccion))) ?>">Ver todas</a></div>
         <div class="table-responsive"><table class="table"><thead><tr><th>Código</th><th>Cliente / Responsable</th><th>Actividad</th><th>Total</th><th>Estado</th></tr></thead><tbody>
-            <?php $actividadTablero = $rolTablero === 'compras_logistica' ? ($actividadCompras ?? []) : []; ?>
-            <?php if ($actividadTablero): foreach ($actividadTablero as $fila): ?>
-                <tr><td><?= e((string)($fila['codigo'] ?? '—')) ?></td><td><?= e((string)($fila['responsable'] ?? '—')) ?></td><td><?= e((string)($fila['actividad'] ?? '—')) ?></td><td><?= (float)($fila['total'] ?? 0)>0 ? 'S/ '.e(number_format((float)$fila['total'],2,'.',',')) : '—' ?></td><td><span class="estado estado--verde"><?= e(ucfirst((string)($fila['estado'] ?? 'Registrado'))) ?></span></td></tr>
-            <?php endforeach; else: ?><tr><td colspan="5" class="dashboard-empty-cell">No hay actividad registrada todavía.</td></tr><?php endif; ?>
+            <?php foreach ([['#001245','Juan Pérez','Pedido registrado','S/ 1,299','En proceso'],['#001244','Distribuidora Andina','Cotización enviada','S/ 5,680','Enviada'],['#001243','María Torres','Venta completada','S/ 899','Completada'],['#001242','Inversiones R&G','Recepción registrada','S/ 7,450','Entregada'],['#001241','Carlos Mendoza','Cliente actualizado','S/ 449','Activo']] as $fila) : ?>
+                <tr><?php foreach ($fila as $i => $celda) :
+                    ?><td><?= $i === 4 ? '<span class="estado estado--verde">' . e($celda) . '</span>' : e($celda) ?></td><?php
+                    endforeach; ?></tr>
+            <?php endforeach; ?>
         </tbody></table></div>
     </section>
     <section class="panel lista-alertas"><div class="titulo-panel"><div><i class="bi bi-exclamation-triangle-fill"></i><h2>Prioridades de hoy</h2></div></div>
-        <?php $prioridadesTablero = $rolTablero === 'compras_logistica' ? ($prioridadesCompras ?? []) : []; ?>
-        <?php if ($prioridadesTablero): foreach ($prioridadesTablero as $alerta): ?>
-            <?php $destinoAlerta = \App\Soporte\Autorizacion\AccesoRol::can($rolTablero, (string)$alerta['modulo']) ? (string)$alerta['modulo'] : $moduloAccion; ?>
-            <a href="<?= e(url(\App\Soporte\Autorizacion\AccesoRol::destino($rolTablero, $destinoAlerta))) ?>"><i class="punto <?= e((string)$alerta['tono']) ?>"></i><span><b><?= e((string)$alerta['titulo']) ?></b><small><?= e((string)$alerta['detalle']) ?></small></span><i class="bi bi-chevron-right"></i></a>
-        <?php endforeach; else: ?><div class="dashboard-empty dashboard-empty--compact"><b>Sin prioridades pendientes</b><span>No hay alertas operativas con los datos actuales.</span></div><?php endif; ?>
+        <?php foreach ([['Stock crítico de iPhone 15','3 unidades disponibles','rojo','inventario'],['Cotizaciones por vencer','6 propuestas pendientes','ambar','cotizaciones'],['Pedidos listos para envío','12 pedidos preparados','verde','pedidos'],['Nuevos clientes','8 registros por revisar','azul','clientes']] as $alerta) : ?>
+            <?php $destinoAlerta = \App\Soporte\Autorizacion\AccesoRol::can($rolTablero, $alerta[3]) ? $alerta[3] : $moduloAccion; ?>
+            <a href="<?= e(url(\App\Soporte\Autorizacion\AccesoRol::destino($rolTablero, $destinoAlerta))) ?>"><i class="punto <?= e($alerta[2]) ?>"></i><span><b><?= e($alerta[0]) ?></b><small><?= e($alerta[1]) ?></small></span><i class="bi bi-chevron-right"></i></a>
+        <?php endforeach; ?>
     </section>
 </div>
 

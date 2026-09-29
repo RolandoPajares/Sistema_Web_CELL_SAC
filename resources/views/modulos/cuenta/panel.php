@@ -39,7 +39,7 @@ $tituloCuenta = $esCuentaMayorista ? 'Portal mayorista B2B' : 'Mi cuenta';
                                 <a class="cuenta-btn-borde" href="<?= e(url('panel/cotizaciones')) ?>"><i class="bi bi-file-earmark-text"></i> Mis cotizaciones</a>
                             <?php else: ?>
                                 <a class="cuenta-btn-blanco" href="<?= e(url('catalog')) ?>"><i class="bi bi-phone"></i> Ver catálogo</a>
-                                <a class="cuenta-btn-borde" href="<?= e(url('panel/pedidos')) ?>"><i class="bi bi-box-seam"></i> Mis pedidos</a>
+                                <a class="cuenta-btn-borde" href="<?= e(url($esCuentaMayorista ? 'panel/pedidos-mayoristas' : 'panel/pedidos')) ?>"><i class="bi bi-box-seam"></i> Mis pedidos</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -52,7 +52,7 @@ $tituloCuenta = $esCuentaMayorista ? 'Portal mayorista B2B' : 'Mi cuenta';
                 </div>
                 <section class="cuenta-panel">
                     <div class="cuenta-panel-titulo">
-                        <h2>Pedidos recientes</h2><a href="<?= e(url('panel/pedidos')) ?>">Ver todos <i class="bi bi-chevron-right"></i></a>
+                        <h2>Pedidos recientes</h2><a href="<?= e(url($esCuentaMayorista ? 'panel/pedidos-mayoristas' : 'panel/pedidos')) ?>">Ver todos <i class="bi bi-chevron-right"></i></a>
                     </div><?php $mostrarPedidos = true;
                             require __DIR__ . '/_parciales/lista-pedidos.php'; ?>
                 </section>
@@ -61,7 +61,7 @@ $tituloCuenta = $esCuentaMayorista ? 'Portal mayorista B2B' : 'Mi cuenta';
                         <div class="cuenta-panel-titulo">
                             <h2>Accesos rápidos</h2>
                         </div>
-                        <div class="cuenta-accesos"><?php if ($rolCuenta === 'cliente_mayorista'): ?><a href="<?= e(url('mayorista')) ?>"><i class="bi bi-grid"></i> Catálogo B2B</a><a href="<?= e(url('panel/cotizaciones')) ?>"><i class="bi bi-file-earmark-text"></i> Cotizaciones</a><a href="<?= e(url('panel/pedidos-mayoristas')) ?>"><i class="bi bi-truck"></i> Mis pedidos</a><a href="<?= e(url('panel/historial')) ?>"><i class="bi bi-clock-history"></i> Historial</a><?php else: ?><a href="<?= e(url('panel/perfil')) ?>"><i class="bi bi-person"></i> Mis datos</a><a href="<?= e(url('panel/direcciones')) ?>"><i class="bi bi-geo-alt"></i> Direcciones</a><a href="<?= e(url('panel/pedidos')) ?>"><i class="bi bi-box-seam"></i> Mis pedidos</a><a href="<?= e(url('panel/historial')) ?>"><i class="bi bi-clock-history"></i> Historial</a><?php endif; ?></div>
+                        <div class="cuenta-accesos"><?php if ($rolCuenta === 'cliente_mayorista'): ?><a href="<?= e(url('mayorista')) ?>"><i class="bi bi-grid"></i> Catálogo B2B</a><a href="<?= e(url('panel/cotizaciones')) ?>"><i class="bi bi-file-earmark-text"></i> Cotizaciones</a><a href="<?= e(url('panel/pedidos-mayoristas')) ?>"><i class="bi bi-truck"></i> Mis pedidos</a><a href="<?= e(url('panel/historial')) ?>"><i class="bi bi-clock-history"></i> Historial</a><?php else: ?><a href="<?= e(url('panel/perfil')) ?>"><i class="bi bi-person"></i> Mis datos</a><a href="<?= e(url('panel/direcciones')) ?>"><i class="bi bi-geo-alt"></i> Direcciones</a><a href="<?= e(url($esCuentaMayorista ? 'panel/pedidos-mayoristas' : 'panel/pedidos')) ?>"><i class="bi bi-box-seam"></i> Mis pedidos</a><a href="<?= e(url('panel/historial')) ?>"><i class="bi bi-clock-history"></i> Historial</a><?php endif; ?></div>
                     </section>
                     <section class="cuenta-panel cuenta-recomendado"><i class="bi bi-stars"></i>
                         <div>

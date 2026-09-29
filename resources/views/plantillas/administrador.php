@@ -17,7 +17,7 @@ $estilosContextuales = \App\Soporte\Presentacion\CatalogoEstilos::para('/' . $ru
     <?php foreach ($estilosContextuales as $estilo): ?>
         <link rel="stylesheet" href="<?= e(asset($estilo . '?v=20260929-1')) ?>">
     <?php endforeach; ?>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="<?= e(asset('assets/vendor/bootstrap-icons/bootstrap-icons.min.css')) ?>">
 </head>
 <body class="admin-body admin-theme <?= e($clasesCuerpo) ?>">
 <div class="admin-app" data-admin-app>

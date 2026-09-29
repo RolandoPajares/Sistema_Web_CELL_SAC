@@ -41,6 +41,10 @@ final class CatalogoEstilos
                 $estilos[] = 'assets/css/modulos/comunes/dashboard.css';
             }
 
+            if (in_array($rol, ['compras_logistica', 'marketing'], true)) {
+                $estilos[] = 'assets/css/david/panel.css';
+            }
+
             $estilos[] = 'assets/css/responsive/adaptable.css';
 
             return self::limpiar($estilos);
@@ -91,6 +95,12 @@ final class CatalogoEstilos
             $estilos[] = 'assets/css/modulos/mayorista/portal-mayorista.css';
         } elseif (str_starts_with($ruta, '/panel') && str_starts_with($rol, 'cliente_')) {
             $estilos[] = 'assets/css/modulos/cuenta/cuenta.css';
+        }
+
+        if ($ruta === '/about') {
+            $estilos[] = 'assets/css/yaxon/nosotros.css';
+        } elseif ($ruta === '/catalog') {
+            $estilos[] = 'assets/css/david/catalogo.css';
         }
 
         $estilos[] = 'assets/css/responsive/adaptable.css';

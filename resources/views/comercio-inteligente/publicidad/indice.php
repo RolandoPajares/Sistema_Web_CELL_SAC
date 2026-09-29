@@ -3,10 +3,10 @@
     <div class="container publicidad-ia-layout">
         <aside class="publicidad-ia-menu">
             <div><i class="bi bi-stars"></i><span><b>MD Ads inteligente</b><small>Impulsa tus ventas con IA</small></span></div>
-            <?php foreach ([['bi-grid', 'Vista general'], ['bi-clock-history', 'Mis campañas'], ['bi-bar-chart', 'Analítica de ventas'], ['bi-people', 'Audiencia'], ['bi-box-seam', 'Productos'], ['bi-stars', 'Recomendaciones IA'], ['bi-file-earmark-bar-graph', 'Reportes'], ['bi-plugin', 'Integraciones'], ['bi-gear', 'Configuración']] as $indice => $opcion): ?><a class="<?= $indice === 0 ? 'activo' : '' ?>" href="<?= e($indice === 1 ? url($rutaCampanias) : '#seccion-' . $indice) ?>"><i class="bi <?= e($opcion[0]) ?>"></i><?= e($opcion[1]) ?></a><?php endforeach; ?>
+            <?php foreach ([['bi-grid', 'Vista general'], ['bi-clock-history', 'Mis campañas'], ['bi-bar-chart', 'Analítica de ventas'], ['bi-people', 'Audiencia'], ['bi-box-seam', 'Productos'], ['bi-stars', 'Recomendaciones IA'], ['bi-file-earmark-bar-graph', 'Reportes'], ['bi-plugin', 'Integraciones'], ['bi-gear', 'Configuración']] as $indice => $opcion): ?><a class="<?= $indice === 0 ? 'activo' : '' ?>" href="<?= e($indice === 1 ? url($rutaCampanias) : match ($indice) { 0 => '#vista-general', 5 => '#recomendaciones', 6 => '#reportes', default => '#funciones-pendientes' }) ?>"><i class="bi <?= e($opcion[0]) ?>"></i><?= e($opcion[1]) ?></a><?php endforeach; ?>
             <div class="publicidad-convierte"><i class="bi bi-graph-up-arrow"></i><b>Convierte más.<br>Vende inteligente.</b><small>IA + Datos + Resultados</small></div>
         </aside>
-        <main class="publicidad-ia-contenido">
+        <main class="publicidad-ia-contenido" id="vista-general">
             <header>
                 <div><span>Inteligencia Artificial para tu negocio</span>
                     <h1>MD Ads inteligente<br><em>SmartCommerce</em></h1>
@@ -27,7 +27,7 @@
                 <section class="panel embudo-publicidad">
                     <h2>Conversión del embudo</h2><p>Próxima iteración: aún no existe atribución entre campañas, carrito y compras.</p>
                 </section>
-                <aside class="panel" id="recomendaciones">
+                <aside class="panel" id="recomendaciones"><span id="funciones-pendientes"></span>
                     <h2><i class="bi bi-stars"></i> Insights con IA</h2><p>Funcionalidad planificada para una siguiente etapa.</p>
                 </aside>
             </div>
