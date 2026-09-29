@@ -23,13 +23,27 @@ $tituloCuenta = $esCuentaMayorista ? 'Portal mayorista B2B' : 'Mi cuenta';
         </aside>
         <main class="cuenta-contenido">
             <?php if ($modulo === 'dashboard'): ?>
-                <header class="cuenta-titulo">
-                    <div><span><i class="bi bi-person-circle"></i></span>
-                        <div>
-                            <h1><?= e($tituloCuenta) ?></h1>
-                            <p><?= $esCuentaMayorista ? 'Gestiona tus cotizaciones, pedidos y compras por volumen.' : 'Gestiona tus compras, datos y preferencias.' ?></p>
+                <!-- Banner de bienvenida (cambia el texto si es cliente mayorista o minorista) -->
+                <header class="cuenta-banner">
+                    <div class="cuenta-banner-texto">
+                        <?php if ($esCuentaMayorista): ?>
+                            <span class="cuenta-banner-etiqueta"><i class="bi bi-buildings"></i> Cliente mayorista</span>
+                        <?php else: ?>
+                            <span class="cuenta-banner-etiqueta"><i class="bi bi-bag-heart"></i> Cliente minorista</span>
+                        <?php endif; ?>
+                        <h1><?= e($tituloCuenta) ?></h1>
+                        <p><?= $esCuentaMayorista ? 'Gestiona tus cotizaciones, pedidos y compras por volumen.' : 'Gestiona tus compras, datos y preferencias.' ?></p>
+                        <div class="cuenta-banner-botones">
+                            <?php if ($esCuentaMayorista): ?>
+                                <a class="cuenta-btn-blanco" href="<?= e(url('mayorista')) ?>"><i class="bi bi-grid"></i> Catálogo B2B</a>
+                                <a class="cuenta-btn-borde" href="<?= e(url('panel/cotizaciones')) ?>"><i class="bi bi-file-earmark-text"></i> Mis cotizaciones</a>
+                            <?php else: ?>
+                                <a class="cuenta-btn-blanco" href="<?= e(url('catalog')) ?>"><i class="bi bi-phone"></i> Ver catálogo</a>
+                                <a class="cuenta-btn-borde" href="<?= e(url('panel/pedidos')) ?>"><i class="bi bi-box-seam"></i> Mis pedidos</a>
+                            <?php endif; ?>
                         </div>
                     </div>
+                    <img src="<?= e(asset('assets/img/publico/inicio/secciones/hero-devices.png')) ?>" alt="Celulares y accesorios">
                 </header>
                 <div class="cuenta-resumen">
                     <?php foreach ($interfaz['metricas'] as $metrica): ?><article><i class="bi <?= e($metrica[2]) ?>"></i>

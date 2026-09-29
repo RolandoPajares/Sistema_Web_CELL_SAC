@@ -473,3 +473,223 @@
     display: none;
   }
 }
+
+
+/* ---------- Banner de bienvenida ---------- */
+.cuenta-banner {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 28px 30px;
+  border-radius: 20px;
+  color: #fff;
+  background: linear-gradient(120deg, #0b3fb8, #1356e8, #22b8f0);
+  box-shadow: 0 15px 35px rgba(19, 60, 160, 0.2);
+}
+
+.cuenta-banner-etiqueta {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.cuenta-banner h1 {
+  margin: 14px 0 6px;
+  font-size: 34px;
+  color: #fff;
+}
+
+.cuenta-banner p {
+  margin: 0;
+  color: #e0ecff;
+}
+
+.cuenta-banner-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cuenta-btn-blanco,
+.cuenta-btn-borde {
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.cuenta-btn-blanco {
+  background: #fff;
+  color: #1356e8;
+}
+
+.cuenta-btn-borde {
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+}
+
+.cuenta-btn-blanco:hover,
+.cuenta-btn-borde:hover {
+  opacity: 0.9;
+}
+
+.cuenta-banner img {
+  width: 100%;
+  max-width: 320px;
+  justify-self: end;
+}
+
+/* en celular el banner se pone en una sola columna */
+@media (max-width: 780px) {
+  .cuenta-banner {
+    grid-template-columns: 1fr;
+    padding: 24px 20px;
+  }
+
+  .cuenta-banner h1 {
+    font-size: 28px;
+  }
+
+  .cuenta-banner img {
+    justify-self: center;
+    max-width: 250px;
+  }
+}
+
+/* ---------- Menú lateral ----------
+   Se pinta de azul, igual que el panel del administrador,
+   para que vaya acorde con los colores del logo */
+.cuenta-lateral {
+  background: linear-gradient(180deg, #0b3fb8, #0a2c80);
+  border: 0;
+}
+
+.cuenta-identidad {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.cuenta-identidad b {
+  color: #fff;
+}
+
+.cuenta-identidad small {
+  color: #bcd2ff;
+}
+
+.cuenta-identidad em {
+  color: #86efac;
+}
+
+.cuenta-identidad > span {
+  background: #fff;
+  color: #1356e8;
+}
+
+.cuenta-lateral nav a {
+  color: #dbe7ff;
+}
+
+.cuenta-lateral nav a i {
+  color: #9cc0ff;
+}
+
+.cuenta-lateral nav a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* opción seleccionada */
+.cuenta-lateral nav a.activo {
+  background: #fff;
+  color: #0b3fb8;
+  border-left: 3px solid #22b8f0;
+}
+
+.cuenta-lateral nav a.activo i {
+  color: #1356e8;
+}
+
+.cuenta-lateral form {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.cuenta-lateral form button {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.cuenta-anuncio {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ---------- Tarjetas de resumen (métricas) ---------- */
+.cuenta-resumen article {
+  border-radius: 14px;
+  transition: 0.3s;
+}
+
+.cuenta-resumen article:hover {
+  transform: translateY(-3px);
+}
+
+.cuenta-resumen article > i {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
+/* un color diferente para cada tarjeta */
+.cuenta-resumen article:nth-child(1) > i { background: #e8f0ff; color: #1356e8; }
+.cuenta-resumen article:nth-child(2) > i { background: #e7f8f0; color: #0f9f6e; }
+.cuenta-resumen article:nth-child(3) > i { background: #fff4e0; color: #d97706; }
+.cuenta-resumen article:nth-child(4) > i { background: #fde8f1; color: #db2777; }
+
+/* ---------- Pedidos, accesos rápidos y recomendado ---------- */
+.cuenta-panel {
+  border-radius: 16px;
+}
+
+.pedido-producto > span {
+  background: #e6f3ff;
+  color: #1356e8;
+}
+
+.lista-pedidos-cuenta article:hover {
+  border-color: #22b8f0;
+}
+
+.cuenta-accesos a:hover {
+  background: #e6f3ff;
+}
+
+/* imagen de productos al fondo de la tarjeta "Recomendado para ti" */
+.cuenta-recomendado {
+  background: url("../../../img/publico/inicio/secciones/hero-devices.png") right -30px bottom -10px / 150px no-repeat, #eef6ff;
+}
+
+.cuenta-recomendado > div {
+  max-width: 70%;
+}
+
+.cuenta-recomendado h2 {
+  font-size: 20px;
+}
+
+@media (max-width: 780px) {
+  .cuenta-recomendado {
+    background: #eef6ff;
+  }
+
+  .cuenta-recomendado > div {
+    max-width: 100%;
+  }
+}
