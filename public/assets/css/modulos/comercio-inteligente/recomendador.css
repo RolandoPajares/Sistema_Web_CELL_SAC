@@ -341,3 +341,41 @@
   margin: 0 auto 18px;
   color: #64748b;
 }
+
+/* ---------- 5. Responsive (tablet y celular) ---------- */
+@media (max-width: 980px) {
+  .smartmatch-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .smartmatch-hero-imagen {
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  .smartmatch-campos {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .smartmatch-resultados {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .smartmatch-hero h1 {
+    font-size: 32px;
+  }
+
+  .smartmatch-campos,
+  .smartmatch-como,
+  .smartmatch-resultados {
+    grid-template-columns: 1fr;
+  }
+
+  .smartmatch-form-titulo,
+  .smartmatch-campos {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
