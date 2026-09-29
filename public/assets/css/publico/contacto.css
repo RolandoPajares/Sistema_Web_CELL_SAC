@@ -1,5 +1,4 @@
 
-
 /* etiqueta pequeña que va arriba de los títulos */
 .contacto-etiqueta {
   display: inline-block;
@@ -91,49 +90,6 @@
   box-shadow: 0 20px 45px rgba(19, 60, 140, 0.25);
 }
 
-/* cuadritos blancos que "flotan" encima de la foto */
-.contacto-dato-foto {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 10px 25px rgba(15, 40, 90, 0.2);
-}
-
-.contacto-dato-foto i {
-  padding: 9px 11px;
-  border-radius: 10px;
-  background: #1356e8;
-  color: #fff;
-}
-
-.contacto-dato-foto b,
-.contacto-dato-foto small {
-  display: block;
-}
-
-.contacto-dato-foto small {
-  color: #64748b;
-  font-size: 12px;
-}
-
-.contacto-dato-arriba {
-  top: 25px;
-  left: -40px;
-}
-
-.contacto-dato-abajo {
-  bottom: 25px;
-  right: -25px;
-}
-
-.contacto-dato-abajo i {
-  background: #10b981; /* verde para el horario */
-}
-
 /* al presionar "Enviar consulta" la página baja suave hasta el formulario */
 html {
   scroll-behavior: smooth;
@@ -141,7 +97,7 @@ html {
 
 /* ---------- 2. Formulario de consulta ---------- */
 .contacto-seccion {
-  margin-top: 45px;
+  padding: 45px 0 60px; /* se quita el espacio grande que trae section por defecto */
   scroll-margin-top: 100px; /* para que el menú de arriba no tape el título */
 }
 
@@ -251,4 +207,48 @@ html {
 .contacto-enviar .btn {
   padding: 13px 26px;
   font-size: 15px;
+}
+
+/* ---------- 4. Tarjetas con los datos de la tienda ---------- */
+.contacto-datos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 40px 0 0;
+}
+
+.contacto-datos article {
+  display: flex;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #e3ecf8;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  transition: 0.3s;
+}
+
+/* efecto al pasar el mouse */
+.contacto-datos article:hover {
+  transform: translateY(-4px);
+}
+
+.contacto-datos article > i {
+  padding: 10px 12px;
+  height: fit-content;
+  border-radius: 12px;
+  background: #e8f0ff;
+  color: #1356e8;
+  font-size: 20px;
+}
+
+.contacto-datos h2 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.contacto-datos p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
 }

@@ -26,16 +26,28 @@ $comoLlegar = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($di
         </div>
         <div class="contacto-foto">
             <img src="<?= e(asset('assets/img/publico/nosotros/local.jpg')) ?>" alt="Fachada de la tienda MD Technology Digital Cell">
-            <div class="contacto-dato-foto contacto-dato-arriba">
-                <i class="bi bi-geo-alt-fill"></i>
-                <div><b>Tienda física</b><small><?= e($direccion) ?></small></div>
-            </div>
-            <div class="contacto-dato-foto contacto-dato-abajo">
-                <i class="bi bi-clock-fill"></i>
-                <div><b>Lunes a sábado</b><small>Horario comercial</small></div>
-            </div>
         </div>
     </div>
+</section>
+
+<!-- ===== 4. Datos de la tienda ===== -->
+<section class="container contacto-datos">
+    <article>
+        <i class="bi bi-geo-alt"></i>
+        <div><h2>Dirección</h2><p><?= e($direccion) ?></p></div>
+    </article>
+    <article>
+        <i class="bi bi-signpost-2"></i>
+        <div><h2>Referencia</h2><p>Cerca de Plásticos Jireh</p></div>
+    </article>
+    <article>
+        <i class="bi bi-calendar-week"></i>
+        <div><h2>Horario</h2><p>Lunes a sábado, horario comercial</p></div>
+    </article>
+    <article>
+        <i class="bi bi-envelope-paper"></i>
+        <div><h2>Consultas web</h2><p>Déjanos tu mensaje y te respondemos</p></div>
+    </article>
 </section>
 
 <!-- ===== 2. Formulario de consulta ===== -->
