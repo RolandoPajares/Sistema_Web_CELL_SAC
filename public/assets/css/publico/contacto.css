@@ -414,3 +414,66 @@ html {
   max-width: 440px;
   justify-self: end;
 }
+
+/* ---------- 7. Responsive (tablet y celular) ---------- */
+@media (max-width: 980px) {
+  .contacto-banner-grid,
+  .contacto-seccion,
+  .contacto-final {
+    grid-template-columns: 1fr;
+  }
+
+  .contacto-datos,
+  .contacto-galeria {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .contacto-final {
+    text-align: center;
+  }
+
+  .contacto-final img {
+    justify-self: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .contacto-banner h1 {
+    font-size: 34px;
+  }
+
+  .contacto-botones {
+    flex-wrap: wrap;
+  }
+
+  .contacto-foto img {
+    height: 360px;
+  }
+
+  .contacto-datos,
+  .contacto-dos-campos {
+    grid-template-columns: 1fr;
+  }
+
+  .contacto-formulario {
+    padding: 22px 18px;
+  }
+
+  .contacto-mapa-pie,
+  .contacto-enviar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .contacto-galeria div {
+    height: 260px;
+  }
+
+  .contacto-final {
+    padding: 28px 22px;
+  }
+
+  .contacto-final h2 {
+    font-size: 24px;
+  }
+}
