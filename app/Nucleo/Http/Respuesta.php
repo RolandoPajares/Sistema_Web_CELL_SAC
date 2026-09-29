@@ -16,7 +16,12 @@ class Respuesta
 
     public function enviar(): void
     {
-        http_response_code($this->estado);
+        if ($this->estado === 419) {
+            $protocolo = (string) ($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1');
+            header($protocolo . ' 419 Authentication Timeout');
+        } else {
+            http_response_code($this->estado);
+        }
 
         foreach ($this->encabezados as $nombre => $valor) {
             header($nombre . ': ' . $valor);
@@ -33,6 +38,12 @@ class Respuesta
     public function contenido(): string
     {
         return $this->contenido;
+    }
+
+    /** @return array<string, string> */
+    public function encabezados(): array
+    {
+        return $this->encabezados;
     }
 
     public function conEncabezado(string $nombre, string $valor): self

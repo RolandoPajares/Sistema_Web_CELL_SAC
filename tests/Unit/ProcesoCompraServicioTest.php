@@ -100,6 +100,11 @@ final class ProcesoCompraServicioTest extends TestCase
             {
                 return 0;
             }
+            public function buscarConDetalle(int $idPedido): ?array { return null; }
+            public function actualizarEstado(int $idPedido, string $estado): void {}
+            public function contarPorEstado(): array { return []; }
+            public function contarVentasRegistradas(): int { return 0; }
+            public function totalVentasPeriodo(): float { return 0.0; }
         };
         $carrito = new CarritoServicio(new ProductoServicio($productos), new GestorSesion());
         $servicio = new ProcesoCompraServicio(new Conexion(new RepositorioConfiguracion([])), $productos, $pedidos, $carrito);
@@ -211,6 +216,11 @@ final class ProcesoCompraServicioTest extends TestCase
             {
                 return 0;
             }
+            public function buscarConDetalle(int $idPedido): ?array { return null; }
+            public function actualizarEstado(int $idPedido, string $estado): void {}
+            public function contarPorEstado(): array { return []; }
+            public function contarVentasRegistradas(): int { return 0; }
+            public function totalVentasPeriodo(): float { return 0.0; }
         };
         $carrito = new CarritoServicio(new ProductoServicio($productos), $sesion);
         $servicio = new ProcesoCompraServicio(new Conexion(new RepositorioConfiguracion([]), $pdo), $productos, $pedidos, $carrito);

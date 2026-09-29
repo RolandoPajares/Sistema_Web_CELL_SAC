@@ -278,7 +278,7 @@ CREATE TABLE `migraciones` (
 
 LOCK TABLES `migraciones` WRITE;
 /*!40000 ALTER TABLE `migraciones` DISABLE KEYS */;
-INSERT INTO `migraciones` VALUES (1,'000001_crear_base_datos_espanol.sql',1,'2026-09-27 17:46:03'),(3,'2026_09_27_000001_esquema_espanol.sql',2,'2026-09-27 18:18:43');
+INSERT INTO `migraciones` VALUES (1,'000001_crear_base_datos_espanol.sql',1,'2026-09-27 17:46:03'),(3,'2026_09_27_000001_esquema_espanol.sql',2,'2026-09-27 18:18:43'),(4,'2026_09_28_000002_integrar_categorias_productos.sql',3,'2026-09-28 23:00:00');
 /*!40000 ALTER TABLE `migraciones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -382,6 +382,7 @@ CREATE TABLE `productos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `marca` varchar(80) NOT NULL,
   `nombre` varchar(160) NOT NULL,
+  `categoria_id` int(11) NOT NULL,
   `categoria` varchar(80) NOT NULL,
   `precio` decimal(10,2) NOT NULL DEFAULT 0.00,
   `existencias` int(11) NOT NULL DEFAULT 0,
@@ -392,7 +393,9 @@ CREATE TABLE `productos` (
   `activo` tinyint(1) NOT NULL DEFAULT 1,
   `creado_en` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  KEY `indice_productos_catalogo` (`activo`,`categoria`,`marca`,`id`)
+  KEY `indice_productos_catalogo` (`activo`,`categoria`,`marca`,`id`),
+  KEY `indice_productos_categoria_id` (`categoria_id`),
+  CONSTRAINT `fk_productos_categoria` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -402,7 +405,7 @@ CREATE TABLE `productos` (
 
 LOCK TABLES `productos` WRITE;
 /*!40000 ALTER TABLE `productos` DISABLE KEYS */;
-INSERT INTO `productos` VALUES (1,'Samsung','Cargador 25W USB-C','Accesorio',89.00,30,'USB-C','Negro','Compatible','Cargador de carga rapida recomendado para equipos Samsung compatibles.',1,'2026-09-27 17:46:03'),(2,'Samsung','Funda Galaxy A Series','Accesorio',39.00,25,'Galaxy A','Transparente','Combo','Funda protectora para modelos seleccionados de la familia Galaxy A.',1,'2026-09-27 17:46:03'),(3,'Xiaomi','Cargador Turbo USB-C','Accesorio',79.00,28,'USB-C','Blanco','Compatible','Cargador rapido para smartphones Xiaomi y Redmi compatibles.',1,'2026-09-27 17:46:03'),(4,'Apple','Cable USB-C trenzado','Accesorio',99.00,22,'USB-C','Blanco','Original','Cable USB-C para carga y sincronizacion de dispositivos compatibles.',1,'2026-09-27 17:46:03');
+INSERT INTO `productos` VALUES (1,'Samsung','Cargador 25W USB-C',3,'Accesorios',89.00,30,'USB-C','Negro','Compatible','Cargador de carga rapida recomendado para equipos Samsung compatibles.',1,'2026-09-27 17:46:03'),(2,'Samsung','Funda Galaxy A Series',3,'Accesorios',39.00,25,'Galaxy A','Transparente','Combo','Funda protectora para modelos seleccionados de la familia Galaxy A.',1,'2026-09-27 17:46:03'),(3,'Xiaomi','Cargador Turbo USB-C',3,'Accesorios',79.00,28,'USB-C','Blanco','Compatible','Cargador rapido para smartphones Xiaomi y Redmi compatibles.',1,'2026-09-27 17:46:03'),(4,'Apple','Cable USB-C trenzado',3,'Accesorios',99.00,22,'USB-C','Blanco','Original','Cable USB-C para carga y sincronizacion de dispositivos compatibles.',1,'2026-09-27 17:46:03');
 /*!40000 ALTER TABLE `productos` ENABLE KEYS */;
 UNLOCK TABLES;
 

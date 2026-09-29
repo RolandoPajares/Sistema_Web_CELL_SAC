@@ -160,7 +160,7 @@ final class AccesoRol
     {
         $rol = self::normalize($rol);
         if ($modulo === 'dashboard') {
-            return 'panel';
+            return $rol === 'administrador' ? 'admin' : 'panel';
         }
         if ($modulo === 'catalogo') {
             return 'catalog';
@@ -179,10 +179,16 @@ final class AccesoRol
         if ($rol === 'administrador') {
             return match ($modulo) {
                 'productos' => 'admin/products',
+                'categorias' => 'admin/categories',
+                'inventario' => 'admin/inventory',
+                'clientes' => 'admin/customers',
+                'proveedores' => 'admin/suppliers',
                 'publicidad', 'campanias' => 'admin/campaigns',
                 'pedidos' => 'admin/orders',
                 'usuarios' => 'admin/users',
-                default => 'panel/' . $modulo,
+                'reportes' => 'admin/reports',
+                'auditoria' => 'admin/audit',
+                default => 'admin',
             };
         }
         return 'panel/' . $modulo;

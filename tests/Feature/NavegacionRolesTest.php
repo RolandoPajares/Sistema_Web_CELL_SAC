@@ -27,7 +27,6 @@ final class NavegacionRolesTest extends TestCase
         return [
             'cliente minorista' => ['cliente_minorista', ['perfil', 'direcciones', 'pedidos', 'historial'], 'usuarios'],
             'cliente mayorista' => ['cliente_mayorista', ['cotizaciones', 'pedidos-mayoristas', 'historial'], 'usuarios'],
-            'administrador' => ['administrador', ['categorias', 'inventario', 'clientes', 'proveedores', 'reportes', 'auditoria'], ''],
             'compras y logística' => ['compras_logistica', ['inventario', 'productos', 'proveedores', 'compras', 'movimientos-stock', 'preparacion-pedidos', 'logistica-mayorista', 'alertas-stock'], 'usuarios'],
             'ventas mayoristas' => ['ventas_mayoristas', ['productos', 'clientes-mayoristas', 'cotizaciones', 'pedidos-mayoristas', 'historial-cliente', 'seguimiento-comercial'], 'usuarios'],
             'ventas minoristas' => ['ventas_minoristas', ['productos', 'inventario', 'clientes', 'ventas', 'pedidos', 'garantias', 'devoluciones', 'reclamaciones'], 'usuarios'],
@@ -102,6 +101,10 @@ final class NavegacionRolesTest extends TestCase
 
         $respuesta = $this->get('/panel');
 
+        if ($rol === 'administrador') {
+            self::assertSame(302, $respuesta->estado());
+            return;
+        }
         self::assertSame(200, $respuesta->estado());
         self::assertStringContainsString($titulo, $respuesta->contenido());
     }
@@ -112,6 +115,7 @@ final class NavegacionRolesTest extends TestCase
         self::assertSame('mayorista', AccesoRol::destino('cliente_mayorista', 'catalogo-b2b'));
         self::assertSame('smart/optimizer', AccesoRol::destino('cliente_mayorista', 'optimizador'));
         self::assertSame('admin/campaigns', AccesoRol::destino('administrador', 'publicidad'));
+        self::assertSame('admin/categories', AccesoRol::destino('administrador', 'categorias'));
         self::assertSame('panel/movimientos-stock', AccesoRol::destino('compras_logistica', 'movimientos-stock'));
     }
 

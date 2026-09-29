@@ -22,6 +22,7 @@ final class Conexion implements GestorTransaccionesInterfaz
     private ?PDO $pdo = null;
     private bool $resuelta = false;
     private ?Throwable $errorConexion = null;
+    private int $contadorSavepoints = 0;
 
     public function __construct(
         private RepositorioConfiguracion $configuracion,
@@ -104,17 +105,29 @@ final class Conexion implements GestorTransaccionesInterfaz
     public function transaccion(callable $operacion): mixed
     {
         $pdo = $this->pdoObligatorio();
+        $transaccionExterna = $pdo->inTransaction();
+        $savepoint = 'sp_aplicacion_' . (++$this->contadorSavepoints);
 
         try {
-            $pdo->beginTransaction();
+            if ($transaccionExterna) {
+                $pdo->exec('SAVEPOINT ' . $savepoint);
+            } else {
+                $pdo->beginTransaction();
+            }
 
             $resultado = $operacion();
 
-            $pdo->commit();
+            if ($transaccionExterna) {
+                $pdo->exec('RELEASE SAVEPOINT ' . $savepoint);
+            } else {
+                $pdo->commit();
+            }
 
             return $resultado;
         } catch (Throwable $excepcion) {
-            if ($pdo->inTransaction()) {
+            if ($transaccionExterna && $pdo->inTransaction()) {
+                $pdo->exec('ROLLBACK TO SAVEPOINT ' . $savepoint);
+            } elseif ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
 
