@@ -9,6 +9,23 @@ section {
 
 .detail-grid {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: 42px;
+  grid-template-columns: 1fr 1fr; 
+  gap: 4rem;
+  align-items: center; 
+}
+
+.feature-grid {
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+@media (max-width: 992px) {
+  .detail-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+  }
+  .hero-card {
+      max-height: 400px;
+      order: -1;
+  }
 }
