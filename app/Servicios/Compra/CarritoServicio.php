@@ -13,7 +13,7 @@ final class CarritoServicio
     {
     }
 
-    public function agregar(int $idProducto): void
+    public function agregar(int $idProducto, ?int $idVariante = null): void
     {
         $producto = $this->productos->buscarActivo($idProducto);
 
@@ -22,10 +22,9 @@ final class CarritoServicio
         }
 
         $carrito = (array) $this->sesion->obtener('cart', []);
-        $carrito[$idProducto] = min(
-            (int) $producto['existencias'],
-            (int) ($carrito[$idProducto] ?? 0) + 1
-        );
+        $clave = $idVariante !== null ? $idProducto . ':' . $idVariante : (string)$idProducto;
+        $limite = (int)($producto['existencias'] ?? 0);
+        $carrito[$clave] = min($limite, (int)($carrito[$clave] ?? 0) + 1);
         $this->sesion->guardar('cart', $carrito);
     }
 
