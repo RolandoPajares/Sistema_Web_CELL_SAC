@@ -668,3 +668,42 @@ CREATE TABLE IF NOT EXISTS producto_imagen_referencia (
  producto_id INT NOT NULL PRIMARY KEY, ruta_imagen VARCHAR(255) NOT NULL, actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  CONSTRAINT fk_ref_producto FOREIGN KEY(producto_id) REFERENCES productos(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Extensiones operativas para Compras y Logística
+CREATE TABLE IF NOT EXISTS `producto_proveedor` (
+  `producto_id` int(11) NOT NULL,
+  `proveedor_id` int(11) NOT NULL,
+  PRIMARY KEY (`producto_id`),
+  KEY `idx_producto_proveedor_proveedor` (`proveedor_id`),
+  CONSTRAINT `fk_pp_producto` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_pp_proveedor` FOREIGN KEY (`proveedor_id`) REFERENCES `proveedores` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `logistica_mayorista` (
+  `pedido_id` int(11) NOT NULL,
+  `exportador` varchar(160) DEFAULT NULL,
+  `direccion_exportador` varchar(255) DEFAULT NULL,
+  `contacto_exportador` varchar(160) DEFAULT NULL,
+  `direccion_consignatario` varchar(255) DEFAULT NULL,
+  `contacto_consignatario` varchar(160) DEFAULT NULL,
+  `factura_numero` varchar(80) DEFAULT NULL,
+  `factura_fecha` date DEFAULT NULL,
+  `orden_compra` varchar(80) DEFAULT NULL,
+  `carta_credito` varchar(100) DEFAULT NULL,
+  `fecha_emision` date DEFAULT NULL,
+  `pais_origen` varchar(100) DEFAULT NULL,
+  `lugar_carga` varchar(160) DEFAULT NULL,
+  `puerto_descarga` varchar(160) DEFAULT NULL,
+  `direccion_entrega` varchar(255) DEFAULT NULL,
+  `descripcion_mercancia` text DEFAULT NULL,
+  `codigo_hs` varchar(40) DEFAULT NULL,
+  `cantidad_unidades` int(11) DEFAULT NULL,
+  `bultos` varchar(160) DEFAULT NULL,
+  `tipo_embalaje` varchar(100) DEFAULT NULL,
+  `dimensiones` varchar(120) DEFAULT NULL,
+  `volumen_m3` decimal(10,3) DEFAULT NULL,
+  `peso_neto` decimal(10,2) DEFAULT NULL,
+  `peso_bruto` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`pedido_id`),
+  CONSTRAINT `fk_log_pedido` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
