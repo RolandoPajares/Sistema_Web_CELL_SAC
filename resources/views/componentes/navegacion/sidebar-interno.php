@@ -1,5 +1,5 @@
 <aside class="sidebar" id="adminSidebar" aria-label="Navegación del panel">
-    <a class="admin-brand" href="<?= e(url('panel')) ?>">
+    <a class="admin-brand" href="<?= e(url($rolActual === 'administrador' ? 'admin' : 'panel')) ?>">
         <img src="<?= e(asset('assets/img/marca/logo.jpeg')) ?>" alt="MD Technology Digital Cell">
         <span>Digital Cell</span>
     </a>

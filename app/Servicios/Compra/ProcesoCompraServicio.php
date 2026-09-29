@@ -7,6 +7,7 @@ namespace App\Servicios\Compra;
 use App\Nucleo\BaseDatos\GestorTransaccionesInterfaz;
 use App\DAO\Contratos\RepositorioPedidoInterfaz;
 use App\DAO\Contratos\RepositorioProductoInterfaz;
+use App\DAO\Contratos\RepositorioInventarioInterfaz;
 use App\Soporte\Excepciones\ExcepcionStockInsuficiente;
 
 final class ProcesoCompraServicio
@@ -16,6 +17,7 @@ final class ProcesoCompraServicio
         private RepositorioProductoInterfaz $productos,
         private RepositorioPedidoInterfaz $pedidos,
         private CarritoServicio $carrito,
+        private ?RepositorioInventarioInterfaz $inventario = null,
     ) {
     }
 
@@ -60,7 +62,16 @@ final class ProcesoCompraServicio
                     $cantidad,
                     (float) $producto['precio']
                 );
-                $this->productos->reducirStock((int) $producto['id'], $cantidad);
+                if ($this->inventario !== null) {
+                    $this->inventario->registrarMovimiento([
+                        'producto_id' => (int) $producto['id'],
+                        'tipo_movimiento' => 'salida',
+                        'cantidad' => $cantidad,
+                        'notas' => 'Salida automática por pedido #' . $idPedido,
+                    ], $idUsuario);
+                } else {
+                    $this->productos->reducirStock((int) $producto['id'], $cantidad);
+                }
             }
 
             return $idPedido;

@@ -27,6 +27,21 @@ final class CampaniaServicio
         return $this->campanias->todosParaAdministrador();
     }
 
+    /** @return array{activas:int,vistas:int,clics:int,ctr:float} */
+    public function resumen(): array
+    {
+        $campanias = $this->todosParaAdministrador();
+        $vistas = array_sum(array_map(static fn (array $campania): int => (int) $campania['vistas'], $campanias));
+        $clics = array_sum(array_map(static fn (array $campania): int => (int) $campania['clics'], $campanias));
+
+        return [
+            'activas' => count(array_filter($campanias, static fn (array $campania): bool => (int) $campania['activo'] === 1)),
+            'vistas' => $vistas,
+            'clics' => $clics,
+            'ctr' => $vistas > 0 ? ($clics / $vistas) * 100 : 0.0,
+        ];
+    }
+
     /** @return array<string, mixed>|null */
     public function buscar(int $idCampania): ?array
     {

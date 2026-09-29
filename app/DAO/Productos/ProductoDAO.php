@@ -154,8 +154,8 @@ final class ProductoDAO implements RepositorioProductoInterfaz
     public function crear(array $datos): int
     {
         $sentencia = $this->pdo()->prepare(
-            'INSERT INTO productos(marca, nombre, categoria, precio, existencias, almacenamiento, color, etiqueta, descripcion, activo)
-             VALUES(:marca, :nombre, :categoria, :precio, :existencias, :almacenamiento, :color, :etiqueta, :descripcion, 1)'
+            'INSERT INTO productos(marca, nombre, categoria_id, categoria, precio, existencias, almacenamiento, color, etiqueta, descripcion, activo)
+             VALUES(:marca, :nombre, :categoria_id, :categoria, :precio, 0, :almacenamiento, :color, :etiqueta, :descripcion, 1)'
         );
         $this->vincularProducto($sentencia, $datos);
         $sentencia->execute();
@@ -167,7 +167,7 @@ final class ProductoDAO implements RepositorioProductoInterfaz
     {
         $sentencia = $this->pdo()->prepare(
             'UPDATE productos
-             SET marca = :marca, nombre = :nombre, categoria = :categoria, precio = :precio, existencias = :existencias,
+             SET marca = :marca, nombre = :nombre, categoria_id = :categoria_id, categoria = :categoria, precio = :precio,
                  almacenamiento = :almacenamiento, color = :color, etiqueta = :etiqueta, descripcion = :descripcion
              WHERE id = :id'
         );
@@ -418,11 +418,11 @@ public function variantes(int $productoId): array
     /** @param array<string, mixed> $datos */
     private function vincularProducto(\PDOStatement $sentencia, array $datos): void
     {
-        foreach (['marca', 'nombre', 'categoria', 'precio', 'existencias', 'almacenamiento', 'color', 'etiqueta', 'descripcion'] as $campo) {
+        foreach (['marca', 'nombre', 'categoria_id', 'categoria', 'precio', 'almacenamiento', 'color', 'etiqueta', 'descripcion'] as $campo) {
             $sentencia->bindValue(
                 ':' . $campo,
                 $datos[$campo],
-                $campo === 'existencias' ? PDO::PARAM_INT : PDO::PARAM_STR
+                $campo === 'categoria_id' ? PDO::PARAM_INT : PDO::PARAM_STR
             );
         }
     }

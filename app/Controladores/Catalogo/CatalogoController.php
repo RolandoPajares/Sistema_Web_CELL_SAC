@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Controladores\Catalogo;
 
 use App\DTO\Productos\FiltroProducto;
-use App\Soporte\Productos\CategoriasProducto;
 use App\Nucleo\Http\Solicitud;
 use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Presentacion\Vista;
 use App\Servicios\Productos\ProductoServicio;
+use App\Servicios\Categorias\CategoriaServicio;
 
 final class CatalogoController
 {
-    public function __construct(private Vista $vista, private ProductoServicio $productos)
+    public function __construct(private Vista $vista, private ProductoServicio $productos, private CategoriaServicio $categorias)
     {
     }
 
@@ -23,6 +23,7 @@ final class CatalogoController
             return is_scalar($valor) ? trim((string) $valor) : $predeterminado;
         };
         $todosLosProductos = $this->productos->todosActivos();
+        $categorias = array_map('strval', array_column($this->categorias->activas(), 'nombre'));
         $marcas = array_values(array_unique(array_map('strval', array_column($todosLosProductos, 'marca'))));
         sort($marcas, SORT_STRING);
 
@@ -32,7 +33,7 @@ final class CatalogoController
         $filtros = [
             'q' => mb_substr($texto($solicitud->consulta('q')), 0, 160),
             'marca' => in_array($marca, $marcas, true) ? $marca : '',
-            'cat' => in_array($categoria, CategoriasProducto::ALL, true) ? $categoria : '',
+            'cat' => in_array($categoria, $categorias, true) ? $categoria : '',
             'min_price' => $texto($solicitud->consulta('min_price')),
             'max_price' => $texto($solicitud->consulta('max_price')),
             'sort' => in_array($orden, ['newest', 'price_asc', 'price_desc', 'name'], true) ? $orden : 'newest',
@@ -64,7 +65,7 @@ final class CatalogoController
             'paginacion' => $paginacion,
             'filtros' => $filtros,
             'marcas' => $marcas,
-            'categorias' => CategoriasProducto::ALL,
+            'categorias' => $categorias,
         ]);
     }
 }

@@ -8,6 +8,7 @@ use App\Soporte\Registros\RegistradorArchivo;
 use App\Servicios\Auditoria\AuditoriaServicio;
 use App\Soporte\Mensajes\MensajeFlashServicio;
 use App\Servicios\Productos\ProductoServicio;
+use App\Servicios\Categorias\CategoriaServicio;
 use App\Soporte\Excepciones\ExcepcionValidacion;
 use App\Nucleo\Http\Solicitud;
 use App\Validacion\Productos\SolicitudProducto;
@@ -20,6 +21,7 @@ final class AdministradorProductoController
     public function __construct(
         private Vista $vista,
         private ProductoServicio $productos,
+        private CategoriaServicio $categorias,
         private MensajeFlashServicio $mensajes,
         private RegistradorArchivo $registro,
         private AuditoriaServicio $auditoria,
@@ -68,13 +70,15 @@ final class AdministradorProductoController
             'tituloPagina' => 'Productos',
             'baseDatosDisponible' => $baseDatosDisponible,
             'productos' => $baseDatosDisponible ? $this->productos->todosParaAdministrador() : [],
+            'resumen' => $baseDatosDisponible ? $this->productos->resumenAdministrativo() : ['total' => 0, 'activos' => 0, 'inactivos' => 0, 'stock_bajo' => 0],
+            'categorias' => $baseDatosDisponible ? $this->categorias->activas() : [],
             'edicion' => $productoEdicion,
             'variantesEdicion' => $productoEdicion ? $this->cargarVariantes((int)$productoEdicion['id']) : [],
             'imagenReferencia' => $productoEdicion ? $this->productos->imagenReferencia((int)$productoEdicion['id']) : null,
             'caracteristicasEdicion' => $productoEdicion ? $this->productos->detalleConVariantes((int)$productoEdicion['id'])['caracteristicas'] ?? [] : [],
             'error' => $this->mensajes->extraer('error'),
             'exito' => $this->mensajes->extraer('success'),
-        ], 'interno');
+        ], 'administrador');
     }
 
     private function cargarVariantes(int $productoId): array

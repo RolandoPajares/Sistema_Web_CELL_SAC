@@ -39,4 +39,59 @@ final class RegistroAuditoriaDAO
             $direccionIp,
         ]);
     }
+
+    /** @return array<int, array<string, mixed>> */
+    public function listar(string $desde, string $hasta, string $entidad = '', int $usuarioId = 0): array
+    {
+        $condiciones = ['DATE(a.creado_en) BETWEEN :desde AND :hasta'];
+        $parametros = [':desde' => $desde, ':hasta' => $hasta];
+        if ($entidad !== '') {
+            $condiciones[] = 'a.entidad = :entidad';
+            $parametros[':entidad'] = $entidad;
+        }
+        if ($usuarioId > 0) {
+            $condiciones[] = 'a.usuario_id = :usuario';
+            $parametros[':usuario'] = $usuarioId;
+        }
+        $sentencia = $this->conexion->pdoObligatorio()->prepare(
+            'SELECT a.id, a.creado_en, COALESCE(u.nombre, "Sistema") AS usuario,
+                    a.usuario_id, a.accion, a.entidad, a.entidad_id, a.direccion_ip,
+                    a.valores_anteriores, a.valores_nuevos
+             FROM registros_auditoria a
+             LEFT JOIN usuarios u ON u.id = a.usuario_id
+             WHERE ' . implode(' AND ', $condiciones) . '
+             ORDER BY a.creado_en DESC, a.id DESC LIMIT 500'
+        );
+        $sentencia->execute($parametros);
+
+        return $sentencia->fetchAll();
+    }
+
+    /** @return array{hoy:int,total:int,usuarios:int,entidades:int} */
+    public function resumen(): array
+    {
+        $fila = $this->conexion->pdoObligatorio()->query(
+            'SELECT COUNT(*) AS total,
+                    SUM(DATE(creado_en) = CURRENT_DATE) AS hoy,
+                    COUNT(DISTINCT usuario_id) AS usuarios,
+                    COUNT(DISTINCT entidad) AS entidades
+             FROM registros_auditoria'
+        )->fetch() ?: [];
+
+        return [
+            'hoy' => (int) ($fila['hoy'] ?? 0),
+            'total' => (int) ($fila['total'] ?? 0),
+            'usuarios' => (int) ($fila['usuarios'] ?? 0),
+            'entidades' => (int) ($fila['entidades'] ?? 0),
+        ];
+    }
+
+    /** @return array<int, array{entidad:string,total:int}> */
+    public function actividadPorEntidad(): array
+    {
+        return $this->conexion->pdoObligatorio()->query(
+            'SELECT entidad, COUNT(*) AS total FROM registros_auditoria
+             GROUP BY entidad ORDER BY total DESC, entidad LIMIT 8'
+        )->fetchAll();
+    }
 }
