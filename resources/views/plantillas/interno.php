@@ -22,9 +22,9 @@ $clasesCuerpo = \App\Soporte\Presentacion\CatalogoEstilos::clasesCuerpo(
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="csrf-token" content="<?= e(csrf_token()) ?>">
     <title><?= e($tituloPagina ?? 'Panel') ?> | MD Technology</title>
-    <link rel="stylesheet" href="<?= e(asset('assets/css/estilos.css?v=20260927-8')) ?>">
+    <link rel="stylesheet" href="<?= e(asset('assets/css/estilos.css?v=20260929-2')) ?>">
     <?php foreach ($estilosContextuales as $archivoCss): ?>
-        <link rel="stylesheet" href="<?= e(asset($archivoCss . '?v=20260927-8')) ?>">
+        <link rel="stylesheet" href="<?= e(asset($archivoCss . '?v=20260929-2')) ?>">
     <?php endforeach; ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
