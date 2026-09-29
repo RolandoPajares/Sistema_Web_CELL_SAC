@@ -75,16 +75,8 @@
             <a href="<?= e(url('catalog')) ?>" class="home-view-all">Ver todos los productos <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
         </div>
         <?php
-        $muestrasPortada = [
-            ['id' => 0, 'marca' => 'Apple', 'nombre' => 'iPhone 15 128GB', 'categoria' => 'Celular', 'precio' => 2999, 'existencias' => 8, 'etiqueta' => 'Más vendido', 'demo' => true],
-            ['id' => 0, 'marca' => 'Samsung', 'nombre' => 'Galaxy S24 256GB', 'categoria' => 'Celular', 'precio' => 2399, 'existencias' => 12, 'etiqueta' => 'Oferta', 'demo' => true],
-            ['id' => 0, 'marca' => 'Xiaomi', 'nombre' => 'Redmi Note 13 Pro', 'categoria' => 'Celular', 'precio' => 899, 'existencias' => 15, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'Lenovo', 'nombre' => 'ThinkPad E14 Gen 5', 'categoria' => 'Laptop', 'precio' => 2199, 'existencias' => 6, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'JBL', 'nombre' => 'Audífonos Tune 520BT', 'categoria' => 'Audio', 'precio' => 249, 'existencias' => 18, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'Apple', 'nombre' => 'Watch SE', 'categoria' => 'Reloj', 'precio' => 1099, 'existencias' => 7, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'Apple', 'nombre' => 'AirPods Pro', 'categoria' => 'Audio', 'precio' => 1299, 'existencias' => 9, 'etiqueta' => 'Original', 'demo' => true],
-        ];
-        $productosPortada = $muestrasPortada;
+        // Los destacados provienen exclusivamente de productos activos existentes en la base de datos.
+        $productosPortada = array_slice(is_array($productos ?? null) ? $productos : [], 0, 7);
         ?>
         <?php if ($productosPortada): ?>
             <div class="product-grid home-product-grid">
