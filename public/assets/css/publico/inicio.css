@@ -1058,6 +1058,33 @@
   }
 }
 
+
+/* Destacados: misma paleta clara y tratamiento visual del catalogo. */
+.featured-products { background:#f7faff; }
+.featured-products .product-card {
+  background:#fff;
+  border:1px solid #dfe7f1;
+  border-radius:18px;
+  box-shadow:0 5px 16px rgba(15,23,42,.06);
+  padding:10px;
+  color:#101828;
+}
+.featured-products .product-art,
+body.dark .featured-products .product-art {
+  background:linear-gradient(145deg,#f1f8ff 0%,#e8f4ff 100%);
+  border-radius:14px;
+  overflow:hidden;
+}
+.featured-products .product-body { background:#fff; color:#101828; padding:12px 6px 4px; }
+.featured-products .product-meta,
+.featured-products .product-specs { color:#7b879b; }
+.featured-products .product-card h3 { color:#101828; }
+.featured-products .price { color:#0867ed; }
+.featured-products .stock { color:#17823b; }
+.featured-products .product-actions .btn-ghost { background:#fff; color:#101828; border-color:#dfe7f1; }
+.featured-products .product-actions .btn-primary { background:#0867ed; color:#fff; }
+.featured-products .product-reference-image { max-width:88%; max-height:88%; object-fit:contain; }
+
 .featured-products .home-product-grid .product-meta {
   font-size: 0.62rem;
 }
@@ -1661,3 +1688,4 @@
     font-size: 1.2rem;
   }
 }
+
