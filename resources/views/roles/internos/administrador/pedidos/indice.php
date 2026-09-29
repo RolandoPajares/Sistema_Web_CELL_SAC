@@ -1,74 +1,38 @@
-<header class="admin-page-head">
-    <div><span class="eyebrow">Dashboard · Pedidos</span>
-        <h1>Pedidos</h1>
-        <p>Gestiona y da seguimiento a todos los pedidos de MD Technology Cell.</p>
-    </div><button class="boton-fecha"><i class="bi bi-calendar3"></i> Hoy, <?= e(date('d M Y')) ?></button>
-</header>
-<div class="metricas-mockup">
-    <article class="metrica-mockup azul">
-        <div class="metrica-icono"><i class="bi bi-cart"></i></div>
-        <div><span>Pedidos nuevos</span><strong>24</strong><small><b>↑ 33%</b> vs. ayer</small></div>
-    </article>
-    <article class="metrica-mockup ambar">
-        <div class="metrica-icono"><i class="bi bi-gear"></i></div>
-        <div><span>En proceso</span><strong>18</strong><small><b>↑ 12%</b> vs. ayer</small></div>
-    </article>
-    <article class="metrica-mockup violeta">
-        <div class="metrica-icono"><i class="bi bi-truck"></i></div>
-        <div><span>Enviados</span><strong>32</strong><small><b>↑ 28%</b> vs. ayer</small></div>
-    </article>
-    <article class="metrica-mockup verde">
-        <div class="metrica-icono"><i class="bi bi-check-circle"></i></div>
-        <div><span>Entregados</span><strong>156</strong><small><b>↑ 19%</b> vs. ayer</small></div>
-    </article>
-</div>
-<section class="panel modulo-filtros"><label><i class="bi bi-search"></i><input type="search" placeholder="Buscar pedido, cliente o producto" data-table-search></label><button>Todos los estados <i class="bi bi-chevron-down"></i></button><button>Todos los canales <i class="bi bi-chevron-down"></i></button><button><i class="bi bi-calendar3"></i> Últimos 30 días</button></section>
-<div class="modulo-con-detalle">
-    <section class="panel tabla-mockup">
-        <div class="titulo-panel">
-            <div><i class="bi bi-cart"></i>
-                <h2>Pedidos (<?= count($pedidos) ?>)</h2>
-            </div><button><i class="bi bi-download"></i> Exportar</button>
-        </div>
-        <div class="table-responsive">
-            <table class="table data-table">
-                <thead>
-                    <tr>
-                        <th>Pedido</th>
-                        <th>Cliente</th>
-                        <th>Fecha</th>
-                        <th>Total</th>
-                        <th>Pago</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody><?php foreach ($pedidos as $pedido): ?><tr>
-                            <td><b>#<?= str_pad((string) $pedido['id'], 6, '0', STR_PAD_LEFT) ?></b></td>
-                            <td><?= e($pedido['nombre']) ?><small><?= e($pedido['correo']) ?></small></td>
-                            <td><?= e(date('d M Y', strtotime((string) $pedido['creado_en']))) ?></td>
-                            <td><?= money($pedido['total']) ?></td>
-                            <td><span class="estado estado--verde">Pagado</span></td>
-                            <td><span class="estado estado--ambar"><?= e($pedido['status']) ?></span></td>
-                            <td><button class="icon-btn"><i class="bi bi-three-dots"></i></button></td>
-                        </tr><?php endforeach; ?></tbody>
-            </table>
-        </div><?php if (!$pedidos): ?><div class="empty">Todavía no hay pedidos.</div><?php endif; ?>
+<?php
+$tarjetasKpi = [
+    ['etiqueta' => 'Pendientes', 'valor' => (string) ($conteos['Pendiente'] ?? 0), 'detalle' => 'Estado actual', 'icono' => 'bi-file-earmark-text', 'tono' => 'verde'],
+    ['etiqueta' => 'En proceso', 'valor' => (string) ($conteos['En proceso'] ?? 0), 'detalle' => 'Estado actual', 'icono' => 'bi-gear', 'tono' => 'azul'],
+    ['etiqueta' => 'Entregados', 'valor' => (string) ($conteos['Entregado'] ?? 0), 'detalle' => 'Estado actual', 'icono' => 'bi-check-circle', 'tono' => 'violeta'],
+    ['etiqueta' => 'Cancelados', 'valor' => (string) ($conteos['Cancelado'] ?? 0), 'detalle' => 'Estado actual', 'icono' => 'bi-x-square', 'tono' => 'rojo'],
+];
+?>
+<header class="admin-page-head"><div><h1>Pedidos <i class="bi bi-cart3"></i></h1><p>Seguimiento y control de pedidos comerciales.</p></div><div class="admin-page-actions"><button class="admin-primary-button admin-orders-new-button" type="button" disabled aria-disabled="true" aria-describedby="admin-orders-new-note" title="Creación administrativa prevista para una siguiente iteración"><i class="bi bi-plus-lg"></i> Nuevo pedido</button><span class="admin-orders-action-note" id="admin-orders-new-note">Próxima iteración</span></div></header>
+<?php if ($error): ?><div class="admin-alert admin-alert--error" role="alert"><?= e($error) ?></div><?php endif; ?><?php if ($exito): ?><div class="admin-alert admin-alert--success" role="status"><?= e($exito) ?></div><?php endif; ?>
+<?php require dirname(__DIR__, 4) . '/componentes/administracion/tarjetas-kpi.php'; ?>
+<div class="admin-orders-content" data-admin-table-container>
+    <div class="admin-toolbar admin-orders-toolbar">
+        <label class="admin-toolbar-search"><i class="bi bi-search" aria-hidden="true"></i><input type="search" data-table-search placeholder="Buscar pedido o cliente..." aria-label="Buscar pedidos o clientes"></label>
+        <label class="admin-orders-filter"><span>Estado</span><select data-order-status-filter aria-label="Filtrar pedidos por estado"><option value="">Todos los estados</option><?php foreach (\App\Validacion\Pedidos\SolicitudEstadoPedido::ESTADOS as $estadoOpcion): ?><option value="<?= e($estadoOpcion) ?>"><?= e($estadoOpcion) ?></option><?php endforeach; ?></select></label>
+        <label class="admin-orders-filter"><span>Fecha</span><select data-order-period-filter aria-label="Filtrar pedidos por período"><option value="all">Todos los períodos</option><option value="30">Últimos 30 días</option><option value="90">Últimos 90 días</option></select></label>
+    </div>
+<div class="admin-grid-main">
+    <section class="admin-panel" data-orders-list><header class="admin-panel-header"><div class="admin-panel-title"><i class="bi bi-cart3"></i><div><h2>Lista de pedidos (<?= count($pedidos) ?>)</h2><p>Pedidos almacenados en MySQL</p></div></div></header>
+        <div class="admin-table-wrap"><table class="admin-table" data-admin-table><thead><tr><th>Pedido</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
+            <?php if ($pedidos === []): ?><tr data-orders-empty><td colspan="6" class="admin-table-empty">Todavía no hay pedidos registrados.</td></tr><?php endif; ?>
+            <?php foreach ($pedidos as $pedido): $claseEstado = match ($pedido['estado']) { 'Pendiente' => 'admin-status--warning', 'En proceso', 'Enviado' => 'admin-status--info', 'Entregado' => '', 'Cancelado' => 'admin-status--danger', default => 'admin-status--muted' }; ?><tr data-data-row data-order-status="<?= e($pedido['estado']) ?>" data-order-time="<?= (int) strtotime((string) $pedido['creado_en']) ?>" class="<?= $detalle && (int) $detalle['id'] === (int) $pedido['id'] ? 'admin-order-row--selected' : '' ?>"><td><a href="<?= e(url('admin/orders/' . (int) $pedido['id'])) ?>"><b>#<?= str_pad((string) $pedido['id'], 6, '0', STR_PAD_LEFT) ?></b></a></td><td><?= e($pedido['nombre']) ?><small><?= e($pedido['correo']) ?></small></td><td><?= e(date('d/m/Y H:i', strtotime((string) $pedido['creado_en']))) ?></td><td><b><?= e(money($pedido['total'])) ?></b></td><td><span class="admin-status <?= $claseEstado ?>"><?= e($pedido['estado']) ?></span></td><td><a class="admin-action-icon" href="<?= e(url('admin/orders/' . (int) $pedido['id'])) ?>" aria-label="Ver detalle"><i class="bi bi-eye"></i></a></td></tr><?php endforeach; ?>
+            <?php if ($pedidos !== []): ?><tr data-orders-filter-empty hidden><td colspan="6" class="admin-table-empty">No se encontraron pedidos para esos filtros.</td></tr><?php endif; ?>
+        </tbody></table></div><div class="admin-pagination" data-admin-pagination></div>
     </section>
-    <aside class="panel detalle-mockup">
-        <div class="titulo-panel">
-            <div><i class="bi bi-receipt"></i>
-                <h2>Detalle del pedido</h2>
-            </div><button><i class="bi bi-x-lg"></i></button>
-        </div>
-        <h3>#001244 <span class="estado estado--ambar">Enviado</span></h3>
-        <p><b>Cliente</b><br>Distribuidora Tech S.A.<br><small>RUC: 20567890123</small></p>
-        <hr>
-        <h3>Productos (3)</h3>
-        <div class="producto-detalle-pedido"><i class="bi bi-phone"></i><span>iPhone 15 128GB<small>2 unidades</small></span><b>S/ 4,598</b></div>
-        <div class="producto-detalle-pedido"><i class="bi bi-headphones"></i><span>Audífonos JBL<small>2 unidades</small></span><b>S/ 399</b></div>
-        <div class="total-pedido"><span>Total del pedido</span><b>S/ 5,680.00</b></div>
-        <h3>Envío y seguimiento</h3>
-        <div class="linea-seguimiento"><i class="activo"></i><i class="activo"></i><i class="activo"></i><i></i></div><small>Confirmado · En preparación · En tránsito · Entregado</small>
+    <aside class="admin-panel admin-order-detail"><header class="admin-panel-header"><div class="admin-panel-title"><i class="bi bi-receipt"></i><div><h2>Detalle del pedido</h2><p><?= $detalle ? '#' . str_pad((string) $detalle['id'], 6, '0', STR_PAD_LEFT) : 'Selecciona un pedido' ?></p></div></div><?php if ($detalle): ?><a class="admin-action-icon" href="<?= e(url('admin/orders')) ?>" aria-label="Cerrar detalle"><i class="bi bi-x-lg"></i></a><?php endif; ?></header>
+        <?php if ($detalle): ?>
+            <?php $claseEstadoDetalle = match ($detalle['estado']) { 'Pendiente' => 'admin-status--warning', 'En proceso', 'Enviado' => 'admin-status--info', 'Entregado' => '', 'Cancelado' => 'admin-status--danger', default => 'admin-status--muted' }; ?>
+            <div class="admin-order-detail-summary"><div><strong>#<?= str_pad((string) $detalle['id'], 6, '0', STR_PAD_LEFT) ?></strong><span class="admin-status <?= $claseEstadoDetalle ?>"><?= e($detalle['estado']) ?></span></div><small>Realizado el <?= e(date('d/m/Y H:i', strtotime((string) $detalle['creado_en']))) ?></small></div>
+            <section class="admin-order-customer"><h3><i class="bi bi-person"></i> Datos del cliente</h3><b><?= e($detalle['nombre']) ?></b><a href="mailto:<?= e($detalle['correo']) ?>"><?= e($detalle['correo']) ?></a></section>
+            <section class="admin-order-items"><h3><i class="bi bi-box-seam"></i> Productos (<?= count($detalle['detalle']) ?>)</h3>
+            <?php foreach ($detalle['detalle'] as $item): ?><div class="admin-order-item"><span class="admin-list-icon"><i class="bi bi-box-seam"></i></span><div><b><?= e($item['marca'] . ' ' . $item['nombre']) ?></b><small><?= (int) $item['cantidad'] ?> × <?= e(money($item['precio_unitario'])) ?></small></div><strong><?= e(money($item['subtotal'])) ?></strong></div><?php endforeach; ?></section>
+            <div class="admin-order-total"><span>Total</span><strong><?= e(money($detalle['total'])) ?></strong></div>
+            <form class="admin-order-status-form" method="post" action="<?= e(url('admin/orders/' . (int) $detalle['id'] . '/status')) ?>"><?= csrf_field() ?><label class="admin-form-group"><span>Actualizar estado</span><select name="estado" required><?php foreach (\App\Validacion\Pedidos\SolicitudEstadoPedido::ESTADOS as $estadoOpcion): ?><option value="<?= e($estadoOpcion) ?>" <?= $detalle['estado'] === $estadoOpcion ? 'selected' : '' ?>><?= e($estadoOpcion) ?></option><?php endforeach; ?></select></label><div class="admin-form-actions"><button class="admin-primary-button" type="submit"><i class="bi bi-arrow-repeat"></i> Actualizar estado</button></div></form>
+        <?php else: ?><div class="admin-empty admin-order-empty">Selecciona un pedido para consultar sus productos.</div><div class="admin-order-status-placeholder"><label class="admin-form-group"><span>Actualizar estado</span><select disabled aria-label="Selecciona un pedido para habilitar el estado"><option>Selecciona un pedido</option></select></label><button class="admin-primary-button" type="button" disabled aria-disabled="true"><i class="bi bi-arrow-repeat"></i> Actualizar estado</button></div><?php endif; ?>
     </aside>
+</div>
 </div>

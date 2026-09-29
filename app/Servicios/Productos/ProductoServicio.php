@@ -6,11 +6,14 @@ namespace App\Servicios\Productos;
 
 use App\DTO\Productos\FiltroProducto;
 use App\DAO\Contratos\RepositorioProductoInterfaz;
+use App\DAO\Contratos\RepositorioCategoriaInterfaz;
 
 final class ProductoServicio
 {
-    public function __construct(private RepositorioProductoInterfaz $productos)
-    {
+    public function __construct(
+        private RepositorioProductoInterfaz $productos,
+        private ?RepositorioCategoriaInterfaz $categorias = null,
+    ) {
     }
 
     public function conexionDisponible(): bool
@@ -63,6 +66,19 @@ final class ProductoServicio
         return $this->productos->todosParaAdministrador();
     }
 
+    /** @return array{total:int,activos:int,inactivos:int,stock_bajo:int} */
+    public function resumenAdministrativo(): array
+    {
+        $productos = $this->todosParaAdministrador();
+
+        return [
+            'total' => count($productos),
+            'activos' => count(array_filter($productos, static fn (array $producto): bool => (int) $producto['activo'] === 1)),
+            'inactivos' => count(array_filter($productos, static fn (array $producto): bool => (int) $producto['activo'] === 0)),
+            'stock_bajo' => count(array_filter($productos, static fn (array $producto): bool => (int) $producto['activo'] === 1 && (int) $producto['existencias'] <= 8)),
+        ];
+    }
+
     /** @return array<string, mixed>|null */
     public function buscarParaAdministrador(int $idProducto): ?array
     {
@@ -75,6 +91,8 @@ final class ProductoServicio
         if (!$this->productos->estaDisponible()) {
             throw new \RuntimeException('La base de datos no está disponible.');
         }
+
+        $datos = $this->resolverCategoria($datos);
 
         if ($idProducto !== null && $idProducto > 0) {
             if ($this->productos->buscarParaAdministrador($idProducto) === null) {
@@ -134,5 +152,28 @@ final class ProductoServicio
     public function todosActivos(): array
     {
         return $this->productos->todosActivos();
+    }
+
+    /** @param array<string, mixed> $datos
+     *  @return array<string, mixed>
+     */
+    private function resolverCategoria(array $datos): array
+    {
+        if ($this->categorias === null) {
+            return $datos;
+        }
+
+        $categoria = (int) ($datos['categoria_id'] ?? 0) > 0
+            ? $this->categorias->buscarActiva((int) $datos['categoria_id'])
+            : $this->categorias->buscarPorNombre((string) ($datos['categoria'] ?? ''));
+
+        if ($categoria === null || (int) ($categoria['activo'] ?? 1) !== 1) {
+            throw new \DomainException('La categoría seleccionada no existe o está inactiva.');
+        }
+
+        $datos['categoria_id'] = (int) $categoria['id'];
+        $datos['categoria'] = (string) $categoria['nombre'];
+
+        return $datos;
     }
 }

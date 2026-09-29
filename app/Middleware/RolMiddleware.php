@@ -17,6 +17,10 @@ final class RolMiddleware
             return redirect('login');
         }
 
+        if (AccesoRol::normalize((string) ($usuario['rol'] ?? '')) === 'administrador') {
+            return redirect('admin');
+        }
+
         $modulo = (string) ($solicitud->parametroRuta('module') ?? 'dashboard');
         if (!AccesoRol::can((string) ($usuario['rol'] ?? ''), $modulo)) {
             return response('No tienes autorización para acceder a este módulo.', 403);

@@ -9,6 +9,7 @@ use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Presentacion\Vista;
 use App\Servicios\Productos\ProductoServicio;
 use App\Servicios\ComercioInteligente\ComercioInteligenteServicio;
+use App\Servicios\Campanias\CampaniaServicio;
 
 final class ComercioInteligenteController
 {
@@ -16,6 +17,7 @@ final class ComercioInteligenteController
         private Vista $vista,
         private ComercioInteligenteServicio $comercioInteligente,
         private ProductoServicio $productos,
+        private CampaniaServicio $campanias,
     ) {
     }
 
@@ -104,6 +106,8 @@ final class ComercioInteligenteController
     {
         return $this->vista->renderizar('comercio-inteligente.publicidad.indice', [
             'tituloPagina' => 'MD Ads inteligente',
+            'resumen' => $this->campanias->resumen(),
+            'campanias' => $this->campanias->todosParaAdministrador(),
         ]);
     }
 

@@ -1,15 +1,50 @@
+<?php $rutaCampanias = is_admin() ? 'admin/campaigns' : 'panel/campanias'; ?>
 <section class="publicidad-ia-fondo">
     <div class="container publicidad-ia-layout">
         <aside class="publicidad-ia-menu">
             <div><i class="bi bi-stars"></i><span><b>MD Ads inteligente</b><small>Impulsa tus ventas con IA</small></span></div>
-            <?php foreach ([['bi-grid','Vista general'],['bi-clock-history','Mis campañas'],['bi-bar-chart','Analítica de ventas'],['bi-people','Audiencia'],['bi-box-seam','Productos'],['bi-stars','Recomendaciones IA'],['bi-file-earmark-bar-graph','Reportes'],['bi-plugin','Integraciones'],['bi-gear','Configuración']] as $indice => $opcion): ?><a class="<?= $indice === 0 ? 'activo' : '' ?>" href="<?= e($indice === 1 ? url('admin/campaigns') : '#seccion-' . $indice) ?>"><i class="bi <?= e($opcion[0]) ?>"></i><?= e($opcion[1]) ?></a><?php endforeach; ?>
+            <?php foreach ([['bi-grid', 'Vista general'], ['bi-clock-history', 'Mis campañas'], ['bi-bar-chart', 'Analítica de ventas'], ['bi-people', 'Audiencia'], ['bi-box-seam', 'Productos'], ['bi-stars', 'Recomendaciones IA'], ['bi-file-earmark-bar-graph', 'Reportes'], ['bi-plugin', 'Integraciones'], ['bi-gear', 'Configuración']] as $indice => $opcion): ?><a class="<?= $indice === 0 ? 'activo' : '' ?>" href="<?= e($indice === 1 ? url($rutaCampanias) : '#seccion-' . $indice) ?>"><i class="bi <?= e($opcion[0]) ?>"></i><?= e($opcion[1]) ?></a><?php endforeach; ?>
             <div class="publicidad-convierte"><i class="bi bi-graph-up-arrow"></i><b>Convierte más.<br>Vende inteligente.</b><small>IA + Datos + Resultados</small></div>
         </aside>
         <main class="publicidad-ia-contenido">
-            <header><div><span>Inteligencia Artificial para tu negocio</span><h1>MD Ads inteligente<br><em>SmartCommerce</em></h1><p>Convierte clics en clientes. Analiza, optimiza y haz crecer tu negocio con el poder de la IA.</p></div><div class="publicidad-ia-acciones"><a class="btn btn-primary" href="<?= e(url('admin/campaigns')) ?>"><i class="bi bi-plus-lg"></i> Crear campaña</a><a href="#recomendaciones"><i class="bi bi-bar-chart"></i> Optimizar anuncios</a><a href="#reportes"><i class="bi bi-file-text"></i> Generar reporte IA</a></div></header>
-            <div class="publicidad-metricas"><?php foreach ([['bi-cart','Ventas atribuidas','S/ 12,450','+28%'],['bi-people','Pedidos generados','186','+32%'],['bi-bar-chart','ROAS','4.8x','+1.2x'],['bi-eye','Impresiones','258,400','+18%']] as $metrica): ?><article><i class="bi <?= e($metrica[0]) ?>"></i><div><span><?= e($metrica[1]) ?></span><b><?= e($metrica[2]) ?></b><small><?= e($metrica[3]) ?></small></div></article><?php endforeach; ?></div>
-            <div class="publicidad-rejilla"><section class="panel"><div class="titulo-panel"><h2>Ventas atribuidas por día</h2><button>Ventas atribuidas <i class="bi bi-chevron-down"></i></button></div><div class="grafico-barras grande"><?php foreach ([52,70,64,82,96,76,105,88,118,96,126,110,139,121,148] as $indice => $altura): ?><span style="--altura:<?= $altura ?>px"><b><?= 1 + ($indice * 2) ?> Abr</b></span><?php endforeach; ?></div></section><section class="panel embudo-publicidad"><h2>Conversión del embudo</h2><?php foreach ([['120,500','Impresiones','100%'],['18,420','Clics','15.3%'],['2,980','Añadido al carrito','2.5%'],['186','Compras','0.15%']] as $indice => $fila): ?><div style="--ancho:<?= 100 - ($indice * 17) ?>%"><b><?= e($fila[0]) ?></b><span><?= e($fila[1]) ?></span><small><?= e($fila[2]) ?></small></div><?php endforeach; ?></section><aside class="panel" id="recomendaciones"><h2><i class="bi bi-stars"></i> Insights con IA</h2><?php foreach ([['Tus ventas crecieron 28%','La campaña de iPhone 15 está generando más ventas.'],['Tu audiencia más activa','Hombres y mujeres de 18 a 34 años en Bagua.'],['Mejor día de conversión','Los miércoles generan un 35% más compras.']] as $insight): ?><article><i class="bi bi-graph-up"></i><div><b><?= e($insight[0]) ?></b><p><?= e($insight[1]) ?></p></div></article><?php endforeach; ?></aside></div>
-            <div class="publicidad-tablas" id="reportes"><section class="panel"><h2>Productos destacados por ventas</h2><ol><li>iPhone 15 128GB <b>S/ 5,280</b></li><li>Samsung Galaxy A54 <b>S/ 2,940</b></li><li>Xiaomi Redmi Note 13 <b>S/ 1,680</b></li><li>AirPods Pro 2 <b>S/ 1,250</b></li></ol></section><section class="panel"><h2>Top campañas</h2><ol><li>iPhone 15 · Potencia tu mundo <b>5.2x</b></li><li>Samsung Galaxy A · A tu ritmo <b>4.1x</b></li><li>Xiaomi · Más para ti <b>3.9x</b></li><li>Accesorios Apple <b>4.8x</b></li></ol></section><section class="panel"><h2>Recomendaciones de la IA</h2><p>Campaña de remarketing lista para activar.</p><a class="btn btn-primary" href="<?= e(url('admin/campaigns')) ?>">Crear ahora</a></section></div>
+            <header>
+                <div><span>Inteligencia Artificial para tu negocio</span>
+                    <h1>MD Ads inteligente<br><em>SmartCommerce</em></h1>
+                    <p>Convierte clics en clientes. Analiza, optimiza y haz crecer tu negocio con el poder de la IA.</p>
+                </div>
+                <div class="publicidad-ia-acciones"><a class="btn btn-primary" href="<?= e(url($rutaCampanias)) ?>"><i class="bi bi-plus-lg"></i> Crear campaña</a><button type="button" disabled title="Próxima iteración"><i class="bi bi-bar-chart"></i> Optimizar anuncios</button><button type="button" disabled title="Próxima iteración"><i class="bi bi-file-text"></i> Generar reporte IA</button></div>
+            </header>
+            <div class="publicidad-metricas"><?php foreach ([['bi-megaphone', 'Campañas activas', (string) $resumen['activas'], 'Datos reales'], ['bi-eye', 'Impresiones', number_format((int) $resumen['vistas']), 'Datos reales'], ['bi-mouse', 'Clics', number_format((int) $resumen['clics']), 'Datos reales'], ['bi-bar-chart', 'CTR', number_format((float) $resumen['ctr'], 1) . '%', 'Calculado']] as $metrica): ?><article><i class="bi <?= e($metrica[0]) ?>"></i>
+                        <div><span><?= e($metrica[1]) ?></span><b><?= e($metrica[2]) ?></b><small><?= e($metrica[3]) ?></small></div>
+                    </article><?php endforeach; ?></div>
+            <div class="publicidad-rejilla">
+                <section class="panel">
+                    <div class="titulo-panel">
+                        <h2>Ventas atribuidas por día</h2><button>Ventas atribuidas <i class="bi bi-chevron-down"></i></button>
+                    </div>
+                    <p>Próxima iteración: se mostrará la serie diaria cuando exista historial de atribución.</p>
+                </section>
+                <section class="panel embudo-publicidad">
+                    <h2>Conversión del embudo</h2><p>Próxima iteración: aún no existe atribución entre campañas, carrito y compras.</p>
+                </section>
+                <aside class="panel" id="recomendaciones">
+                    <h2><i class="bi bi-stars"></i> Insights con IA</h2><p>Funcionalidad planificada para una siguiente etapa.</p>
+                </aside>
+            </div>
+            <div class="publicidad-tablas" id="reportes">
+                <section class="panel">
+                    <h2>Productos destacados por ventas</h2>
+                    <p>Próxima iteración: requiere atribución de ventas por campaña.</p>
+                </section>
+                <section class="panel">
+                    <h2>Top campañas</h2>
+                    <ol><?php foreach (array_slice($campanias, 0, 4) as $campania): ?><li><?= e($campania['nombre']) ?> <b><?= (int) $campania['clics'] ?> clics</b></li><?php endforeach; ?></ol>
+                </section>
+                <section class="panel">
+                    <h2>Recomendaciones de la IA</h2>
+                    <p>Funcionalidad planificada para una siguiente etapa.</p><button class="btn btn-primary" type="button" disabled>Próxima iteración</button>
+                </section>
+            </div>
         </main>
     </div>
 </section>

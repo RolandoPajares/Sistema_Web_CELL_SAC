@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Validacion\Productos;
 
-use App\Soporte\Productos\CategoriasProducto;
 use App\Nucleo\Http\Solicitud;
 use App\Soporte\Excepciones\ExcepcionValidacion;
 
@@ -22,8 +21,8 @@ final class SolicitudProducto
             'marca' => $texto('brand'),
             'nombre' => $texto('name'),
             'categoria' => $texto('category'),
+            'categoria_id' => 0,
             'precio' => 0.0,
-            'existencias' => 0,
             'almacenamiento' => $texto('storage'),
             'color' => $texto('color'),
             'etiqueta' => $texto('badge'),
@@ -40,8 +39,11 @@ final class SolicitudProducto
             $errores['nombre'] = 'El nombre es obligatorio y admite hasta 160 caracteres.';
         }
 
-        if (!in_array($datos['categoria'], CategoriasProducto::ALL, true)) {
-            $errores['categoria'] = 'La categoría no es válida.';
+        $categoriaId = filter_var($solicitud->entrada('category_id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if ($categoriaId === false && $datos['categoria'] === '') {
+            $errores['categoria'] = 'Selecciona una categoría válida.';
+        } elseif ($categoriaId !== false) {
+            $datos['categoria_id'] = (int) $categoriaId;
         }
 
         $precio = $solicitud->entrada('price');
@@ -49,18 +51,6 @@ final class SolicitudProducto
             $errores['precio'] = 'El precio debe ser mayor que cero.';
         } else {
             $datos['precio'] = (float) $precio;
-        }
-
-        $existencias = $solicitud->entrada('stock');
-        if (
-            !is_scalar($existencias)
-            || filter_var($existencias, FILTER_VALIDATE_INT) === false
-            || (int) $existencias < 0
-            || (int) $existencias > 2147483647
-        ) {
-            $errores['existencias'] = 'El stock debe ser un entero no negativo.';
-        } else {
-            $datos['existencias'] = (int) $existencias;
         }
 
         foreach (['almacenamiento' => 80, 'color' => 80, 'etiqueta' => 80] as $campo => $limite) {

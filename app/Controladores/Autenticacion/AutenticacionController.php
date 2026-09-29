@@ -42,7 +42,7 @@ final class AutenticacionController
             $usuario = $this->autenticacion->iniciarSesion($credenciales['correo'], $credenciales['contrasena']);
             $this->limitador->limpiar($solicitud->ruta() . '|' . $solicitud->direccionIp());
 
-            return redirect('panel');
+            return redirect(($usuario['rol'] ?? '') === 'administrador' ? 'admin' : 'panel');
         } catch (ExcepcionValidacion $excepcion) {
             $errores = $excepcion->errores();
             $this->mensajes->error(reset($errores) ?: 'Datos inválidos.');

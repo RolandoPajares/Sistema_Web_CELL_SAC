@@ -37,7 +37,7 @@ final class Contenedor
             return $this->instancias[$abstracto] = $concreto($this);
         }
 
-        if (is_string($concreto) && $concreto !== $abstracto) {
+        if ($concreto !== $abstracto) {
             return $this->instancias[$abstracto] = $this->obtener($concreto);
         }
 

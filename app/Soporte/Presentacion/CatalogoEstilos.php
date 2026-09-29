@@ -15,6 +15,10 @@ final class CatalogoEstilos
         $rol = AccesoRol::normalize($rol);
         $modulo = self::modulo($ruta, $modulo);
 
+        if ($plantilla === 'administrador') {
+            return ['assets/css/roles/internos/administrador.css'];
+        }
+
         if ($plantilla === 'interno') {
             $estilos = [
                 'assets/css/modulos/comunes/panel.css',
@@ -106,7 +110,7 @@ final class CatalogoEstilos
             $clases[] = 'modulo-' . preg_replace('/[^a-z0-9-]+/', '-', str_replace('_', '-', $modulo));
         }
 
-        return implode(' ', array_filter($clases));
+        return implode(' ', $clases);
     }
 
     private static function modulo(string $ruta, string $modulo): string
