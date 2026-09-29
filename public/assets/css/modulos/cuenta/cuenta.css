@@ -473,3 +473,92 @@
     display: none;
   }
 }
+
+
+/* ---------- Banner de bienvenida ---------- */
+.cuenta-banner {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 28px 30px;
+  border-radius: 20px;
+  color: #fff;
+  background: linear-gradient(120deg, #0b3fb8, #1356e8, #22b8f0);
+  box-shadow: 0 15px 35px rgba(19, 60, 160, 0.2);
+}
+
+.cuenta-banner-etiqueta {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.cuenta-banner h1 {
+  margin: 14px 0 6px;
+  font-size: 34px;
+  color: #fff;
+}
+
+.cuenta-banner p {
+  margin: 0;
+  color: #e0ecff;
+}
+
+.cuenta-banner-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cuenta-btn-blanco,
+.cuenta-btn-borde {
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.cuenta-btn-blanco {
+  background: #fff;
+  color: #1356e8;
+}
+
+.cuenta-btn-borde {
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+}
+
+.cuenta-btn-blanco:hover,
+.cuenta-btn-borde:hover {
+  opacity: 0.9;
+}
+
+.cuenta-banner img {
+  width: 100%;
+  max-width: 320px;
+  justify-self: end;
+}
+
+/* en celular el banner se pone en una sola columna */
+@media (max-width: 780px) {
+  .cuenta-banner {
+    grid-template-columns: 1fr;
+    padding: 24px 20px;
+  }
+
+  .cuenta-banner h1 {
+    font-size: 28px;
+  }
+
+  .cuenta-banner img {
+    justify-self: center;
+    max-width: 250px;
+  }
+}
