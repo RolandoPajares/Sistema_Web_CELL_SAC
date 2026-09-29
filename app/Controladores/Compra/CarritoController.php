@@ -37,7 +37,7 @@ final class CarritoController
                 ['options' => ['min_range' => 1]]
             );
             if ($idProducto !== false) {
-                $this->carrito->agregar((int) $idProducto);
+                $this->carrito->agregar((int) $idProducto, (int)($solicitud->entrada('variante_id') ?? 0) ?: null);
             }
         }
 
