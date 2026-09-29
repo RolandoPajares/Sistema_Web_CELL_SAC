@@ -1,4 +1,3 @@
-
 /* etiqueta pequeña que va arriba de los títulos */
 .contacto-etiqueta {
   display: inline-block;
@@ -251,4 +250,84 @@ html {
   margin: 0;
   color: #64748b;
   font-size: 14px;
+}
+
+/* ---------- 3. Ubicación al costado del formulario ---------- */
+.contacto-seccion {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+}
+
+/* ahora el formulario ocupa su columna completa */
+.contacto-formulario {
+  max-width: none;
+}
+
+.contacto-mapa {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid #e3ecf8;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  scroll-margin-top: 100px;
+}
+
+/* "mapa" hecho con CSS: las lineas blancas simulan las calles */
+.contacto-mapa-dibujo {
+  flex: 1;
+  min-height: 330px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e5ecf5;
+  background-image:
+    linear-gradient(transparent 56%, #fde68a 56%, #fde68a 61%, transparent 61%),
+    linear-gradient(90deg, transparent 30%, #ffffff 30%, #ffffff 34%, transparent 34%),
+    linear-gradient(#ffffff 6px, transparent 6px),
+    linear-gradient(90deg, #ffffff 6px, transparent 6px);
+  background-size: 100% 100%, 100% 100%, 60px 60px, 60px 60px; /* avenida, calle y manzanas */
+}
+
+/* marcador de la tienda */
+.contacto-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.contacto-pin i {
+  font-size: 54px;
+  color: #1356e8;
+  text-shadow: 0 8px 16px rgba(19, 86, 232, 0.35);
+}
+
+.contacto-pin span {
+  padding: 7px 14px;
+  border-radius: 20px;
+  background: #fff;
+  color: #0b1b3f;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 0 6px 16px rgba(15, 40, 90, 0.18);
+}
+
+.contacto-mapa-pie {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+}
+
+.contacto-mapa-pie .btn {
+  white-space: nowrap;
+}
+
+.contacto-mapa-pie small {
+  display: block;
+  color: #64748b;
 }

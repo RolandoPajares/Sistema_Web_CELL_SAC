@@ -1,7 +1,6 @@
 <?php
-// Datos para el mapa y el botón "Cómo llegar" (se usa la misma dirección de la configuración)
+// Enlace para abrir la ubicación en Google Maps (usa la dirección de la configuración)
 $direccion = config('app.address');
-$mapa = 'https://www.google.com/maps?q=' . urlencode($direccion) . '&output=embed';
 $comoLlegar = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($direccion);
 ?>
 <!-- Hoja de estilos solo para esta página -->
@@ -16,7 +15,7 @@ $comoLlegar = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($di
             <p>Escríbenos tu consulta o visítanos en nuestra tienda de Bagua. Te ayudamos a elegir el celular o accesorio ideal, con productos originales y atención cercana.</p>
             <div class="contacto-botones">
                 <a class="btn btn-primary" href="#formulario"><i class="bi bi-send"></i> Enviar consulta</a>
-                <a class="btn btn-ghost" href="<?= e($comoLlegar) ?>" target="_blank"><i class="bi bi-geo-alt"></i> Cómo llegar</a>
+                <a class="btn btn-ghost" href="#mapa"><i class="bi bi-geo-alt"></i> Cómo llegar</a>
             </div>
             <ul class="contacto-ventajas">
                 <li><i class="bi bi-patch-check-fill"></i> Productos originales</li>
@@ -84,5 +83,19 @@ $comoLlegar = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($di
                 <button type="submit" class="btn btn-primary">Enviar consulta <i class="bi bi-send"></i></button>
             </div>
         </form>
+    </div>
+
+    <!-- ===== 3. Ubicación de la tienda ===== -->
+    <div class="contacto-mapa" id="mapa">
+        <div class="contacto-mapa-dibujo">
+            <div class="contacto-pin">
+                <i class="bi bi-geo-alt-fill"></i>
+                <span>MD Technology Cell</span>
+            </div>
+        </div>
+        <div class="contacto-mapa-pie">
+            <div><b>MD Technology Digital Cell</b><small><?= e($direccion) ?></small></div>
+            <a class="btn btn-primary" href="<?= e($comoLlegar) ?>" target="_blank"><i class="bi bi-sign-turn-right"></i> Ver en Google Maps</a>
+        </div>
     </div>
 </section>
