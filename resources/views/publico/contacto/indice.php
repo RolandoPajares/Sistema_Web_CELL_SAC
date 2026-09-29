@@ -111,3 +111,13 @@ $comoLlegar = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($di
         <?php endfor; ?>
     </div>
 </section>
+
+<!-- ===== 6. Franja para ir al catálogo ===== -->
+<section class="container contacto-final">
+    <div>
+        <h2>¿Ya sabes qué equipo quieres?</h2>
+        <p>Revisa precios, características y stock disponible en nuestro catálogo antes de visitarnos.</p>
+        <a href="<?= e(url('catalog')) ?>">Ver catálogo <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <img src="<?= e(asset('assets/img/publico/inicio/secciones/hero-devices.png')) ?>" alt="Celulares y accesorios">
+</section>

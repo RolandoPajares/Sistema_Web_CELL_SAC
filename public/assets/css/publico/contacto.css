@@ -374,3 +374,43 @@ html {
 .contacto-galeria div:hover img {
   transform: scale(1.05);
 }
+
+/* ---------- 6. Franja final para ir al catálogo ---------- */
+.contacto-final {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 20px;
+  margin: 20px auto 60px;
+  padding: 35px 40px;
+  border-radius: 25px;
+  color: #fff;
+  background: linear-gradient(120deg, #0b3fb8, #1356e8, #3b82f6);
+}
+
+.contacto-final h2 {
+  margin: 0 0 10px;
+  font-size: 30px;
+  color: #fff;
+}
+
+.contacto-final p {
+  color: #dbe7ff;
+}
+
+.contacto-final a {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  background: #fff;
+  color: #1356e8;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.contacto-final img {
+  width: 100%;
+  max-width: 440px;
+  justify-self: end;
+}
