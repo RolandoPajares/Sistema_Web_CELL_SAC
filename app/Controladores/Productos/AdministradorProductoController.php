@@ -69,91 +69,16 @@ final class AdministradorProductoController
             'baseDatosDisponible' => $baseDatosDisponible,
             'productos' => $baseDatosDisponible ? $this->productos->todosParaAdministrador() : [],
             'edicion' => $productoEdicion,
-            'variantesEdicion' => $productoEdicion ? $this->cargarVariantes((int)$productoEdicion['id']) : [],
-            'imagenReferencia' => $productoEdicion ? $this->productos->imagenReferencia((int)$productoEdicion['id']) : null,
-            'caracteristicasEdicion' => $productoEdicion ? $this->productos->detalleConVariantes((int)$productoEdicion['id'])['caracteristicas'] ?? [] : [],
             'error' => $this->mensajes->extraer('error'),
             'exito' => $this->mensajes->extraer('success'),
         ], 'interno');
     }
-
-    private function cargarVariantes(int $productoId): array
-    {
-        $variantes=$this->productos->variantes($productoId);
-        foreach($variantes as &$v){ $v['imagenes']=$this->productos->imagenesVariante((int)$v['id']); }
-        return $variantes;
-    }
-
-    public function crearVariante(Solicitud $solicitud): Respuesta
-    {
-        $pid=(int)$solicitud->parametroRuta('id');
-        try { $nombre=trim((string)$solicitud->entrada('variant_name')); if($nombre==='') throw new \DomainException('Indica el nombre del color.');
-            $this->productos->crearVariante($pid,$nombre,trim((string)$solicitud->entrada('variant_hex')),(int)$solicitud->entrada('variant_stock',0));
-            $this->mensajes->exito('Color añadido. Ahora puedes cargar sus imágenes.');
-        } catch(Throwable $e){$this->mensajes->error($e->getMessage());}
-        return redirect('admin/products/'.$pid.'/edit#variantes-producto');
-    }
-
-    public function eliminarVariante(Solicitud $solicitud): Respuesta
-    {
-        $pid=(int)$solicitud->parametroRuta('id');
-        $vid=(int)$solicitud->parametroRuta('variant');
-        try {
-            $rutas=$this->productos->eliminarVariante($pid,$vid);
-            foreach($rutas as $ruta){ $this->borrarArchivoUpload((string)$ruta); }
-            $dir=dirname(__DIR__,3).'/public/uploads/products/'.$pid.'/'.$vid;
-            if(is_dir($dir)){ @rmdir($dir); }
-            $this->mensajes->exito('Color eliminado correctamente.');
-        } catch(Throwable $e){ $this->mensajes->error($e->getMessage()); }
-        return redirect('admin/products/'.$pid.'/edit#variantes-producto');
-    }
-
-    public function subirImagenes(Solicitud $solicitud): Respuesta
-    {
-        $pid=(int)$solicitud->parametroRuta('id'); $vid=(int)$solicitud->parametroRuta('variant');
-        try { $files=$solicitud->archivo('images'); if(!$files || !is_array($files['name']??null)) throw new \DomainException('Selecciona una o más imágenes.');
-            $dir=dirname(__DIR__,3).'/public/uploads/products/'.$pid.'/'.$vid; if(!is_dir($dir) && !mkdir($dir,0775,true) && !is_dir($dir)) throw new \RuntimeException('No se pudo crear la carpeta de imágenes.');
-            $permitidos=['image/jpeg'=>'jpg','image/png'=>'png','image/webp'=>'webp']; $finfo=new \finfo(FILEINFO_MIME_TYPE); $count=0;
-            foreach($files['name'] as $i=>$name){$tmp=$files['tmp_name'][$i]??'';$err=(int)($files['error'][$i]??UPLOAD_ERR_NO_FILE);$size=(int)($files['size'][$i]??0);if($err!==UPLOAD_ERR_OK)continue;if($size>5*1024*1024)throw new \DomainException('Cada imagen debe pesar máximo 5 MB.');$mime=$finfo->file($tmp);if(!isset($permitidos[$mime]))throw new \DomainException('Solo se permiten JPG, PNG o WebP.');$file=bin2hex(random_bytes(8)).'.'.$permitidos[$mime];if(!move_uploaded_file($tmp,$dir.'/'.$file))throw new \RuntimeException('No se pudo guardar una imagen.');$ruta='uploads/products/'.$pid.'/'.$vid.'/'.$file;$this->productos->agregarImagenVariante($vid,$ruta);$count++;}
-            if($count===0)throw new \DomainException('No se recibió ninguna imagen válida.');$this->mensajes->exito($count.' imagen(es) añadida(s) al color.');
-        } catch(Throwable $e){$this->mensajes->error($e->getMessage());}
-        return redirect('admin/products/'.$pid.'/edit#variantes-producto');
-    }
-
-    public function eliminarImagen(Solicitud $solicitud): Respuesta
-    {
-        $pid=(int)$solicitud->parametroRuta('id'); try{$ruta=$this->productos->eliminarImagenVariante((int)$solicitud->parametroRuta('image'));if($ruta){$base=dirname(__DIR__,3).'/public/';$real=realpath($base.$ruta);$uploads=realpath($base.'uploads');if($real && $uploads && str_starts_with($real,$uploads))@unlink($real);}$this->mensajes->exito('Imagen eliminada.');}catch(Throwable $e){$this->mensajes->error('No se pudo eliminar la imagen.');}
-        return redirect('admin/products/'.$pid.'/edit#variantes-producto');
-    }
-
-    public function subirImagenReferencia(Solicitud $solicitud): Respuesta
-    {
-        $pid=(int)$solicitud->parametroRuta('id');
-        try { $f=$solicitud->archivo('reference_image'); if(!$f || (int)($f['error']??UPLOAD_ERR_NO_FILE)!==UPLOAD_ERR_OK) throw new \DomainException('Selecciona una imagen de referencia.');
-            if((int)($f['size']??0)>5*1024*1024) throw new \DomainException('La imagen debe pesar máximo 5 MB.');
-            $mime=(new \finfo(FILEINFO_MIME_TYPE))->file((string)$f['tmp_name']); $ext=['image/jpeg'=>'jpg','image/png'=>'png','image/webp'=>'webp'][$mime]??null; if(!$ext) throw new \DomainException('Solo se permiten JPG, PNG o WebP.');
-            $dir=dirname(__DIR__,3).'/public/uploads/products/'.$pid.'/reference'; if(!is_dir($dir)) mkdir($dir,0775,true); $name=bin2hex(random_bytes(8)).'.'.$ext; if(!move_uploaded_file((string)$f['tmp_name'],$dir.'/'.$name)) throw new \RuntimeException('No se pudo guardar la imagen.');
-            $old=$this->productos->guardarImagenReferencia($pid,'uploads/products/'.$pid.'/reference/'.$name); $this->borrarArchivoUpload($old); $this->mensajes->exito('Imagen de referencia actualizada.');
-        } catch(Throwable $e){$this->mensajes->error($e->getMessage());} return redirect('admin/products/'.$pid.'/edit#editor-producto');
-    }
-
-    public function eliminarImagenReferencia(Solicitud $solicitud): Respuesta
-    {
-        $pid=(int)$solicitud->parametroRuta('id'); try{$old=$this->productos->eliminarImagenReferencia($pid);$this->borrarArchivoUpload($old);$this->mensajes->exito('Imagen de referencia eliminada.');}catch(Throwable $e){$this->mensajes->error('No se pudo eliminar la imagen.');} return redirect('admin/products/'.$pid.'/edit#editor-producto');
-    }
-
-    private function borrarArchivoUpload(?string $ruta): void
-    { if(!$ruta)return; $base=dirname(__DIR__,3).'/public/'; $real=realpath($base.$ruta); $uploads=realpath($base.'uploads'); if($real&&$uploads&&str_starts_with($real,$uploads)) @unlink($real); }
 
     public function guardar(Solicitud $solicitud): Respuesta
     {
         try {
             $datos = SolicitudProducto::validar($solicitud);
             $idGuardado = $this->productos->guardar($datos);
-            $this->productos->guardarCaracteristicas($idGuardado, [
-                'Memoria RAM'=>(string)$solicitud->entrada('spec_ram',''), 'Memoria Interna'=>(string)$solicitud->entrada('spec_storage',''),
-                'Batería'=>(string)$solicitud->entrada('spec_battery',''), 'Procesador y generación'=>(string)$solicitud->entrada('spec_processor','')
-            ]);
             $this->auditoria->registrar('product.created', 'product', $idGuardado, null, $datos, $solicitud->direccionIp());
             $this->mensajes->exito('Producto registrado correctamente.');
             $this->registro->info('Producto creado desde la administración.', [
@@ -186,10 +111,6 @@ final class AdministradorProductoController
             $datos = SolicitudProducto::validar($solicitud);
             $valoresAnteriores = $this->productos->buscarParaAdministrador((int) $idProducto);
             $idGuardado = $this->productos->guardar($datos, (int) $idProducto);
-            $this->productos->guardarCaracteristicas($idGuardado, [
-                'Memoria RAM'=>(string)$solicitud->entrada('spec_ram',''), 'Memoria Interna'=>(string)$solicitud->entrada('spec_storage',''),
-                'Batería'=>(string)$solicitud->entrada('spec_battery',''), 'Procesador y generación'=>(string)$solicitud->entrada('spec_processor','')
-            ]);
             $this->auditoria->registrar(
                 'product.updated',
                 'product',

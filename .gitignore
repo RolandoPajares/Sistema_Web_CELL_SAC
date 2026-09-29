@@ -8,9 +8,8 @@
 !/storage/sessions/.gitkeep
 /storage/uploads/*
 !/storage/uploads/.gitkeep
-# Product images are intentionally versioned so cloned repositories keep them.
-!/public/uploads/
-!/public/uploads/**
+/public/uploads/*
+!/public/uploads/.gitkeep
 /.phpunit.cache/
 /.phpunit.result.cache
 *.tmp
