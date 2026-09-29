@@ -27,7 +27,8 @@ final class InteligenciaNegocioDAO
                  GROUP BY p.id ORDER BY unidades DESC LIMIT 5'
             )->fetchAll(),
             'existencias_bajas' => $pdo->query(
-                'SELECT id, marca, nombre, existencias FROM productos WHERE activo = 1 ORDER BY existencias ASC LIMIT 5'
+                'SELECT id, marca, nombre, existencias FROM productos
+                 WHERE activo = 1 AND existencias <= 8 ORDER BY existencias ASC LIMIT 5'
             )->fetchAll(),
             'diario' => $pdo->query(
                 'SELECT DATE(p.creado_en) dia, COALESCE(SUM(dp.cantidad), 0) unidades
@@ -36,5 +37,118 @@ final class InteligenciaNegocioDAO
                  GROUP BY DATE(p.creado_en) ORDER BY dia'
             )->fetchAll(),
         ];
+    }
+
+    /** @return array<int, array{periodo:string,total:float,pedidos:int}> */
+    public function ventasMensuales(int $meses = 12): array
+    {
+        $meses = min(24, max(1, $meses));
+        $sentencia = $this->conexion->pdoObligatorio()->prepare(
+            'SELECT DATE_FORMAT(creado_en, "%Y-%m") AS periodo,
+                    COALESCE(SUM(total), 0) AS total, COUNT(*) AS pedidos
+             FROM pedidos
+             WHERE estado <> :cancelado AND creado_en >= DATE_SUB(CURRENT_DATE, INTERVAL ' . $meses . ' MONTH)
+             GROUP BY DATE_FORMAT(creado_en, "%Y-%m")
+             ORDER BY periodo'
+        );
+        $sentencia->bindValue(':cancelado', 'Cancelado');
+        $sentencia->execute();
+
+        return $sentencia->fetchAll();
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    public function pedidosRecientes(int $limite = 6): array
+    {
+        $sentencia = $this->conexion->pdoObligatorio()->prepare(
+            'SELECT p.id, p.total, p.estado, p.creado_en, u.nombre
+             FROM pedidos p JOIN usuarios u ON u.id = p.usuario_id
+             ORDER BY p.creado_en DESC, p.id DESC LIMIT :limite'
+        );
+        $sentencia->bindValue(':limite', min(20, max(1, $limite)), \PDO::PARAM_INT);
+        $sentencia->execute();
+
+        return $sentencia->fetchAll();
+    }
+
+    /** @return array{ventas:float,pedidos:int,productos_vendidos:int,clientes:int} */
+    public function resumenPeriodo(string $desde, string $hasta): array
+    {
+        $pdo = $this->conexion->pdoObligatorio();
+        $sentencia = $pdo->prepare(
+            'SELECT COALESCE(SUM(total), 0) AS ventas, COUNT(*) AS pedidos,
+                    COUNT(DISTINCT usuario_id) AS clientes
+             FROM pedidos
+             WHERE estado <> :cancelado AND DATE(creado_en) BETWEEN :desde AND :hasta'
+        );
+        $sentencia->execute([':cancelado' => 'Cancelado', ':desde' => $desde, ':hasta' => $hasta]);
+        $fila = $sentencia->fetch() ?: [];
+        $productos = $pdo->prepare(
+            'SELECT COALESCE(SUM(dp.cantidad), 0)
+             FROM detalle_pedidos dp JOIN pedidos p ON p.id = dp.pedido_id
+             WHERE p.estado <> :cancelado AND DATE(p.creado_en) BETWEEN :desde AND :hasta'
+        );
+        $productos->execute([':cancelado' => 'Cancelado', ':desde' => $desde, ':hasta' => $hasta]);
+
+        return [
+            'ventas' => (float) ($fila['ventas'] ?? 0),
+            'pedidos' => (int) ($fila['pedidos'] ?? 0),
+            'productos_vendidos' => (int) $productos->fetchColumn(),
+            'clientes' => (int) ($fila['clientes'] ?? 0),
+        ];
+    }
+
+    /** @return array<int, array{periodo:string,total:float,pedidos:int}> */
+    public function ventasDiarias(string $desde, string $hasta): array
+    {
+        $sentencia = $this->conexion->pdoObligatorio()->prepare(
+            'SELECT DATE(creado_en) AS periodo, COALESCE(SUM(total), 0) AS total, COUNT(*) AS pedidos
+             FROM pedidos
+             WHERE estado <> :cancelado AND DATE(creado_en) BETWEEN :desde AND :hasta
+             GROUP BY DATE(creado_en) ORDER BY periodo'
+        );
+        $sentencia->execute([':cancelado' => 'Cancelado', ':desde' => $desde, ':hasta' => $hasta]);
+
+        return $sentencia->fetchAll();
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    public function detalleReporte(string $tipo, string $desde, string $hasta): array
+    {
+        $pdo = $this->conexion->pdoObligatorio();
+        $consulta = match ($tipo) {
+            'pedidos' => 'SELECT p.id, u.nombre AS cliente, p.creado_en AS fecha, p.total, p.estado
+                          FROM pedidos p JOIN usuarios u ON u.id = p.usuario_id
+                          WHERE DATE(p.creado_en) BETWEEN :desde AND :hasta ORDER BY p.creado_en DESC',
+            'inventario' => 'SELECT CONCAT(p.marca, " ", p.nombre) AS producto, p.categoria,
+                             p.existencias AS stock, p.activo AS estado
+                             FROM productos p ORDER BY p.existencias, p.nombre',
+            'productos' => 'SELECT CONCAT(p.marca, " ", p.nombre) AS producto, c.nombre AS categoria,
+                            p.precio, p.existencias AS stock, p.activo AS estado
+                            FROM productos p JOIN categorias c ON c.id = p.categoria_id ORDER BY p.nombre',
+            'clientes' => 'SELECT nombre_contacto AS cliente, documento, tipo, correo, telefono, activo AS estado
+                           FROM clientes ORDER BY activo DESC, nombre_contacto',
+            default => 'SELECT CONCAT(pr.marca, " ", pr.nombre) AS producto, c.nombre AS categoria,
+                        COALESCE(SUM(dp.cantidad), 0) AS cantidad,
+                        COALESCE(SUM(dp.cantidad * dp.precio_unitario), 0) AS total
+                        FROM detalle_pedidos dp
+                        JOIN pedidos p ON p.id = dp.pedido_id
+                        JOIN productos pr ON pr.id = dp.producto_id
+                        JOIN categorias c ON c.id = pr.categoria_id
+                        WHERE p.estado <> :cancelado AND DATE(p.creado_en) BETWEEN :desde AND :hasta
+                        GROUP BY pr.id, pr.marca, pr.nombre, c.nombre ORDER BY total DESC',
+        };
+        $sentencia = $pdo->prepare($consulta);
+        if (in_array($tipo, ['inventario', 'productos', 'clientes'], true)) {
+            $sentencia->execute();
+        } else {
+            $parametros = [':desde' => $desde, ':hasta' => $hasta];
+            if ($tipo === 'ventas') {
+                $parametros[':cancelado'] = 'Cancelado';
+            }
+            $sentencia->execute($parametros);
+        }
+
+        return $sentencia->fetchAll();
     }
 }

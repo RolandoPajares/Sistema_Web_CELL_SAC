@@ -46,6 +46,26 @@ final class AuditoriaServicio
         }
     }
 
+    /** @return array{desde:string,hasta:string,registros:array<int,array<string,mixed>>,resumen:array<string,int>,actividad:array<int,array<string,mixed>>} */
+    public function consulta(string $desde = '', string $hasta = '', string $entidad = '', int $usuarioId = 0): array
+    {
+        $fechaHasta = $this->fechaValida($hasta) ?? new \DateTimeImmutable('today');
+        $fechaDesde = $this->fechaValida($desde) ?? $fechaHasta->modify('-29 days');
+        if ($fechaDesde > $fechaHasta) {
+            [$fechaDesde, $fechaHasta] = [$fechaHasta, $fechaDesde];
+        }
+        $desdeNormalizado = $fechaDesde->format('Y-m-d');
+        $hastaNormalizado = $fechaHasta->format('Y-m-d');
+
+        return [
+            'desde' => $desdeNormalizado,
+            'hasta' => $hastaNormalizado,
+            'registros' => $this->auditoria->listar($desdeNormalizado, $hastaNormalizado, trim($entidad), $usuarioId),
+            'resumen' => $this->auditoria->resumen(),
+            'actividad' => $this->auditoria->actividadPorEntidad(),
+        ];
+    }
+
     /**
      * @param array<string, mixed>|null $valores
      * @return array<string, mixed>|null
@@ -57,5 +77,12 @@ final class AuditoriaServicio
         }
 
         return $valores;
+    }
+
+    private function fechaValida(string $fecha): ?\DateTimeImmutable
+    {
+        $valor = \DateTimeImmutable::createFromFormat('!Y-m-d', $fecha);
+
+        return $valor && $valor->format('Y-m-d') === $fecha ? $valor : null;
     }
 }

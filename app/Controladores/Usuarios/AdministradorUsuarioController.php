@@ -20,6 +20,7 @@ final class AdministradorUsuarioController
         return $this->vista->renderizar('roles.internos.administrador.usuarios.indice', [
             'tituloPagina' => 'Usuarios',
             'usuarios' => $this->usuarios->todos(),
-        ], 'interno');
+            'resumen' => $this->usuarios->resumen(),
+        ], 'administrador');
     }
 }

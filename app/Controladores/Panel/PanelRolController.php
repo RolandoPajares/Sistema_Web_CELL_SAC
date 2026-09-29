@@ -31,6 +31,10 @@ final class PanelRolController
         $resumen = $this->consultaSegura(fn (): array => $this->modulos->resumen(), []);
         $rol = AccesoRol::normalize((string) ($usuario['rol'] ?? ''));
 
+        if ($rol === 'administrador') {
+            return redirect('admin');
+        }
+
         if (str_starts_with($rol, 'cliente_')) {
             return $this->vista->renderizar('modulos.cuenta.panel', [
                 'tituloPagina' => 'Mi cuenta',

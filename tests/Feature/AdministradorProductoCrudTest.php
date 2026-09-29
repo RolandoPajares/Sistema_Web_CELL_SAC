@@ -10,6 +10,7 @@ use App\Nucleo\Enrutamiento\Enrutador;
 use App\Nucleo\BaseDatos\Conexion;
 use App\Nucleo\Aplicacion;
 use App\Soporte\Seguridad\GestorTokenCsrf;
+use App\DAO\Categorias\CategoriaDAO;
 use PHPUnit\Framework\TestCase;
 
 final class AdministradorProductoCrudTest extends TestCase
@@ -18,6 +19,7 @@ final class AdministradorProductoCrudTest extends TestCase
     private ProductoDAO $productos;
     private Enrutador $enrutador;
     private string $csrf;
+    private int $categoriaId;
 
     protected function setUp(): void
     {
@@ -31,6 +33,7 @@ final class AdministradorProductoCrudTest extends TestCase
         $this->enrutador = Aplicacion::obtener(Enrutador::class);
         $_SESSION = ['user' => ['id' => 1, 'nombre' => 'Admin Test', 'rol' => 'administrador']];
         $this->csrf = Aplicacion::obtener(GestorTokenCsrf::class)->token();
+        $this->categoriaId = (int) Aplicacion::obtener(CategoriaDAO::class)->activas()[0]['id'];
     }
 
     protected function tearDown(): void
@@ -50,7 +53,7 @@ final class AdministradorProductoCrudTest extends TestCase
             'csrf' => $this->csrf,
             'brand' => 'Marca Test',
             'name' => $nombreCreado,
-            'category' => 'Accesorio',
+            'category_id' => (string) $this->categoriaId,
             'price' => '49.90',
             'stock' => '5',
             'storage' => 'USB-C',
@@ -75,7 +78,7 @@ final class AdministradorProductoCrudTest extends TestCase
             'csrf' => $this->csrf,
             'brand' => 'Marca Test',
             'name' => $nombreActualizado,
-            'category' => 'Accesorio',
+            'category_id' => (string) $this->categoriaId,
             'price' => '59.90',
             'stock' => '7',
             'storage' => 'USB-C',
