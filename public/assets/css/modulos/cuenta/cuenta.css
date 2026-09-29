@@ -562,3 +562,93 @@
     max-width: 250px;
   }
 }
+
+/* ---------- Menú lateral ----------
+   Se pinta de azul, igual que el panel del administrador,
+   para que vaya acorde con los colores del logo */
+.cuenta-lateral {
+  background: linear-gradient(180deg, #0b3fb8, #0a2c80);
+  border: 0;
+}
+
+.cuenta-identidad {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.cuenta-identidad b {
+  color: #fff;
+}
+
+.cuenta-identidad small {
+  color: #bcd2ff;
+}
+
+.cuenta-identidad em {
+  color: #86efac;
+}
+
+.cuenta-identidad > span {
+  background: #fff;
+  color: #1356e8;
+}
+
+.cuenta-lateral nav a {
+  color: #dbe7ff;
+}
+
+.cuenta-lateral nav a i {
+  color: #9cc0ff;
+}
+
+.cuenta-lateral nav a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* opción seleccionada */
+.cuenta-lateral nav a.activo {
+  background: #fff;
+  color: #0b3fb8;
+  border-left: 3px solid #22b8f0;
+}
+
+.cuenta-lateral nav a.activo i {
+  color: #1356e8;
+}
+
+.cuenta-lateral form {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.cuenta-lateral form button {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.cuenta-anuncio {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ---------- Tarjetas de resumen (métricas) ---------- */
+.cuenta-resumen article {
+  border-radius: 14px;
+  transition: 0.3s;
+}
+
+.cuenta-resumen article:hover {
+  transform: translateY(-3px);
+}
+
+.cuenta-resumen article > i {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
+/* un color diferente para cada tarjeta */
+.cuenta-resumen article:nth-child(1) > i { background: #e8f0ff; color: #1356e8; }
+.cuenta-resumen article:nth-child(2) > i { background: #e7f8f0; color: #0f9f6e; }
+.cuenta-resumen article:nth-child(3) > i { background: #fff4e0; color: #d97706; }
+.cuenta-resumen article:nth-child(4) > i { background: #fde8f1; color: #db2777; }
