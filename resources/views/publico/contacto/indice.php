@@ -99,3 +99,15 @@ $comoLlegar = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($di
         </div>
     </div>
 </section>
+
+<!-- ===== 5. Fotos de la tienda ===== -->
+<section class="container contacto-tienda">
+    <span class="contacto-etiqueta"><i class="bi bi-camera"></i> Nuestra tienda</span>
+    <h2>Ven y prueba los equipos en persona</h2>
+    <p>Exhibimos celulares, audífonos y accesorios de las marcas que más te gustan.</p>
+    <div class="contacto-galeria">
+        <?php for ($i = 1; $i <= 4; $i++): ?>
+            <div><img src="<?= e(asset('assets/img/publico/inicio/banners/exhibicion' . $i . '.jpg')) ?>" alt="Exhibición de la tienda <?= $i ?>"></div>
+        <?php endfor; ?>
+    </div>
+</section>

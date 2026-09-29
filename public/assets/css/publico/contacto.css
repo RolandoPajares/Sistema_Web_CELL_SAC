@@ -331,3 +331,46 @@ html {
   display: block;
   color: #64748b;
 }
+
+/* ---------- 5. Galería de fotos de la tienda ---------- */
+.contacto-tienda {
+  padding-top: 20px;
+  text-align: center;
+}
+
+.contacto-tienda h2 {
+  margin: 14px 0 8px;
+  font-size: 32px;
+}
+
+.contacto-tienda > p {
+  color: #64748b;
+}
+
+.contacto-galeria {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 25px;
+}
+
+.contacto-galeria div {
+  height: 330px;
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+}
+
+/* las fotos tienen bordes negros a los lados, por eso se agrandan un poco */
+.contacto-galeria img {
+  width: 136%;
+  max-width: none;
+  height: 100%;
+  margin-left: -18%;
+  object-fit: cover;
+  transition: 0.4s;
+}
+
+.contacto-galeria div:hover img {
+  transform: scale(1.05);
+}
