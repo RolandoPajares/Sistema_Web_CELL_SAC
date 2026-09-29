@@ -28,7 +28,16 @@ final class CatalogoController
         sort($marcas, SORT_STRING);
 
         $marca = $texto($solicitud->consulta('brand', $solicitud->consulta('marca')));
-        $categoria = $texto($solicitud->consulta('cat', $solicitud->consulta('category')));
+        $categoriaSolicitada = $solicitud->consulta('cat', $solicitud->consulta('category'));
+        $categoria = $texto($categoriaSolicitada);
+        if ($categoriaSolicitada === null) {
+            foreach ($categorias as $categoriaActiva) {
+                if (preg_match('/^celular(?:es)?$/iu', trim($categoriaActiva)) === 1) {
+                    $categoria = $categoriaActiva;
+                    break;
+                }
+            }
+        }
         $orden = $texto($solicitud->consulta('sort'), 'newest');
         $filtros = [
             'q' => mb_substr($texto($solicitud->consulta('q')), 0, 160),
@@ -55,7 +64,7 @@ final class CatalogoController
             precioMinimo: $precioMinimo,
             precioMaximo: $precioMaximo,
             pagina: max(1, (int) $solicitud->consulta('page', 1)),
-            porPagina: 12,
+            porPagina: 25,
             orden: $filtros['sort'],
         ));
 

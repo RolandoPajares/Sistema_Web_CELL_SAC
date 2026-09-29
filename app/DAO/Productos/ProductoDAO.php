@@ -42,8 +42,13 @@ final class ProductoDAO implements RepositorioProductoInterfaz
             $parametros['marca'] = $filtro->marca;
         }
         if ($filtro->categoria !== '') {
-            $condiciones[] = 'categoria = :categoria';
-            $parametros['categoria'] = $filtro->categoria;
+            $placeholdersCategoria = [];
+            foreach (self::categoriasCompatibles($filtro->categoria) as $indice => $categoriaCompatible) {
+                $nombreParametro = 'categoria_' . $indice;
+                $placeholdersCategoria[] = ':' . $nombreParametro;
+                $parametros[$nombreParametro] = $categoriaCompatible;
+            }
+            $condiciones[] = 'LOWER(TRIM(categoria)) IN (' . implode(', ', $placeholdersCategoria) . ')';
         }
         if ($filtro->precioMinimo !== null) {
             $condiciones[] = 'precio >= :precio_minimo';
@@ -68,7 +73,8 @@ final class ProductoDAO implements RepositorioProductoInterfaz
             default => 'id DESC',
         };
         $sentencia = $this->pdo()->prepare(
-            'SELECT id, marca, nombre, categoria, precio, existencias, almacenamiento, color, etiqueta, descripcion
+            'SELECT id, marca, nombre, categoria, precio, precio_original, descuento, precio_oferta,
+                    url_imagen, existencias, etiqueta, almacenamiento, color, descripcion
              FROM productos WHERE ' . $clausulaWhere . ' ORDER BY ' . $orden . ' LIMIT :limit OFFSET :offset'
         );
         foreach ($parametros as $nombre => $valor) {
@@ -226,6 +232,18 @@ final class ProductoDAO implements RepositorioProductoInterfaz
     private function pdo(): PDO
     {
         return $this->conexion->pdoObligatorio();
+    }
+
+    /** @return array<int, string> */
+    private static function categoriasCompatibles(string $categoria): array
+    {
+        $categoria = mb_strtolower(trim($categoria));
+        $singular = preg_replace('/(?:es|s)$/u', '', $categoria) ?? $categoria;
+        $plural = preg_match('/[aeiouáéíóú]$/u', $singular) === 1
+            ? $singular . 's'
+            : $singular . 'es';
+
+        return array_values(array_unique(array_filter([$categoria, $singular, $plural])));
     }
 
     /** @param array<string, mixed> $datos */

@@ -99,8 +99,6 @@ final class CatalogoEstilos
 
         if ($ruta === '/about') {
             $estilos[] = 'assets/css/yaxon/nosotros.css';
-        } elseif ($ruta === '/catalog') {
-            $estilos[] = 'assets/css/david/catalogo.css';
         }
 
         $estilos[] = 'assets/css/responsive/adaptable.css';

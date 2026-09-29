@@ -60,76 +60,66 @@
         <div class="section-head home-section-head">
             <div>
                 <h2>Productos destacados</h2>
-                <p>Lo más buscado, al mejor precio. Equipos originales y con garantía.</p>
+                <p>Productos y precios actualizados desde nuestro catálogo.</p>
             </div>
             <a href="<?= e(url('catalog')) ?>" class="home-view-all">Ver todos los productos <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
         </div>
-        <?php
-        $muestrasPortada = [
-            ['id' => 0, 'marca' => 'Apple', 'nombre' => 'iPhone 15 128GB', 'categoria' => 'Celular', 'precio' => 2999, 'existencias' => 8, 'etiqueta' => 'Más vendido', 'demo' => true],
-            ['id' => 0, 'marca' => 'Samsung', 'nombre' => 'Galaxy S24 256GB', 'categoria' => 'Celular', 'precio' => 2399, 'existencias' => 12, 'etiqueta' => 'Oferta', 'demo' => true],
-            ['id' => 0, 'marca' => 'Xiaomi', 'nombre' => 'Redmi Note 13 Pro', 'categoria' => 'Celular', 'precio' => 899, 'existencias' => 15, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'Motorola', 'nombre' => 'Moto G47 128GB', 'categoria' => 'Celular', 'precio' => 639, 'existencias' => 6, 'etiqueta' => 'Oferta', 'demo' => true],
-            ['id' => 0, 'marca' => 'Samsung', 'nombre' => 'Galaxy A55 128GB', 'categoria' => 'Celular', 'precio' => 1599, 'existencias' => 8, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'Apple', 'nombre' => 'iPhone 16 128GB', 'categoria' => 'Celular', 'precio' => 3299, 'existencias' => 5, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'Samsung', 'nombre' => 'Galaxy A35 256GB', 'categoria' => 'Celular', 'precio' => 1199, 'existencias' => 10, 'etiqueta' => 'Oferta', 'demo' => true],
-            ['id' => 0, 'marca' => 'Xiaomi', 'nombre' => 'Redmi Note 14 Pro 256GB', 'categoria' => 'Celular', 'precio' => 1199, 'existencias' => 14, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'Motorola', 'nombre' => 'Edge 50 Fusion 256GB', 'categoria' => 'Celular', 'precio' => 1499, 'existencias' => 4, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'HONOR', 'nombre' => 'X8c 256GB', 'categoria' => 'Celular', 'precio' => 999, 'existencias' => 7, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'Apple', 'nombre' => 'iPhone 15 Pro 256GB', 'categoria' => 'Celular', 'precio' => 4299, 'existencias' => 3, 'etiqueta' => 'Premium', 'demo' => true],
-            ['id' => 0, 'marca' => 'Samsung', 'nombre' => 'Galaxy S24 FE 256GB', 'categoria' => 'Celular', 'precio' => 2599, 'existencias' => 6, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'Xiaomi', 'nombre' => 'Redmi Note 13 256GB', 'categoria' => 'Celular', 'precio' => 699, 'existencias' => 18, 'etiqueta' => 'Oferta', 'demo' => true],
-            ['id' => 0, 'marca' => 'Motorola', 'nombre' => 'Moto G85 256GB', 'categoria' => 'Celular', 'precio' => 1099, 'existencias' => 9, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'HONOR', 'nombre' => 'X9c 256GB', 'categoria' => 'Celular', 'precio' => 1299, 'existencias' => 5, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'Apple', 'nombre' => 'iPhone 14 128GB', 'categoria' => 'Celular', 'precio' => 2399, 'existencias' => 8, 'etiqueta' => 'Oferta', 'demo' => true],
-            ['id' => 0, 'marca' => 'Samsung', 'nombre' => 'Galaxy A25 256GB', 'categoria' => 'Celular', 'precio' => 899, 'existencias' => 11, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'Xiaomi', 'nombre' => 'Redmi 13 256GB', 'categoria' => 'Celular', 'precio' => 499, 'existencias' => 13, 'etiqueta' => 'Nuevo', 'demo' => true],
-            ['id' => 0, 'marca' => 'Motorola', 'nombre' => 'Moto G55 256GB', 'categoria' => 'Celular', 'precio' => 799, 'existencias' => 7, 'etiqueta' => 'Popular', 'demo' => true],
-            ['id' => 0, 'marca' => 'HONOR', 'nombre' => '200 Lite 256GB', 'categoria' => 'Celular', 'precio' => 1399, 'existencias' => 4, 'etiqueta' => 'Oferta', 'demo' => true],
-        ];
-        $productosPortada = $muestrasPortada;
-        ?>
-        <?php if ($productosPortada): ?>
+        <?php if (!empty($productos)): ?>
             <div class="product-grid home-product-grid">
-                <?php foreach ($productosPortada as $producto): ?>
+                <?php foreach ($productos as $producto): ?>
                     <?php
                     $categoriaProducto = (string) ($producto['categoria'] ?? 'Celular');
                     $nombreProductoPortada = (string) ($producto['nombre'] ?? '');
-                    preg_match('/(\d+)\s*GB/i', $nombreProductoPortada, $coincidenciaAlmacenamiento);
-                    $almacenamientoPortada = $coincidenciaAlmacenamiento[1] ?? '128';
-                    $precioProductoPortada = (float) ($producto['precio'] ?? 0);
-                    $precioAnteriorPortada = round(($precioProductoPortada / 0.8) / 10) * 10;
-                    $descuentoPortada = $precioAnteriorPortada > 0
-                        ? (int) round((1 - ($precioProductoPortada / $precioAnteriorPortada)) * 100)
-                        : 0;
-                    $enlaceCatalogoPortada = url('catalog?category=Celular');
-                    $enlaceDetallePortada = url('catalog?q=' . rawurlencode($nombreProductoPortada));
+                    $marcaProductoPortada = (string) ($producto['marca'] ?? '');
+                    $almacenamientoPortada = trim((string) ($producto['almacenamiento'] ?? ''));
+                    $precioProductoPortada = (float) ($producto['precio_oferta'] ?? $producto['precio'] ?? 0);
+                    $precioOriginalPortada = (float) ($producto['precio_original'] ?? 0);
+                    $descuentoPortada = trim((string) ($producto['descuento'] ?? ''));
+                    $existenciasPortada = (int) ($producto['existencias'] ?? 0);
+                    $imagenPortada = product_image_url((string) ($producto['url_imagen'] ?? ''));
+                    $enlaceDetallePortada = url('products/' . (int) ($producto['id'] ?? 0));
                     ?>
                     <article class="product-card home-product-card">
-                        <a class="home-product-image-link" href="<?= e($enlaceDetallePortada) ?>" aria-label="Explorar <?= e($producto['marca'] . ' ' . $nombreProductoPortada) ?>">
+                        <a class="home-product-image-link" href="<?= e($enlaceDetallePortada) ?>" aria-label="Ver <?= e($marcaProductoPortada . ' ' . $nombreProductoPortada) ?>">
                             <div class="product-art home-product-art">
-                                <span class="badge"><?= e($producto['etiqueta'] ?? $producto['marca']) ?></span>
-                                <div class="phone-shape"><?= e(product_visual((string) $producto['marca'])) ?></div>
+                                <span class="badge"><?= e($producto['etiqueta'] ?? 'Oferta') ?></span>
+                                <?php if ($imagenPortada !== ''): ?>
+                                    <img class="home-product-photo" src="<?= e($imagenPortada) ?>" alt="<?= e($marcaProductoPortada . ' ' . $nombreProductoPortada) ?>" loading="lazy">
+                                <?php else: ?>
+                                    <div class="phone-shape" aria-hidden="true"><?= e(product_visual($marcaProductoPortada)) ?></div>
+                                <?php endif; ?>
                             </div>
                         </a>
                         <div class="product-body home-product-body">
-                            <div class="product-meta"><span><?= e($producto['marca']) ?></span><span><?= e($categoriaProducto) ?></span></div>
+                            <div class="product-meta"><span><?= e($marcaProductoPortada) ?></span><span><?= e($categoriaProducto) ?></span></div>
                             <h3><?= e($nombreProductoPortada) ?></h3>
-                            <div class="home-product-specs"><?= e($almacenamientoPortada) ?> GB · Equipo original</div>
-                            <div class="home-product-pricing">
-                                <del><?= money($precioAnteriorPortada) ?></del>
-                                <span>-<?= $descuentoPortada ?>%</span>
-                            </div>
+                            <div class="home-product-specs"><?= e($almacenamientoPortada !== '' ? $almacenamientoPortada . ' · ' : '') ?>Equipo original</div>
+                            <?php if ($precioOriginalPortada > $precioProductoPortada && $descuentoPortada !== ''): ?>
+                                <div class="home-product-pricing">
+                                    <del><?= money($precioOriginalPortada) ?></del>
+                                    <span><?= e($descuentoPortada) ?></span>
+                                </div>
+                            <?php endif; ?>
                             <div class="price"><?= money($precioProductoPortada) ?></div>
-                            <div class="stock"><?= (int) $producto['existencias'] ?> unidades disponibles</div>
+                            <div class="stock"><?= $existenciasPortada ?> unidades disponibles</div>
                             <div class="home-product-actions">
-                                <a class="btn btn-primary home-product-action" href="<?= e($enlaceCatalogoPortada) ?>"><i class="bi bi-cart3" aria-hidden="true"></i> Ver catálogo</a>
+                                <?php if ($existenciasPortada > 0): ?>
+                                    <form class="home-product-buy-form" action="<?= e(url('cart')) ?>" method="post">
+                                        <?= csrf_field() ?>
+                                        <input type="hidden" name="add" value="<?= (int) $producto['id'] ?>">
+                                        <button class="btn btn-primary home-product-action" type="submit"><i class="bi bi-cart3" aria-hidden="true"></i> Comprar</button>
+                                    </form>
+                                <?php else: ?>
+                                    <button class="btn btn-primary home-product-action" type="button" disabled>Agotado</button>
+                                <?php endif; ?>
                                 <a class="btn btn-ghost home-product-details" href="<?= e($enlaceDetallePortada) ?>">Ver detalles</a>
                             </div>
                         </div>
                     </article>
                 <?php endforeach; ?>
             </div>
+        <?php else: ?>
+            <p class="home-products-empty">No hay productos disponibles por el momento.</p>
         <?php endif; ?>
     </div>
 </section>

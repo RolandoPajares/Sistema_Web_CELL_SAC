@@ -26,7 +26,16 @@ $clasesCuerpo = \App\Soporte\Presentacion\CatalogoEstilos::clasesCuerpo(
     <meta name="description" content="Celulares y audífonos originales en Bagua. Catálogo, stock y atención de MD Technology Digital Cell.">
     <link rel="stylesheet" href="<?= e(asset('assets/css/estilos.css?v=20260927-8')) ?>">
     <?php foreach ($estilosContextuales as $archivoCss): ?>
-        <link rel="stylesheet" href="<?= e(asset($archivoCss . '?v=' . ($archivoCss === 'assets/css/publico/inicio.css' ? '20260928-8' : ($archivoCss === 'assets/css/estructura/sitio.css' ? '20260928-1' : '20260927-8')))) ?>">
+        <?php
+        $versionCss = match ($archivoCss) {
+            'assets/css/publico/inicio.css' => '20260928-8',
+            'assets/css/estructura/sitio.css' => '20260928-1',
+            'assets/css/publico/catalogo.css' => '20260929-3',
+            'assets/css/publico/producto.css' => '20260929-2',
+            default => '20260927-8',
+        };
+        ?>
+        <link rel="stylesheet" href="<?= e(asset($archivoCss . '?v=' . $versionCss)) ?>">
     <?php endforeach; ?>
     <link rel="stylesheet" href="<?= e(asset('assets/vendor/bootstrap-icons/bootstrap-icons.min.css')) ?>">
 </head>
@@ -40,7 +49,7 @@ $clasesCuerpo = \App\Soporte\Presentacion\CatalogoEstilos::clasesCuerpo(
 <button id="toTop" class="to-top" aria-label="Subir"><i class="bi bi-arrow-up" aria-hidden="true"></i></button>
 <script src="<?= e(asset('assets/js/aplicacion.js?v=20260927-5')) ?>"></script>
 <?php if (isset($producto) && str_contains($contenido, 'data-product-detail')): ?>
-<script src="<?= e(asset('assets/js/david/producto.js')) ?>"></script>
+<script src="<?= e(asset('assets/js/david/producto.js?v=20260929-2')) ?>"></script>
 <?php endif; ?>
 </body>
 </html>

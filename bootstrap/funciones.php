@@ -41,6 +41,29 @@ function asset(string $ruta): string
     return app(GeneradorUrl::class)->asset($ruta);
 }
 
+function product_image_url(string $ruta): string
+{
+    $ruta = trim($ruta);
+    $esquema = strtolower((string) parse_url($ruta, PHP_URL_SCHEME));
+    if ($ruta === '') {
+        return '';
+    }
+    if (in_array($esquema, ['http', 'https'], true)) {
+        return filter_var($ruta, FILTER_VALIDATE_URL) ? $ruta : '';
+    }
+
+    $rutaRelativa = ltrim($ruta, '/');
+    if (
+        !preg_match('#^assets/[A-Za-z0-9_./-]+$#D', $rutaRelativa)
+        || str_contains($rutaRelativa, '..')
+        || !is_file(dirname(__DIR__) . '/public/' . $rutaRelativa)
+    ) {
+        return '';
+    }
+
+    return asset($rutaRelativa);
+}
+
 function redirect(string $ruta): RespuestaRedireccion
 {
     return new RespuestaRedireccion(url($ruta));

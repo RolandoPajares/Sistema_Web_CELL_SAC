@@ -24,7 +24,16 @@ final class ProductoServicio
     /** @return array<int, array<string, mixed>> */
     public function destacados(int $limite = 4): array
     {
-        return array_slice($this->todosActivos(), 0, $limite);
+        $productos = $this->todosActivos();
+        usort($productos, static function (array $productoA, array $productoB): int {
+            $esCelularA = stripos((string) ($productoA['categoria'] ?? ''), 'celular') !== false;
+            $esCelularB = stripos((string) ($productoB['categoria'] ?? ''), 'celular') !== false;
+
+            return ($esCelularB <=> $esCelularA)
+                ?: ((int) ($productoB['id'] ?? 0) <=> (int) ($productoA['id'] ?? 0));
+        });
+
+        return array_slice($productos, 0, max(0, $limite));
     }
 
     /** @return array<int, array<string, mixed>> */
