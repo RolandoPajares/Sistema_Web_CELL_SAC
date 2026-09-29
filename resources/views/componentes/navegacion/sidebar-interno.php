@@ -11,11 +11,13 @@
             ?>
             <a class="<?= $activo ? 'active' : '' ?>" href="<?= e(url($destino)) ?>"><i class="bi <?= e($elemento['icon']) ?>" aria-hidden="true"></i><span><?= e($elemento['label']) ?></span></a>
         <?php endforeach; ?>
+        <?php if ($rolActual !== 'compras_logistica'): ?>
         <div class="sidebar-divider">Comercio inteligente</div>
         <?php $slugsNavegacion = array_column($navegacion, 'slug'); ?>
         <?php if (!in_array('recomendador', $slugsNavegacion, true)): ?><a href="<?= e(url('smart/recommend')) ?>"><i class="bi bi-lightbulb"></i><span>Recomendador</span></a><?php endif; ?>
         <?php if (!in_array('comparador', $slugsNavegacion, true)): ?><a href="<?= e(url('smart/compare')) ?>"><i class="bi bi-columns-gap"></i><span>Comparador</span></a><?php endif; ?>
         <?php if (!in_array('asistente', $slugsNavegacion, true)): ?><a href="<?= e(url('smart/assistant')) ?>"><i class="bi bi-robot"></i><span>MD Assistant</span></a><?php endif; ?>
+        <?php endif; ?>
     </nav>
-    <div class="sidebar-support"><i class="bi bi-headset"></i><div><b>Soporte interno</b><small>Ayuda para tu operación</small></div></div>
+    <?php if ($rolActual !== 'compras_logistica'): ?><div class="sidebar-support"><i class="bi bi-headset"></i><div><b>Soporte interno</b><small>Ayuda para tu operación</small></div></div><?php endif; ?>
 </aside>
