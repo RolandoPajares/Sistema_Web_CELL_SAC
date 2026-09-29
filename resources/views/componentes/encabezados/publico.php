@@ -12,8 +12,8 @@ $enlacesEncabezado = [
     ['etiqueta' => 'Inicio', 'destino' => '', 'activo' => $rutaEncabezado === '/' || str_ends_with($rutaEncabezado, '/public/')],
     ['etiqueta' => 'Catálogo', 'destino' => 'catalog', 'activo' => str_contains($rutaEncabezado, '/catalog') || str_contains($rutaEncabezado, '/products/')],
     ['etiqueta' => 'SmartMatch', 'destino' => 'smart/recommend', 'activo' => str_contains($rutaEncabezado, '/smart/recommend')],
-    ['etiqueta' => 'Mayorista', 'destino' => 'mayorista', 'activo' => str_contains($rutaEncabezado, '/mayorista')],
     ['etiqueta' => 'Nosotros', 'destino' => 'about', 'activo' => str_contains($rutaEncabezado, '/about')],
+    ['etiqueta' => 'Contacto', 'destino' => 'contact', 'activo' => str_contains($rutaEncabezado, '/contact')],
 ];
 if ($esPublicidad) {
     $enlacesEncabezado[] = ['etiqueta' => 'MD Ads', 'destino' => 'smart/ads', 'activo' => true];
