@@ -46,18 +46,5 @@
   padding: 60px 20px;
   color: var(--muted);
 }
-.hero-card {
-  width: 100%;
-  height: 100%;
-  max-height: 550px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-}
 
-.hero-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
+.ecommerce-card .product-art{min-height:280px}.product-actions{display:flex;gap:10px;align-items:center}.product-specs{font-size:.9rem}.detail-gallery{padding:20px}.thumbs{display:flex;gap:10px}.thumbs span{width:55px;height:55px;border-radius:8px;background:#ddd}.colors button{font-size:22px;border:1px solid #ddd;border-radius:50%;margin:5px}.product-detail-modern{display:grid;grid-template-columns:1fr 1fr;gap:30px}

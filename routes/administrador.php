@@ -34,6 +34,12 @@ return static function (Enrutador $enrutador): void {
     $enrutador->post('/admin/products', [AdministradorProductoController::class, 'guardar'], $administradorPost);
     $enrutador->post('/admin/products/{id}', [AdministradorProductoController::class, 'actualizar'], $administradorPost);
     $enrutador->post('/admin/products/{id}/deactivate', [AdministradorProductoController::class, 'eliminar'], $administradorPost);
+    $enrutador->post('/admin/products/{id}/variants', [AdministradorProductoController::class, 'crearVariante'], $administradorPost);
+    $enrutador->post('/admin/products/{id}/variants/{variant}/delete', [AdministradorProductoController::class, 'eliminarVariante'], $administradorPost);
+    $enrutador->post('/admin/products/{id}/variants/{variant}/images', [AdministradorProductoController::class, 'subirImagenes'], $administradorPost);
+    $enrutador->post('/admin/products/{id}/images/{image}/delete', [AdministradorProductoController::class, 'eliminarImagen'], $administradorPost);
+    $enrutador->post('/admin/products/{id}/reference-image', [AdministradorProductoController::class, 'subirImagenReferencia'], $administradorPost);
+    $enrutador->post('/admin/products/{id}/reference-image/delete', [AdministradorProductoController::class, 'eliminarImagenReferencia'], $administradorPost);
     $enrutador->obtener('/admin/orders', [AdministradorPedidoController::class, 'indice'], $administrador);
     $enrutador->obtener('/admin/orders/{id}', [AdministradorPedidoController::class, 'detalle'], $administrador);
     $enrutador->post('/admin/orders/{id}/status', [AdministradorPedidoController::class, 'actualizarEstado'], $administradorPost);
