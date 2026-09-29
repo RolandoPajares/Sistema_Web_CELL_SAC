@@ -1,11 +1,24 @@
+<!-- ===== 1. Presentación de SmartMatch ===== -->
+<section class="smartmatch-hero">
+    <div class="container smartmatch-hero-grid">
+        <div>
+            <span class="smartmatch-etiqueta"><i class="bi bi-stars"></i> MD SmartCommerce</span>
+            <h1>Encuentra tu <span>celular ideal</span> con SmartMatch</h1>
+            <p>Indica tu presupuesto, para qué usarás el equipo y qué es lo más importante para ti. SmartMatch revisa el catálogo y te muestra los celulares que mejor encajan contigo.</p>
+            <div class="smartmatch-pasos-mini">
+                <span><b>1</b> Presupuesto</span>
+                <span><b>2</b> Uso</span>
+                <span><b>3</b> Prioridad</span>
+            </div>
+        </div>
+        <div class="smartmatch-hero-imagen">
+            <img src="<?= e(asset('assets/img/publico/inicio/secciones/hero-devices.png')) ?>" alt="Celulares y accesorios">
+        </div>
+    </div>
+</section>
+
 <section class="smart-page">
     <div class="container">
-        <div class="smart-hero">
-            <span class="eyebrow">MD SmartCommerce</span>
-            <h1><i class="bi bi-lightbulb" aria-hidden="true"></i> Recomendador inteligente</h1>
-            <p>Indica tu presupuesto y prioridad. El motor SmartMatch puntúa el catálogo y explica por qué cada equipo encaja contigo.</p>
-        </div>
-
         <form class="smart-form panel" method="get">
             <label>
                 Presupuesto máximo
