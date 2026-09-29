@@ -1,0 +1,254 @@
+
+
+/* etiqueta pequeña que va arriba de los títulos */
+.contacto-etiqueta {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: #e6efff;
+  color: #1356e8;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* ---------- 1. Banner principal ---------- */
+.contacto-banner {
+  padding: 50px 0 70px;
+  background: linear-gradient(135deg, #f3f8ff, #d6e8ff);
+}
+
+.contacto-banner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.contacto-banner h1 {
+  margin: 16px 0 12px;
+  font-size: 48px;
+  line-height: 1.1;
+  color: #0b1b3f;
+}
+
+/* la palabra resaltada en azul */
+.contacto-banner h1 span {
+  color: #1356e8;
+}
+
+.contacto-banner p {
+  color: #475569;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.contacto-botones {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0 20px;
+}
+
+.contacto-botones .btn-ghost {
+  background: #fff;
+}
+
+/* lista de "ventajas" debajo de los botones */
+.contacto-ventajas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.contacto-ventajas li {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #d7e5fb;
+  color: #1e3a6b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.contacto-ventajas i {
+  color: #1356e8;
+}
+
+/* foto de la tienda */
+.contacto-foto {
+  position: relative;
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+.contacto-foto img {
+  width: 100%;
+  height: 460px;
+  object-fit: cover;
+  border-radius: 25px;
+  border: 6px solid #fff;
+  box-shadow: 0 20px 45px rgba(19, 60, 140, 0.25);
+}
+
+/* cuadritos blancos que "flotan" encima de la foto */
+.contacto-dato-foto {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 10px 25px rgba(15, 40, 90, 0.2);
+}
+
+.contacto-dato-foto i {
+  padding: 9px 11px;
+  border-radius: 10px;
+  background: #1356e8;
+  color: #fff;
+}
+
+.contacto-dato-foto b,
+.contacto-dato-foto small {
+  display: block;
+}
+
+.contacto-dato-foto small {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.contacto-dato-arriba {
+  top: 25px;
+  left: -40px;
+}
+
+.contacto-dato-abajo {
+  bottom: 25px;
+  right: -25px;
+}
+
+.contacto-dato-abajo i {
+  background: #10b981; /* verde para el horario */
+}
+
+/* al presionar "Enviar consulta" la página baja suave hasta el formulario */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ---------- 2. Formulario de consulta ---------- */
+.contacto-seccion {
+  margin-top: 45px;
+  scroll-margin-top: 100px; /* para que el menú de arriba no tape el título */
+}
+
+.contacto-formulario {
+  max-width: 800px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid #e3ecf8;
+  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08);
+}
+
+/* parte azul de arriba del formulario */
+.contacto-formulario-titulo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 30px;
+  color: #fff;
+  background: linear-gradient(120deg, #0b3fb8, #1356e8, #3b82f6);
+}
+
+.contacto-formulario-titulo > i {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 22px;
+}
+
+.contacto-formulario-titulo h2 {
+  margin: 0 0 3px;
+  color: #fff;
+}
+
+.contacto-formulario-titulo p {
+  margin: 0;
+  color: #dbe7ff;
+}
+
+.contacto-formulario form {
+  padding: 26px 30px 30px;
+}
+
+.contacto-formulario .alert {
+  margin: 20px 30px 0;
+}
+
+/* nombre y correo en dos columnas */
+.contacto-dos-campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.contacto-formulario label {
+  font-weight: bold;
+  color: #0b1b3f;
+}
+
+/* cajita que contiene el icono y el campo */
+.contacto-campo {
+  position: relative;
+}
+
+.contacto-campo i {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  color: #94a3b8;
+}
+
+.contacto-formulario input,
+.contacto-formulario textarea {
+  width: 100%;
+  padding-left: 40px !important; /* espacio para el icono */
+  border-radius: 12px;
+  background: #f8fbff;
+  border: 1.5px solid #dbe6f5;
+}
+
+/* cuando el usuario hace clic en un campo */
+.contacto-formulario input:focus,
+.contacto-formulario textarea:focus {
+  outline: none;
+  background: #fff;
+  border-color: #1356e8;
+  box-shadow: 0 0 0 4px rgba(19, 86, 232, 0.12);
+}
+
+.contacto-enviar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.contacto-enviar small {
+  color: #64748b;
+}
+
+.contacto-enviar small i {
+  color: #10b981;
+}
+
+.contacto-enviar .btn {
+  padding: 13px 26px;
+  font-size: 15px;
+}
