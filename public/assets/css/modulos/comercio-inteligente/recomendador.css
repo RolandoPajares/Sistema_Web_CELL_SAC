@@ -211,3 +211,42 @@
   background: linear-gradient(120deg, #6d28d9, #1356e8);
   border: 0;
 }
+
+/* ---------- 3. Cómo funciona ---------- */
+.smartmatch-como {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 30px;
+}
+
+.smartmatch-como article {
+  padding: 22px;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid #e3e8f5;
+  transition: 0.3s;
+}
+
+.smartmatch-como article:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(30, 27, 75, 0.08);
+}
+
+.smartmatch-como i {
+  display: inline-block;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: 22px;
+}
+
+.smartmatch-como h3 {
+  margin: 14px 0 6px;
+}
+
+.smartmatch-como p {
+  margin: 0;
+  color: #64748b;
+}

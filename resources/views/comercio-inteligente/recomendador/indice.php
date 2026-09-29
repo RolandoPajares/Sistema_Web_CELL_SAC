@@ -55,6 +55,25 @@
         </div>
     </form>
 
+    <!-- ===== 3. Cómo funciona ===== -->
+    <div class="smartmatch-como">
+        <article>
+            <i class="bi bi-wallet2"></i>
+            <h3>1. Tu presupuesto</h3>
+            <p>Solo se muestran equipos que no pasan el monto que indicas.</p>
+        </article>
+        <article>
+            <i class="bi bi-controller"></i>
+            <h3>2. Tu forma de usarlo</h3>
+            <p>Estudio, juegos, fotos, trabajo o redes: cada uso tiene sus puntos fuertes.</p>
+        </article>
+        <article>
+            <i class="bi bi-graph-up-arrow"></i>
+            <h3>3. Tu coincidencia</h3>
+            <p>Cada celular recibe un porcentaje y las razones de por qué te conviene.</p>
+        </article>
+    </div>
+
     <!-- resultados (se rediseñan en el siguiente paso) -->
     <?php if ($resultados): ?>
         <div class="smart-results">
