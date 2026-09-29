@@ -74,29 +74,46 @@
         </article>
     </div>
 
-    <!-- resultados (se rediseñan en el siguiente paso) -->
+    <!-- ===== 4. Resultados de la búsqueda ===== -->
     <?php if ($resultados): ?>
-        <div class="smart-results">
+        <div class="smartmatch-titulo-resultados">
+            <h2>Te recomendamos estos equipos</h2>
+            <p>Ordenados de mayor a menor coincidencia.</p>
+        </div>
+        <div class="smartmatch-resultados">
             <?php foreach ($resultados as $indice => $producto): ?>
-                <article class="smart-card panel">
-                    <div class="smart-rank">#<?= $indice + 1 ?></div>
-                    <div>
-                        <span class="eyebrow"><?= e($producto['marca']) ?></span>
-                        <h3><?= e($producto['nombre']) ?></h3>
-                        <div class="match-ring"><?= (int) $producto['coincidencia'] ?>%</div>
-                        <p class="price"><?= money($producto['precio']) ?></p>
-                        <ul>
-                            <?php foreach ($producto['razones'] as $razon): ?>
-                                <li>✓ <?= e($razon) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <div class="smart-actions">
-                            <a class="btn btn-primary" href="<?= e(url('products/' . (int) $producto['id'])) ?>">Ver equipo</a>
-                            <a class="btn btn-ghost" href="<?= e(url('smart/compare?ids=' . (int) $producto['id'])) ?>">Comparar</a>
+                <article class="smartmatch-tarjeta">
+                    <span class="smartmatch-puesto">#<?= $indice + 1 ?></span>
+                    <div class="smartmatch-tarjeta-arriba">
+                        <div>
+                            <small><?= e($producto['marca']) ?></small>
+                            <h3><?= e($producto['nombre']) ?></h3>
+                            <p class="smartmatch-precio"><?= money($producto['precio']) ?></p>
                         </div>
+                        <div class="smartmatch-porcentaje">
+                            <b><?= (int) $producto['coincidencia'] ?>%</b>
+                            <small>coincide</small>
+                        </div>
+                    </div>
+                    <ul>
+                        <?php foreach ($producto['razones'] as $razon): ?>
+                            <li><i class="bi bi-check-circle-fill"></i> <?= e($razon) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <div class="smartmatch-botones">
+                        <a class="btn btn-primary" href="<?= e(url('products/' . (int) $producto['id'])) ?>">Ver equipo</a>
+                        <a class="btn btn-ghost" href="<?= e(url('smart/compare?ids=' . (int) $producto['id'])) ?>">Comparar</a>
                     </div>
                 </article>
             <?php endforeach; ?>
+        </div>
+    <?php elseif ($presupuesto): ?>
+        <!-- si buscó pero no hubo resultados, se muestra un mensaje en vez de dejar la página vacía -->
+        <div class="smartmatch-vacio">
+            <i class="bi bi-emoji-neutral"></i>
+            <h2>No encontramos equipos para esa búsqueda</h2>
+            <p>Prueba con un presupuesto un poco más alto o cambia la prioridad. También puedes revisar todo el catálogo.</p>
+            <a class="btn btn-primary" href="<?= e(url('catalog')) ?>">Ver catálogo</a>
         </div>
     <?php endif; ?>
 </section>

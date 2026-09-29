@@ -1,53 +1,3 @@
-.smart-results {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-.smart-card {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 14px;
-}
-.smart-rank {
-  font-size: 1.8rem;
-  font-weight: 900;
-  color: var(--primary);
-}
-.match-ring {
-  display: inline-grid;
-  place-items: center;
-  width: 72px;
-  height: 72px;
-  border: 7px solid color-mix(in srgb, var(--primary) 75%, white);
-  border-radius: 50%;
-  font-weight: 900;
-  margin: 8px 0;
-}
-.smart-card ul {
-  padding-left: 0;
-  list-style: none;
-  color: var(--muted);
-  line-height: 1.8;
-}
-.smart-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-@media (max-width: 900px) {
-  .smart-results {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 650px) {
-  .smart-results {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* ---------- 1. Presentación (banner) ---------- */
 .smartmatch-hero {
   padding: 50px 0;
@@ -248,5 +198,146 @@
 
 .smartmatch-como p {
   margin: 0;
+  color: #64748b;
+}
+
+/* ---------- 4. Resultados ---------- */
+.smartmatch-titulo-resultados {
+  margin: 45px 0 18px;
+}
+
+.smartmatch-titulo-resultados h2 {
+  margin: 0 0 4px;
+}
+
+.smartmatch-titulo-resultados p {
+  margin: 0;
+  color: #64748b;
+}
+
+.smartmatch-resultados {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.smartmatch-tarjeta {
+  position: relative;
+  padding: 24px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid #e3e8f5;
+  box-shadow: 0 10px 25px rgba(30, 27, 75, 0.06);
+  transition: 0.3s;
+}
+
+.smartmatch-tarjeta:hover {
+  transform: translateY(-4px);
+  border-color: #c4b5fd;
+}
+
+/* el primer puesto se resalta con borde morado */
+.smartmatch-tarjeta:first-child {
+  border: 2px solid #6d28d9;
+}
+
+.smartmatch-puesto {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: #6d28d9;
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.smartmatch-tarjeta-arriba {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.smartmatch-tarjeta small {
+  color: #6d28d9;
+  font-weight: bold;
+}
+
+.smartmatch-tarjeta h3 {
+  margin: 4px 0;
+}
+
+.smartmatch-precio {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #1356e8;
+}
+
+/* círculo con el porcentaje de coincidencia */
+.smartmatch-porcentaje {
+  flex-shrink: 0;
+  width: 78px;
+  height: 78px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 6px solid #c4b5fd;
+  background: #f5f3ff;
+}
+
+.smartmatch-porcentaje b {
+  font-size: 18px;
+  color: #4c1d95;
+}
+
+.smartmatch-porcentaje small {
+  font-size: 10px;
+  color: #6d28d9;
+}
+
+.smartmatch-tarjeta ul {
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+  color: #475569;
+  line-height: 1.9;
+}
+
+.smartmatch-tarjeta li i {
+  color: #10b981;
+}
+
+.smartmatch-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* mensaje cuando no hay resultados */
+.smartmatch-vacio {
+  margin-top: 40px;
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: 20px;
+  background: #fff;
+  border: 2px dashed #ddd6fe;
+}
+
+.smartmatch-vacio > i {
+  font-size: 44px;
+  color: #a78bfa;
+}
+
+.smartmatch-vacio h2 {
+  margin: 10px 0 6px;
+}
+
+.smartmatch-vacio p {
+  max-width: 480px;
+  margin: 0 auto 18px;
   color: #64748b;
 }
