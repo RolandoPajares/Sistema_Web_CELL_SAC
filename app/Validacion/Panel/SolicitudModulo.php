@@ -9,8 +9,10 @@ use App\Soporte\Excepciones\ExcepcionValidacion;
 
 final class SolicitudModulo
 {
-    /** @param array<string, array<string, mixed>> $campos
-     *  @return array<string, mixed>
+    /**
+     * Comprueba que los datos cumplan las reglas antes de continuar.
+     * @param array<string, array<string, mixed>> $campos
+     * @return array<string, mixed>
      */
     public static function validar(Solicitud $solicitud, array $campos): array
     {

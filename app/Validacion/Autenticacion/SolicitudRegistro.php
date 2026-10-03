@@ -9,7 +9,10 @@ use App\Soporte\Excepciones\ExcepcionValidacion;
 
 final class SolicitudRegistro
 {
-    /** @return array{nombre:string,correo:string,contrasena:string} */
+    /**
+     * Comprueba que los datos cumplan las reglas antes de continuar.
+     * @return array{nombre:string,correo:string,contrasena:string}
+     */
     public static function validar(Solicitud $solicitud): array
     {
         $entradaNombre = $solicitud->entrada('name', '');

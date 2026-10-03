@@ -1,14 +1,19 @@
-<section class="home-hero home-hero-banner">
+<?php
+/**
+ * @var string $atributoProductosInicioGridOculto
+ * @var array<array-key, mixed> $tarjetasProducto
+ * @var string $atributoProductosInicioVacioOculto
+ */ ?><section class="home-hero home-hero-banner">
     <div class="home-hero-banner-link">
-        <img class="home-hero-banner-image" src="<?= e(asset('assets/img/publico/inicio/banners/bannerInicio.png')) ?>" alt="Celulares y accesorios de MD Technology Digital Cell">
+        <img class="home-hero-banner-image" src="<?= e(url_recurso_estatico('assets/img/publico/inicio/banners/bannerInicio.png')) ?>" alt="Celulares y accesorios de MD Technology Digital Cell">
     </div>
     <div class="home-hero-banner-content">
         <span class="home-hero-banner-kicker">Tecnología original en Bagua</span>
         <h1>Tu próximo celular está en <span>MD Technology Cell</span></h1>
         <p>Celulares y accesorios originales con atención local y precios para ti.</p>
         <div class="home-hero-banner-actions">
-            <a class="btn btn-primary" href="<?= e(url('catalog?category=Celular')) ?>">Ver celulares <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-            <a class="btn btn-ghost" href="<?= e(url('catalog?category=Accesorio')) ?>"><i class="bi bi-tag" aria-hidden="true"></i> Explorar accesorios</a>
+            <a class="btn btn-primary" href="<?= e(url_interna('catalog?category=Celular')) ?>">Ver celulares <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            <a class="btn btn-ghost" href="<?= e(url_interna('catalog?category=Accesorio')) ?>"><i class="bi bi-tag" aria-hidden="true"></i> Explorar accesorios</a>
         </div>
     </div>
 </section>
@@ -29,6 +34,7 @@
         <div class="brand-pill xiaomi"><b>mi</b> XIAOMI</div>
         <div class="brand-pill honor">HONOR</div>
         <div class="brand-pill jbl">JBL</div>
+        <div class="brand-pill beats"><span aria-hidden="true">b</span> Beats</div>
     </div>
 </section>
 
@@ -38,18 +44,19 @@
             <h2>Compra<br>más inteligente</h2>
             <p>Herramientas con IA y filtros avanzados para encontrar exactamente lo que necesitas.</p>
         </div>
+
         <div class="smart-home-grid">
-            <a class="smart-tile smart-purple" href="<?= e(url('smart/recommend')) ?>"><span><i class="bi bi-lightbulb-fill" aria-hidden="true"></i></span>
-                <div><b>SmartMatch</b><small>Encuentra el equipo ideal según tu estilo de vida.</small></div><i class="bi bi-chevron-right"></i>
+            <a class="smart-tile smart-purple" href="<?= e(url_interna('smart/recommend')) ?>"><span><i class="bi bi-lightbulb-fill" aria-hidden="true"></i></span>
+            <div><b>SmartMatch</b><small>Encuentra el equipo ideal según tu estilo de vida.</small></div><i class="bi bi-chevron-right"></i>
             </a>
-            <a class="smart-tile smart-orange" href="<?= e(url('smart/compare')) ?>"><span><i class="bi bi-columns-gap" aria-hidden="true"></i></span>
-                <div><b>Comparador</b><small>Compara hasta 3 equipos con puntajes.</small></div><i class="bi bi-chevron-right"></i>
+            <a class="smart-tile smart-orange" href="<?= e(url_interna('smart/compare')) ?>"><span><i class="bi bi-columns-gap" aria-hidden="true"></i></span>
+            <div><b>Comparador</b><small>Compara hasta 3 equipos con puntajes.</small></div><i class="bi bi-chevron-right"></i>
             </a>
-            <a class="smart-tile smart-gold" href="<?= e(url('mayorista')) ?>"><span><i class="bi bi-cash-coin" aria-hidden="true"></i></span>
-                <div><b>Modo emprendedor</b><small>Arma una compra mayorista según tu presupuesto.</small></div><i class="bi bi-chevron-right"></i>
+            <a class="smart-tile smart-gold" href="<?= e(url_interna('mayorista')) ?>"><span><i class="bi bi-cash-coin" aria-hidden="true"></i></span>
+            <div><b>Modo emprendedor</b><small>Arma una compra mayorista según tu presupuesto.</small></div><i class="bi bi-chevron-right"></i>
             </a>
-            <a class="smart-tile smart-assistant" href="<?= e(url('smart/assistant')) ?>"><span><i class="bi bi-robot" aria-hidden="true"></i></span>
-                <div><b>MD Assistant <em>NUEVO</em></b><small>Conversa con IA y recibe recomendaciones al instante.</small></div><i class="bi bi-chevron-right"></i>
+            <a class="smart-tile smart-assistant" href="<?= e(url_interna('smart/assistant')) ?>"><span><i class="bi bi-robot" aria-hidden="true"></i></span>
+            <div><b>MD Assistant <em>NUEVO</em></b><small>Conversa con IA y recibe recomendaciones al instante.</small></div><i class="bi bi-chevron-right"></i>
             </a>
         </div>
     </div>
@@ -59,80 +66,37 @@
     <div class="container">
         <div class="section-head home-section-head">
             <div>
-                <h2>Productos destacados</h2>
-                <p>Productos y precios actualizados desde nuestro catálogo.</p>
+                <h2>Los más populares en oferta</h2>
+                <p>Ofertas vigentes seleccionadas de todas las categorías.</p>
             </div>
-            <a href="<?= e(url('catalog')) ?>" class="home-view-all">Ver todos los productos <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            <a href="<?= e(url_interna('catalog')) ?>" class="home-view-all">Ver todos los productos <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
         </div>
-        <?php if (!empty($productos)): ?>
-            <div class="product-grid home-product-grid">
-                <?php foreach ($productos as $producto): ?>
-                    <?php
-                    $categoriaProducto = (string) ($producto['categoria'] ?? 'Celular');
-                    $nombreProductoPortada = (string) ($producto['nombre'] ?? '');
-                    $marcaProductoPortada = (string) ($producto['marca'] ?? '');
-                    $almacenamientoPortada = trim((string) ($producto['almacenamiento'] ?? ''));
-                    $precioProductoPortada = (float) ($producto['precio_oferta'] ?? $producto['precio'] ?? 0);
-                    $precioOriginalPortada = (float) ($producto['precio_original'] ?? 0);
-                    $descuentoPortada = trim((string) ($producto['descuento'] ?? ''));
-                    $existenciasPortada = (int) ($producto['existencias'] ?? 0);
-                    $imagenPortada = product_image_url((string) ($producto['url_imagen'] ?? ''));
-                    $enlaceDetallePortada = url('products/' . (int) ($producto['id'] ?? 0));
-                    ?>
-                    <article class="product-card home-product-card">
-                        <a class="home-product-image-link" href="<?= e($enlaceDetallePortada) ?>" aria-label="Ver <?= e($marcaProductoPortada . ' ' . $nombreProductoPortada) ?>">
-                            <div class="product-art home-product-art">
-                                <span class="badge"><?= e($producto['etiqueta'] ?? 'Oferta') ?></span>
-                                <?php if ($imagenPortada !== ''): ?>
-                                    <img class="home-product-photo" src="<?= e($imagenPortada) ?>" alt="<?= e($marcaProductoPortada . ' ' . $nombreProductoPortada) ?>" loading="lazy">
-                                <?php else: ?>
-                                    <div class="phone-shape" aria-hidden="true"><?= e(product_visual($marcaProductoPortada)) ?></div>
-                                <?php endif; ?>
-                            </div>
-                        </a>
-                        <div class="product-body home-product-body">
-                            <div class="product-meta"><span><?= e($marcaProductoPortada) ?></span><span><?= e($categoriaProducto) ?></span></div>
-                            <h3><?= e($nombreProductoPortada) ?></h3>
-                            <div class="home-product-specs"><?= e($almacenamientoPortada !== '' ? $almacenamientoPortada . ' · ' : '') ?>Equipo original</div>
-                            <?php if ($precioOriginalPortada > $precioProductoPortada && $descuentoPortada !== ''): ?>
-                                <div class="home-product-pricing">
-                                    <del><?= money($precioOriginalPortada) ?></del>
-                                    <span><?= e($descuentoPortada) ?></span>
-                                </div>
-                            <?php endif; ?>
-                            <div class="price"><?= money($precioProductoPortada) ?></div>
-                            <div class="stock"><?= $existenciasPortada ?> unidades disponibles</div>
-                            <div class="home-product-actions">
-                                <?php if ($existenciasPortada > 0): ?>
-                                    <form class="home-product-buy-form" action="<?= e(url('cart')) ?>" method="post">
-                                        <?= csrf_field() ?>
-                                        <input type="hidden" name="add" value="<?= (int) $producto['id'] ?>">
-                                        <button class="btn btn-primary home-product-action" type="submit"><i class="bi bi-cart3" aria-hidden="true"></i> Comprar</button>
-                                    </form>
-                                <?php else: ?>
-                                    <button class="btn btn-primary home-product-action" type="button" disabled>Agotado</button>
-                                <?php endif; ?>
-                                <a class="btn btn-ghost home-product-details" href="<?= e($enlaceDetallePortada) ?>">Ver detalles</a>
-                            </div>
-                        </div>
-                    </article>
+        <div class="product-grid home-product-grid" <?= $atributoProductosInicioGridOculto ?>>
+                <?php foreach ($tarjetasProducto as $tarjetaProducto): ?>
+                <?php require __DIR__ . '/_tarjeta-producto.php'; ?>
                 <?php endforeach; ?>
-            </div>
-        <?php else: ?>
-            <p class="home-products-empty">No hay productos disponibles por el momento.</p>
-        <?php endif; ?>
+        </div>
+        <p class="home-products-empty" <?= $atributoProductosInicioVacioOculto ?>>No hay productos disponibles por el momento.</p>
     </div>
 </section>
 
 <section class="home-shortcuts">
     <div class="container shortcut-grid">
-        <a href="<?= e(url('catalog')) ?>"><i class="bi bi-percent" aria-hidden="true"></i><span><b>Ofertas de la semana</b><small>Equipos seleccionados con precios especiales</small></span><i class="bi bi-arrow-right"></i></a>
-        <a href="<?= e(url('catalog')) ?>"><i class="bi bi-laptop" aria-hidden="true"></i><span><b>Laptops para productividad</b><small>Trabajo, estudio y más</small></span><i class="bi bi-arrow-right"></i></a>
-        <a href="<?= e(url('catalog')) ?>"><i class="bi bi-phone" aria-hidden="true"></i><span><b>Celulares que te conectan</b><small>Últimos lanzamientos</small></span><i class="bi bi-arrow-right"></i></a>
-        <a href="<?= e(url('catalog')) ?>"><i class="bi bi-headphones" aria-hidden="true"></i><span><b>Accesorios originales</b><small>Completa tu experiencia</small></span><i class="bi bi-arrow-right"></i></a>
+
+        <a href="<?= e(url_interna('catalog')) ?>"><i class="bi bi-percent" aria-hidden="true"></i><span><b>Ofertas de la semana</b><small>Equipos seleccionados con precios especiales</small></span><i class="bi bi-arrow-right"></i>
+        </a>
+
+        <a href="<?= e(url_interna('catalog')) ?>"><i class="bi bi-laptop" aria-hidden="true"></i><span><b>Laptops para productividad</b><small>Trabajo, estudio y más</small></span><i class="bi bi-arrow-right"></i>
+        </a>
+
+        <a href="<?= e(url_interna('catalog')) ?>"><i class="bi bi-phone" aria-hidden="true"></i><span><b>Celulares que te conectan</b><small>Últimos lanzamientos</small></span><i class="bi bi-arrow-right"></i>
+        </a>
+
+        <a href="<?= e(url_interna('catalog')) ?>"><i class="bi bi-headphones" aria-hidden="true"></i><span><b>Accesorios originales</b><small>Completa tu experiencia</small></span><i class="bi bi-arrow-right"></i>
+        </a>
     </div>
 </section>
 
-<a class="assistant-fab" href="<?= e(url('smart/assistant')) ?>" aria-label="Abrir Cell AI">
+<a class="assistant-fab" href="<?= e(url_interna('smart/assistant')) ?>" aria-label="Abrir Cell AI">
     <span><i class="bi bi-robot" aria-hidden="true"></i></span><span><b>Cell AI</b><small>Asesor virtual</small></span><i class="assistant-status" aria-hidden="true"></i>
 </a>

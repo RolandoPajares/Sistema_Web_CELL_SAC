@@ -14,6 +14,9 @@ final class LimiteSolicitudesMiddleware
     {
     }
 
+    /**
+     * Limita los intentos por ruta y dirección IP antes de continuar la solicitud.
+     */
     public function manejar(Solicitud $solicitud, callable $siguiente): Respuesta
     {
         $clave = $solicitud->ruta() . '|' . $solicitud->direccionIp();

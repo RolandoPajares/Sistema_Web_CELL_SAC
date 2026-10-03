@@ -10,14 +10,17 @@ use App\Soporte\Autorizacion\AccesoRol;
 
 final class AccesoRutaRolMiddleware
 {
+    /**
+     * Autoriza la solicitud según el rol del usuario y la ruta solicitada.
+     */
     public function manejar(Solicitud $solicitud, callable $siguiente): Respuesta
     {
-        $usuario = current_user();
+        $usuario = usuario_actual();
         if (!$usuario) {
-            return redirect('login');
+            return redirigir('login');
         }
 
-        $rol = AccesoRol::normalize((string) ($usuario['rol'] ?? ''));
+        $rol = AccesoRol::normalizarRol((string) ($usuario['rol'] ?? ''));
         $ruta = $solicitud->ruta();
         $permitidos = match (true) {
             $ruta === '/cart', $ruta === '/checkout' => ['cliente_minorista'],
@@ -28,7 +31,7 @@ final class AccesoRutaRolMiddleware
         };
 
         if ($rol !== 'administrador' && !in_array($rol, $permitidos, true)) {
-            return response('No tienes autorización para acceder a esta ruta.', 403);
+            return respuesta_http('No tienes autorización para acceder a esta ruta.', 403);
         }
 
         return $siguiente($solicitud);

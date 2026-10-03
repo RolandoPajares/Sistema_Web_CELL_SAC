@@ -8,11 +8,15 @@ use App\Soporte\Autorizacion\AccesoRol;
 
 final class CatalogoEstilos
 {
-    /** @return array<int, string> */
+    /**
+     * Prepara los datos de entrada para el caso de uso indicado.
+     *
+     * @return array<int, string>
+     */
     public static function para(string $ruta, string $plantilla, string $rol = '', string $modulo = ''): array
     {
         $ruta = self::normalizarRuta($ruta);
-        $rol = AccesoRol::normalize($rol);
+        $rol = AccesoRol::normalizarRol($rol);
         $modulo = self::modulo($ruta, $modulo);
 
         if ($plantilla === 'administrador') {
@@ -106,12 +110,15 @@ final class CatalogoEstilos
         return self::limpiar($estilos);
     }
 
+    /**
+     * Genera las clases CSS que corresponden al estado de la página.
+     */
     public static function clasesCuerpo(string $ruta, string $rol = '', string $modulo = ''): string
     {
         $ruta = self::normalizarRuta($ruta);
         $clases = [];
         if ($rol !== '') {
-            $clases[] = 'rol-' . str_replace('_', '-', AccesoRol::normalize($rol));
+            $clases[] = 'rol-' . str_replace('_', '-', AccesoRol::normalizarRol($rol));
         }
         $modulo = self::modulo($ruta, $modulo);
         if ($modulo !== '') {
@@ -121,6 +128,9 @@ final class CatalogoEstilos
         return implode(' ', $clases);
     }
 
+    /**
+     * Obtiene el módulo solicitado y comprueba que esté registrado.
+     */
     private static function modulo(string $ruta, string $modulo): string
     {
         if ($modulo !== '') {
@@ -147,6 +157,9 @@ final class CatalogoEstilos
         };
     }
 
+    /**
+     * Normaliza la ruta recibida para su uso en el enrutador.
+     */
     private static function normalizarRuta(string $ruta): string
     {
         $ruta = (string) (parse_url($ruta, PHP_URL_PATH) ?: '/');
@@ -161,6 +174,9 @@ final class CatalogoEstilos
         return $ruta === '' ? '/' : '/' . trim($ruta, '/');
     }
 
+    /**
+     * Resuelve la vista correspondiente al rol activo.
+     */
     private static function archivoRol(string $rol): string
     {
         $roles = [
@@ -182,7 +198,11 @@ final class CatalogoEstilos
         return "assets/css/roles/{$grupo}/{$nombre}.css";
     }
 
-    /** @param array<int, string> $estilos @return array<int, string> */
+    /**
+     * Limpia el estado actual y elimina los datos temporales asociados.
+     *
+     * @param array<int, string> $estilos @return array<int, string>
+     */
     private static function limpiar(array $estilos): array
     {
         return array_values(array_unique(array_filter($estilos)));

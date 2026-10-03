@@ -1,10 +1,13 @@
 <?php
-// Enlace para abrir la ubicación en Google Maps (usa la dirección de la configuración)
-$direccion = config('app.address');
-$comoLlegar = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($direccion);
-?>
-<!-- Hoja de estilos solo para esta página -->
-<link rel="stylesheet" href="<?= e(asset('assets/css/publico/contacto.css')) ?>">
+/**
+ * @var string $direccion
+ * @var string $atributoExitoOculto
+ * @var mixed $exito
+ * @var string $atributoErrorOculto
+ * @var mixed $error
+ * @var mixed $comoLlegar
+ */ ?><!-- Hoja de estilos solo para esta página -->
+<link rel="stylesheet" href="<?= e(url_recurso_estatico('assets/css/publico/contacto.css')) ?>">
 
 <!-- ===== 1. Banner principal ===== -->
 <section class="contacto-banner">
@@ -24,7 +27,7 @@ $comoLlegar = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($di
             </ul>
         </div>
         <div class="contacto-foto">
-            <img src="<?= e(asset('assets/img/publico/nosotros/local.jpg')) ?>" alt="Fachada de la tienda MD Technology Digital Cell">
+            <img src="<?= e(url_recurso_estatico('assets/img/publico/nosotros/local.jpg')) ?>" alt="Fachada de la tienda MD Technology Digital Cell">
         </div>
     </div>
 </section>
@@ -60,23 +63,38 @@ $comoLlegar = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($di
                 <p>Cuéntanos qué producto buscas o en qué te podemos ayudar.</p>
             </div>
         </div>
-        <?php if (!empty($exito)): ?><div class="alert alert-success"><?= e($exito) ?></div><?php endif; ?>
-        <?php if (!empty($error)): ?><div class="alert alert-error"><?= e($error) ?></div><?php endif; ?>
-        <form method="post" action="<?= e(url('contact')) ?>">
+        <div class="alert alert-success" <?= $atributoExitoOculto ?>><?= e($exito) ?></div>
+        <div class="alert alert-error" <?= $atributoErrorOculto ?>><?= e($error) ?></div>
+        <form method="post" action="<?= e(url_interna('contact')) ?>">
             <?= csrf_field() ?>
             <div class="contacto-dos-campos">
                 <div class="form-group">
-                    <label for="contact-name">Nombre</label>
-                    <div class="contacto-campo"><i class="bi bi-person"></i><input id="contact-name" name="name" class="input" required maxlength="120" placeholder="Tu nombre completo"></div>
+                <label for="contact-name">Nombre</label>
+
+                    <div class="contacto-campo">
+                <i class="bi bi-person"></i><input id="contact-name" name="name" class="input" required maxlength="120" placeholder="Tu nombre completo">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="contact-email">Correo o teléfono</label>
-                    <div class="contacto-campo"><i class="bi bi-envelope"></i><input id="contact-email" name="contact" class="input" required maxlength="160" placeholder="ejemplo@correo.com o 9XX XXX XXX"></div>
+                <label for="contact-email">Correo o teléfono</label>
+
+                    <div class="contacto-campo">
+                <i class="bi bi-envelope"></i><input id="contact-email" name="contact" class="input" required maxlength="160" placeholder="ejemplo@correo.com o 9XX XXX XXX">
+                    </div>
                 </div>
             </div>
             <div class="form-group">
                 <label for="contact-message">Mensaje</label>
-                <div class="contacto-campo"><i class="bi bi-chat-left-text"></i><textarea id="contact-message" name="message" rows="5" required maxlength="2000" placeholder="Ej.: ¿Tienen disponible el Samsung Galaxy A55 en color azul?"></textarea></div>
+
+                <div class="contacto-campo">
+                <i class="bi bi-chat-left-text"></i><textarea
+                id="contact-message"
+                name="message"
+                rows="5"
+                required
+                maxlength="2000"
+                placeholder="Ej.: ¿Tienen disponible el Samsung Galaxy A55 en color azul?"></textarea>
+                </div>
             </div>
             <div class="contacto-enviar">
                 <small><i class="bi bi-shield-lock"></i> Tus datos solo se usan para responder tu consulta.</small>
@@ -107,7 +125,7 @@ $comoLlegar = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($di
     <p>Exhibimos celulares, audífonos y accesorios de las marcas que más te gustan.</p>
     <div class="contacto-galeria">
         <?php for ($i = 1; $i <= 4; $i++): ?>
-            <div><img src="<?= e(asset('assets/img/publico/inicio/banners/exhibicion' . $i . '.jpg')) ?>" alt="Exhibición de la tienda <?= $i ?>"></div>
+        <div><img src="<?= e(url_recurso_estatico('assets/img/publico/inicio/banners/exhibicion' . $i . '.jpg')) ?>" alt="Exhibición de la tienda <?= $i ?>"></div>
         <?php endfor; ?>
     </div>
 </section>
@@ -117,7 +135,7 @@ $comoLlegar = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($di
     <div>
         <h2>¿Ya sabes qué equipo quieres?</h2>
         <p>Revisa precios, características y stock disponible en nuestro catálogo antes de visitarnos.</p>
-        <a href="<?= e(url('catalog')) ?>">Ver catálogo <i class="bi bi-arrow-right"></i></a>
+        <a href="<?= e(url_interna('catalog')) ?>">Ver catálogo <i class="bi bi-arrow-right"></i></a>
     </div>
-    <img src="<?= e(asset('assets/img/publico/inicio/secciones/hero-devices.png')) ?>" alt="Celulares y accesorios">
+    <img src="<?= e(url_recurso_estatico('assets/img/publico/inicio/secciones/hero-devices.png')) ?>" alt="Celulares y accesorios">
 </section>

@@ -1,15 +1,17 @@
-<div class="auth-wrap panel">
+<?php
+/**
+ * @var string $atributoErrorOculto
+ * @var mixed $error
+ * @var string $atributoExitoOculto
+ * @var mixed $exito
+ */ ?><div class="auth-wrap panel">
     <h1>Crear cuenta</h1>
     <p>El registro publico crea una cuenta de cliente. El acceso administrativo solo se concede a usuarios con rol administrador.</p>
 
-    <?php if ($error): ?>
-        <div class="alert alert-error"><?= e($error) ?></div>
-    <?php endif; ?>
-    <?php if ($exito): ?>
-        <div class="alert alert-success"><?= e($exito) ?></div>
-    <?php endif; ?>
+    <div class="alert alert-error" <?= $atributoErrorOculto ?>><?= e($error) ?></div>
+    <div class="alert alert-success" <?= $atributoExitoOculto ?>><?= e($exito) ?></div>
 
-    <form method="post" action="<?= e(url('register')) ?>">
+    <form method="post" action="<?= e(url_interna('register')) ?>">
         <?= csrf_field() ?>
         <div class="form-group">
             <label>Nombre completo</label>

@@ -187,6 +187,21 @@
   font-size: 3.5rem;
   color: #164478;
 }
+.productos-mayorista .mayorista-product-photo {
+  display: block;
+  width: 100%;
+  height: 92px;
+  margin: 0 auto 8px;
+  object-fit: contain;
+  background: #f5f9ff;
+  border-radius: 8px;
+}
+.productos-mayorista article > i.mayorista-product-placeholder {
+  height: 92px;
+  margin-bottom: 8px;
+  background: #f5f9ff;
+  border-radius: 8px;
+}
 .productos-mayorista h3 {
   font-size: 0.88rem;
   min-height: 38px;

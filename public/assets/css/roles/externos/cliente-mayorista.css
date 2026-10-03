@@ -51,5 +51,8 @@
 }
 
 .rol-cliente-mayorista .cuenta-recomendado {
-  background: url("../../../img/publico/inicio/secciones/hero-devices.png") right -30px bottom -10px / 150px no-repeat, #fff8e8;
+  background:
+    url("../../../img/publico/inicio/secciones/hero-devices.png") right -30px
+      bottom -10px / 150px no-repeat,
+    #fff8e8;
 }

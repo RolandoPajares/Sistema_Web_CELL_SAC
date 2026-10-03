@@ -9,10 +9,13 @@ use App\Nucleo\Http\Respuesta;
 
 final class AutenticacionMiddleware
 {
+    /**
+     * Exige una sesión autenticada antes de permitir el acceso a la ruta.
+     */
     public function manejar(Solicitud $solicitud, callable $siguiente): Respuesta
     {
-        if (!current_user()) {
-            return redirect('login');
+        if (!usuario_actual()) {
+            return redirigir('login');
         }
 
         return $siguiente($solicitud);

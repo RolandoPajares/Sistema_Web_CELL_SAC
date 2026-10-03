@@ -19,12 +19,38 @@ final class CarritoController
     ) {
     }
 
+    /**
+     * Prepara los datos de la página y muestra el listado principal del módulo.
+     */
     public function indice(Solicitud $solicitud): Respuesta
     {
+        $resumen = $this->carrito->resumen();
+        $sugerencias = $this->comercioInteligente->sugerenciasCarrito($resumen['articulos']);
+        $resumen['articulos'] = array_map(static function (array $producto): array {
+            $producto['imagen_carrito_vista'] = url_imagen_producto((string) ($producto['url_imagen'] ?? ''));
+            $producto['icono_carrito_vista'] = icono_categoria_producto((string) ($producto['categoria'] ?? ''));
+            $producto['atributoImagenOculta'] = $producto['imagen_carrito_vista'] !== '' ? '' : 'hidden';
+            $producto['atributoIconoOculto'] = $producto['imagen_carrito_vista'] === '' ? '' : 'hidden';
+
+            return $producto;
+        }, $resumen['articulos']);
+        $sugerencias = array_map(static function (array $producto): array {
+            $producto['imagen_sugerencia_vista'] = url_imagen_producto((string) ($producto['url_imagen'] ?? ''));
+            $producto['icono_sugerencia_vista'] = icono_categoria_producto((string) ($producto['categoria'] ?? ''));
+            $producto['texto_alternativo_vista'] = trim((string) ($producto['marca'] ?? '') . ' ' . (string) ($producto['nombre'] ?? ''));
+            $producto['atributoImagenOculta'] = $producto['imagen_sugerencia_vista'] !== '' ? '' : 'hidden';
+            $producto['atributoIconoOculto'] = $producto['imagen_sugerencia_vista'] === '' ? '' : 'hidden';
+
+            return $producto;
+        }, $sugerencias);
+
         return $this->vista->renderizar('modulos.compra.carrito.indice', [
             'tituloPagina' => 'Carrito',
-            'resumen' => $resumen = $this->carrito->resumen(),
-            'sugerencias' => $this->comercioInteligente->sugerenciasCarrito($resumen['articulos']),
+            'resumen' => $resumen,
+            'sugerencias' => $sugerencias,
+            'atributoCarritoVacioOculto' => $resumen['articulos'] === [] ? '' : 'hidden',
+            'atributoCarritoConArticulosOculto' => $resumen['articulos'] !== [] ? '' : 'hidden',
+            'atributoSugerenciasOculto' => $sugerencias !== [] ? '' : 'hidden',
         ]);
     }
 
@@ -56,6 +82,6 @@ final class CarritoController
             $this->carrito->limpiar();
         }
 
-        return redirect('cart');
+        return redirigir('cart');
     }
 }

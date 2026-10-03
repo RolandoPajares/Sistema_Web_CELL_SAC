@@ -15,16 +15,23 @@ final class Contenedor
     /** @var array<string, mixed> */
     private array $instancias = [];
 
+    /**
+     * Registra la factoría o implementación asociada a un servicio.
+     */
     public function definir(string $abstracto, callable|string $concreto): void
     {
         $this->enlaces[$abstracto] = $concreto;
     }
 
+    /**
+     * Asocia una instancia existente con el identificador del servicio.
+     */
     public function registrarInstancia(string $abstracto, mixed $instancia): void
     {
         $this->instancias[$abstracto] = $instancia;
     }
 
+    /** Devuelve una instancia registrada o construye la dependencia solicitada. */
     public function obtener(string $abstracto): mixed
     {
         if (array_key_exists($abstracto, $this->instancias)) {
@@ -44,6 +51,9 @@ final class Contenedor
         return $this->instancias[$abstracto] = $this->construir($abstracto);
     }
 
+    /**
+     * Construye una instancia y resuelve sus dependencias mediante este contenedor.
+     */
     private function construir(string $clase): object
     {
         if (!class_exists($clase)) {

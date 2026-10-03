@@ -9,6 +9,9 @@ use App\Soporte\Excepciones\ExcepcionValidacion;
 
 final class SolicitudProveedor
 {
+    /**
+     * Comprueba que los datos cumplan las reglas antes de continuar.
+     */
     public static function validar(Solicitud $solicitud): array
     {
         $datos = self::textos($solicitud, ['nombre', 'ruc', 'correo', 'telefono', 'ciudad']);
@@ -35,6 +38,10 @@ final class SolicitudProveedor
         return $datos;
     }
 
+    /**
+     * Devuelve los textos configurados para la interfaz del módulo.
+     * Devuelve los textos configurados para la interfaz del catálogo.
+     */
     private static function textos(Solicitud $solicitud, array $campos): array
     {
         $datos = [];

@@ -19,7 +19,11 @@ final class PanelAdministradorServicio
     ) {
     }
 
-    /** @return array<string, int|float> */
+    /**
+     * Calcula las estadísticas utilizadas por el panel.
+     *
+     * @return array<string, int|float>
+     */
     public function estadisticas(): array
     {
         $productos = $this->productos->todosParaAdministrador();

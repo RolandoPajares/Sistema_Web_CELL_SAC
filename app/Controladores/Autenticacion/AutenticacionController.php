@@ -27,6 +27,9 @@ final class AutenticacionController
     ) {
     }
 
+    /**
+     * Prepara el formulario para iniciar sesión.
+     */
     public function formularioInicioSesion(Solicitud $solicitud): Respuesta
     {
         return $this->vista->renderizar('publico.autenticacion.iniciar-sesion', [
@@ -35,6 +38,9 @@ final class AutenticacionController
         ]);
     }
 
+    /**
+     * Valida las credenciales e inicia la sesión del usuario.
+     */
     public function iniciarSesion(Solicitud $solicitud): Respuesta
     {
         try {
@@ -42,7 +48,7 @@ final class AutenticacionController
             $usuario = $this->autenticacion->iniciarSesion($credenciales['correo'], $credenciales['contrasena']);
             $this->limitador->limpiar($solicitud->ruta() . '|' . $solicitud->direccionIp());
 
-            return redirect(($usuario['rol'] ?? '') === 'administrador' ? 'admin' : 'panel');
+            return redirigir(($usuario['rol'] ?? '') === 'administrador' ? 'admin' : 'panel');
         } catch (ExcepcionValidacion $excepcion) {
             $errores = $excepcion->errores();
             $this->mensajes->error(reset($errores) ?: 'Datos inválidos.');
@@ -54,9 +60,12 @@ final class AutenticacionController
             ]);
         }
 
-        return redirect('login');
+        return redirigir('login');
     }
 
+    /**
+     * Prepara el formulario para registrar una cuenta.
+     */
     public function formularioRegistro(Solicitud $solicitud): Respuesta
     {
         return $this->vista->renderizar('publico.autenticacion.registro', [
@@ -84,16 +93,22 @@ final class AutenticacionController
             $this->mensajes->error('No se pudo crear la cuenta. El correo puede estar registrado.');
         }
 
-        return redirect('register');
+        return redirigir('register');
     }
 
+    /**
+     * Cierra la sesión activa y limpia los datos asociados.
+     */
     public function cerrarSesion(Solicitud $solicitud): Respuesta
     {
         $this->autenticacion->cerrarSesion();
 
-        return redirect('');
+        return redirigir('');
     }
 
+    /**
+     * Prepara la confirmación para cerrar la sesión activa.
+     */
     public function formularioCierreSesion(Solicitud $solicitud): Respuesta
     {
         return $this->vista->renderizar('modulos.cuenta.cerrar-sesion', ['tituloPagina' => 'Cerrar sesión']);

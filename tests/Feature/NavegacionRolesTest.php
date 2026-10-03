@@ -4,61 +4,134 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Nucleo\Enrutamiento\Enrutador;
-use App\Nucleo\Http\Solicitud;
 use App\Nucleo\Aplicacion;
+use App\Nucleo\Enrutamiento\Enrutador;
+use App\Nucleo\Http\Respuesta;
+use App\Nucleo\Http\Solicitud;
 use App\Soporte\Autorizacion\AccesoRol;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Pruebas de integración para validar la navegación, los permisos y las restricciones de acceso según el rol del usuario.
+ */
 final class NavegacionRolesTest extends TestCase
 {
     private Enrutador $enrutador;
 
+    /**
+     * Prepara el estado y los recursos necesarios para ejecutar la prueba.
+     */
     protected function setUp(): void
     {
         $_SESSION = [];
         $this->enrutador = Aplicacion::obtener(Enrutador::class);
     }
 
-    /** @return array<string, array{0:string,1:array<int,string>,2:string}> */
+    /**
+     * Devuelve los perfiles disponibles para las recomendaciones de productos.
+     *
+     * @return array<string, array{0:string, 1:array<int,string>, 2:string}>
+     */
     public static function perfiles(): array
     {
         return [
-            'cliente minorista' => ['cliente_minorista', ['perfil', 'direcciones', 'pedidos', 'historial'], 'usuarios'],
-            'cliente mayorista' => ['cliente_mayorista', ['cotizaciones', 'pedidos-mayoristas', 'historial'], 'usuarios'],
-            'compras y logística' => ['compras_logistica', ['inventario', 'productos', 'proveedores', 'compras', 'movimientos-stock', 'preparacion-pedidos', 'logistica-mayorista', 'alertas-stock'], 'usuarios'],
-            'ventas mayoristas' => ['ventas_mayoristas', ['productos', 'clientes-mayoristas', 'cotizaciones', 'pedidos-mayoristas', 'historial-cliente', 'seguimiento-comercial'], 'usuarios'],
-            'ventas minoristas' => ['ventas_minoristas', ['productos', 'inventario', 'clientes', 'ventas', 'pedidos', 'garantias', 'devoluciones', 'reclamaciones'], 'usuarios'],
-            'marketing' => ['marketing', ['publicidad', 'campanias', 'catalogo-digital', 'destacados', 'promociones', 'contenido', 'analitica', 'consultas-digitales', 'segmentacion', 'smartcommerce-analytics'], 'usuarios'],
+            'cliente minorista' => [
+                'cliente_minorista', 
+                ['perfil', 'direcciones', 'pedidos', 'historial'], 
+                'usuarios'
+            ],
+            'cliente mayorista' => [
+                'cliente_mayorista', 
+                ['cotizaciones', 'pedidos-mayoristas', 'historial'], 
+                'usuarios'
+            ],
+            'compras y logística' => [
+                'compras_logistica', 
+                ['inventario', 'productos', 'proveedores', 'compras', 'movimientos-stock', 'preparacion-pedidos', 'logistica-mayorista', 'alertas-stock'], 
+                'usuarios'
+            ],
+            'ventas mayoristas' => [
+                'ventas_mayoristas', 
+                ['productos', 'clientes-mayoristas', 'cotizaciones', 'pedidos-mayoristas', 'historial-cliente', 'seguimiento-comercial'], 
+                'usuarios'
+            ],
+            'ventas minoristas' => [
+                'ventas_minoristas', 
+                ['productos', 'inventario', 'clientes', 'ventas', 'pedidos', 'garantias', 'devoluciones', 'reclamaciones'], 
+                'usuarios'
+            ],
+            'marketing' => [
+                'marketing', 
+                ['publicidad', 'campanias', 'catalogo-digital', 'destacados', 'promociones', 'contenido', 'analitica', 'consultas-digitales', 'segmentacion', 'smartcommerce-analytics'], 
+                'usuarios'
+            ],
         ];
     }
 
-    /** @param array<int, string> $permitidos */
+    /**
+     * Comprueba qué módulos puede abrir cada perfil y qué rutas deben bloquearse.
+     * 
+     * @param array<int, string> $permitidos
+     */
     #[DataProvider('perfiles')]
-    public function testDashboardModulosYBloqueosPorPerfil(string $rol, array $permitidos, string $prohibido): void
+    public function testTableroModulosYBloqueosPorPerfil(string $rol, array $permitidos, string $prohibido): void
     {
-        $_SESSION['user'] = ['id' => 1, 'nombre' => 'Prueba', 'correo' => $rol . '@test.local', 'rol' => $rol];
+        $_SESSION['user'] = [
+            'id' => 1, 
+            'nombre' => 'Prueba', 
+            'correo' => $rol . '@test.local', 
+            'rol' => $rol
+        ];
 
-        self::assertSame(200, $this->get('/panel')->estado(), $rol . ' debe entrar a su dashboard');
+        self::assertSame(200, $this->solicitarGet('/panel')->estado(), $rol . ' debe entrar a su dashboard');
+        
         foreach ($permitidos as $modulo) {
-            self::assertSame(200, $this->get('/panel/' . $modulo)->estado(), $rol . ' debe acceder a ' . $modulo);
+            self::assertSame(200, $this->solicitarGet('/panel/' . $modulo)->estado(), $rol . ' debe acceder a ' . $modulo);
         }
+        
         if ($prohibido !== '') {
-            self::assertSame(403, $this->get('/panel/' . $prohibido)->estado(), $rol . ' no debe acceder a ' . $prohibido);
+            self::assertSame(403, $this->solicitarGet('/panel/' . $prohibido)->estado(), $rol . ' no debe acceder a ' . $prohibido);
         }
     }
 
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba testVisitanteSoloAccedeAlRecorridoPublico.
+     */
     public function testVisitanteSoloAccedeAlRecorridoPublico(): void
     {
-        foreach (['/', '/catalog', '/products/1', '/smart/recommend', '/smart/compare', '/smart/assistant', '/about', '/contact'] as $ruta) {
-            self::assertSame(200, $this->get($ruta)->estado(), 'Visitante debe acceder a ' . $ruta);
+        $rutasPublicas = [
+            '/', 
+            '/catalog', 
+            '/products/1', 
+            '/smart/recommend', 
+            '/smart/compare', 
+            '/smart/assistant', 
+            '/about', 
+            '/contact'
+        ];
+        
+        foreach ($rutasPublicas as $ruta) {
+            self::assertSame(200, $this->solicitarGet($ruta)->estado(), 'Visitante debe acceder a ' . $ruta);
         }
-        foreach (['/panel', '/cart', '/checkout', '/mayorista', '/smart/optimizer', '/smart/ads'] as $ruta) {
-            self::assertSame(302, $this->get($ruta)->estado(), 'Visitante debe ser enviado al login desde ' . $ruta);
+        
+        $rutasProtegidas = [
+            '/panel', 
+            '/cart', 
+            '/checkout', 
+            '/mayorista', 
+            '/smart/optimizer', 
+            '/smart/ads'
+        ];
+        
+        foreach ($rutasProtegidas as $ruta) {
+            self::assertSame(302, $this->solicitarGet($ruta)->estado(), 'Visitante debe ser enviado al login desde ' . $ruta);
         }
     }
 
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba testRutasEspecialesRespetanElPerfil.
+     */
     public function testRutasEspecialesRespetanElPerfil(): void
     {
         $casos = [
@@ -75,13 +148,22 @@ final class NavegacionRolesTest extends TestCase
         ];
 
         foreach ($casos as [$rol, $ruta, $estado]) {
-            $_SESSION['user'] = ['id' => 1, 'nombre' => 'Prueba', 'rol' => $rol];
-            self::assertSame($estado, $this->get($ruta)->estado(), $rol . ' en ' . $ruta);
+            $_SESSION['user'] = [
+                'id' => 1, 
+                'nombre' => 'Prueba', 
+                'rol' => $rol
+            ];
+            
+            self::assertSame($estado, $this->solicitarGet($ruta)->estado(), $rol . ' en ' . $ruta);
         }
     }
 
-    /** @return array<string, array{0:string,1:string}> */
-    public static function dashboards(): array
+    /**
+     * Prepara los indicadores necesarios para los paneles disponibles.
+     *
+     * @return array<string, array{0:string, 1:string}>
+     */
+    public static function tableros(): array
     {
         return [
             'cliente minorista' => ['cliente_minorista', 'Mi cuenta'],
@@ -94,21 +176,33 @@ final class NavegacionRolesTest extends TestCase
         ];
     }
 
-    #[DataProvider('dashboards')]
-    public function testCadaRolLlegaAlDashboardQueLeCorresponde(string $rol, string $titulo): void
+    /**
+     * Comprueba que cada rol llegue al tablero que le corresponde.
+     */
+    #[DataProvider('tableros')]
+    public function testCadaRolLlegaAlTableroQueLeCorresponde(string $rol, string $titulo): void
     {
-        $_SESSION['user'] = ['id' => 1, 'nombre' => 'Prueba', 'correo' => $rol . '@test.local', 'rol' => $rol];
+        $_SESSION['user'] = [
+            'id' => 1, 
+            'nombre' => 'Prueba', 
+            'correo' => $rol . '@test.local', 
+            'rol' => $rol
+        ];
 
-        $respuesta = $this->get('/panel');
+        $respuesta = $this->solicitarGet('/panel');
 
         if ($rol === 'administrador') {
             self::assertSame(302, $respuesta->estado());
             return;
         }
+        
         self::assertSame(200, $respuesta->estado());
         self::assertStringContainsString($titulo, $respuesta->contenido());
     }
 
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba testDestinosDeNavegacionCriticos.
+     */
     public function testDestinosDeNavegacionCriticos(): void
     {
         self::assertSame('catalog', AccesoRol::destino('cliente_minorista', 'catalogo'));
@@ -119,7 +213,8 @@ final class NavegacionRolesTest extends TestCase
         self::assertSame('panel/movimientos-stock', AccesoRol::destino('compras_logistica', 'movimientos-stock'));
     }
 
-    private function get(string $ruta): \App\Nucleo\Http\Respuesta
+    // Despacha una solicitud GET a la ruta indicada.
+    private function solicitarGet(string $ruta): Respuesta
     {
         return $this->enrutador->despachar(new Solicitud('GET', $ruta, [], [], []));
     }

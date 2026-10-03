@@ -1,9 +1,22 @@
-<?php $rutaCampanias = is_admin() ? 'admin/campaigns' : 'panel/campanias'; ?>
+<?php
+/**
+ * @var array<int, array{icono:string,etiqueta:string,destino:string,activo:bool}> $opcionesMenuPublicidadInteligente
+ * @var array<int, array{icono:string,etiqueta:string,valor:string,detalle:string}> $metricasPublicidad
+ * @var array<int, array<string, mixed>> $campaniasDestacadas
+ * @var string $rutaCampanias
+ 
+ */
+?>
 <section class="publicidad-ia-fondo">
     <div class="container publicidad-ia-layout">
         <aside class="publicidad-ia-menu">
             <div><i class="bi bi-stars"></i><span><b>MD Ads inteligente</b><small>Impulsa tus ventas con IA</small></span></div>
-            <?php foreach ([['bi-grid', 'Vista general'], ['bi-clock-history', 'Mis campañas'], ['bi-bar-chart', 'Analítica de ventas'], ['bi-people', 'Audiencia'], ['bi-box-seam', 'Productos'], ['bi-stars', 'Recomendaciones IA'], ['bi-file-earmark-bar-graph', 'Reportes'], ['bi-plugin', 'Integraciones'], ['bi-gear', 'Configuración']] as $indice => $opcion): ?><a class="<?= $indice === 0 ? 'activo' : '' ?>" href="<?= e($indice === 1 ? url($rutaCampanias) : match ($indice) { 0 => '#vista-general', 5 => '#recomendaciones', 6 => '#reportes', default => '#funciones-pendientes' }) ?>"><i class="bi <?= e($opcion[0]) ?>"></i><?= e($opcion[1]) ?></a><?php endforeach; ?>
+            <?php foreach ($opcionesMenuPublicidadInteligente as $opcion): ?>
+            <a
+                class="<?= e($opcion['activo'] ? 'activo' : '') ?>"
+                href="<?= e($opcion['destino']) ?>"><i class="bi <?= e($opcion['icono']) ?>"></i><?= e($opcion['etiqueta']) ?>
+            </a>
+            <?php endforeach; ?>
             <div class="publicidad-convierte"><i class="bi bi-graph-up-arrow"></i><b>Convierte más.<br>Vende inteligente.</b><small>IA + Datos + Resultados</small></div>
         </aside>
         <main class="publicidad-ia-contenido" id="vista-general">
@@ -12,11 +25,23 @@
                     <h1>MD Ads inteligente<br><em>SmartCommerce</em></h1>
                     <p>Convierte clics en clientes. Analiza, optimiza y haz crecer tu negocio con el poder de la IA.</p>
                 </div>
-                <div class="publicidad-ia-acciones"><a class="btn btn-primary" href="<?= e(url($rutaCampanias)) ?>"><i class="bi bi-plus-lg"></i> Crear campaña</a><button type="button" disabled title="Próxima iteración"><i class="bi bi-bar-chart"></i> Optimizar anuncios</button><button type="button" disabled title="Próxima iteración"><i class="bi bi-file-text"></i> Generar reporte IA</button></div>
+
+                <div class="publicidad-ia-acciones">
+                    <a class="btn btn-primary" href="<?= e(url_interna($rutaCampanias)) ?>"><i class="bi bi-plus-lg"></i> Crear campaña
+                    </a>
+                    <button type="button" disabled title="Próxima iteración"><i class="bi bi-bar-chart"></i> Optimizar anuncios
+                    </button>
+                    <button type="button" disabled title="Próxima iteración"><i class="bi bi-file-text"></i> Generar reporte IA
+                    </button>
+                </div>
             </header>
-            <div class="publicidad-metricas"><?php foreach ([['bi-megaphone', 'Campañas activas', (string) $resumen['activas'], 'Datos reales'], ['bi-eye', 'Impresiones', number_format((int) $resumen['vistas']), 'Datos reales'], ['bi-mouse', 'Clics', number_format((int) $resumen['clics']), 'Datos reales'], ['bi-bar-chart', 'CTR', number_format((float) $resumen['ctr'], 1) . '%', 'Calculado']] as $metrica): ?><article><i class="bi <?= e($metrica[0]) ?>"></i>
-                        <div><span><?= e($metrica[1]) ?></span><b><?= e($metrica[2]) ?></b><small><?= e($metrica[3]) ?></small></div>
-                    </article><?php endforeach; ?></div>
+
+            <div class="publicidad-metricas">
+                <?php foreach ($metricasPublicidad as $metrica): ?>
+                <article>
+                <i class="bi <?= e($metrica['icono']) ?>"></i>
+                    <div><span><?= e($metrica['etiqueta']) ?></span><b><?= e($metrica['valor']) ?></b><small><?= e($metrica['detalle']) ?></small></div>
+                </article><?php endforeach; ?></div>
             <div class="publicidad-rejilla">
                 <section class="panel">
                     <div class="titulo-panel">
@@ -38,7 +63,14 @@
                 </section>
                 <section class="panel">
                     <h2>Top campañas</h2>
-                    <ol><?php foreach (array_slice($campanias, 0, 4) as $campania): ?><li><?= e($campania['nombre']) ?> <b><?= (int) $campania['clics'] ?> clics</b></li><?php endforeach; ?></ol>
+
+                    <ol>
+                <?php foreach ($campaniasDestacadas as $campania): ?>
+                        <li>
+                <?= e($campania['nombre']) ?> <b><?= (int) $campania['clics'] ?> clics</b>
+                        </li>
+                <?php endforeach; ?>
+                    </ol>
                 </section>
                 <section class="panel">
                     <h2>Recomendaciones de la IA</h2>

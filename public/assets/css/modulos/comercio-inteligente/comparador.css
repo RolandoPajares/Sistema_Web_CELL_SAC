@@ -6,6 +6,21 @@
 .comparison-card h2 {
   min-height: 58px;
 }
+.comparison-product-photo {
+  display: grid;
+  width: 100%;
+  height: 170px;
+  place-items: center;
+  object-fit: contain;
+  padding: 10px;
+  margin-bottom: 14px;
+  background: #f4f8ff;
+  border-radius: 12px;
+}
+.comparison-product-placeholder {
+  color: #2464ad;
+  font-size: 4rem;
+}
 .score-row {
   display: grid;
   grid-template-columns: 1fr auto;

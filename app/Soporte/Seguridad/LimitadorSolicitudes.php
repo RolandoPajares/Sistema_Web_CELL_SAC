@@ -10,6 +10,9 @@ final class LimitadorSolicitudes
     {
     }
 
+    /**
+     * Comprueba si se alcanzó el límite de intentos permitido.
+     */
     public function demasiadosIntentos(string $clave, int $maximoIntentos, int $segundosCaducidad): bool
     {
         $intentos = $this->leer($clave, $segundosCaducidad);
@@ -17,6 +20,9 @@ final class LimitadorSolicitudes
         return count($intentos) >= $maximoIntentos;
     }
 
+    /**
+     * Crea o guarda la información relacionada con «intento».
+     */
     public function registrarIntento(string $clave, int $segundosCaducidad): void
     {
         $intentos = $this->leer($clave, $segundosCaducidad);
@@ -24,6 +30,9 @@ final class LimitadorSolicitudes
         $this->escribir($clave, $intentos);
     }
 
+    /**
+     * Limpia el estado actual y elimina los datos temporales asociados.
+     */
     public function limpiar(string $clave): void
     {
         $archivo = $this->archivo($clave);
@@ -32,7 +41,11 @@ final class LimitadorSolicitudes
         }
     }
 
-    /** @return array<int, int> */
+    /**
+     * Lee el valor o contenido almacenado en la ubicación indicada.
+     *
+     * @return array<int, int>
+     */
     private function leer(string $clave, int $segundosCaducidad): array
     {
         $archivo = $this->archivo($clave);
@@ -42,7 +55,11 @@ final class LimitadorSolicitudes
         return array_values(array_filter((array) $valores, static fn (mixed $valor): bool => is_int($valor) && $valor > $umbral));
     }
 
-    /** @param array<int, int> $intentos */
+    /**
+     * Guarda el mensaje y el contexto recibidos en el registro correspondiente.
+     *
+     * @param array<int, int> $intentos
+     */
     private function escribir(string $clave, array $intentos): void
     {
         if (!is_dir($this->directorio)) {
@@ -51,6 +68,9 @@ final class LimitadorSolicitudes
         file_put_contents($this->archivo($clave), json_encode($intentos), LOCK_EX);
     }
 
+    /**
+     * Resuelve el archivo asociado a la ruta o identificador recibido.
+     */
     private function archivo(string $clave): string
     {
         return rtrim($this->directorio, '/\\') . '/rate-' . hash('sha256', $clave) . '.json';

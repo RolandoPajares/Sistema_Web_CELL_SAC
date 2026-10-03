@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DAO\Campanias;
 
+use App\DAO\Contratos\RepositorioCampaniaInterfaz;
 use App\Nucleo\BaseDatos\Conexion;
 use PDO;
 use Throwable;
@@ -12,7 +13,7 @@ use Throwable;
  * Data Access Object para la gestión de Campañas Publicitarias.
  * Centraliza todas las consultas a la tabla 'campanas_publicitarias'.
  */
-final class CampaniaDAO
+final class CampaniaDAO implements RepositorioCampaniaInterfaz
 {
     public function __construct(private Conexion $conexion)
     {
@@ -45,6 +46,7 @@ final class CampaniaDAO
     }
 
     /**
+     * Busca una campaña por su identificador y devuelve null si no existe.
      * @return array<string, mixed>|null Devuelve null si no existe, permitiendo un manejo limpio de errores 404.
      */
     public function buscar(int $idCampania): ?array
@@ -91,6 +93,7 @@ final class CampaniaDAO
     }
 
     /**
+     * Actualiza los campos permitidos de la campaña indicada.
      * @param array<string, mixed> $datos Datos a actualizar. Deben incluir todas las columnas mapeadas.
      */
     public function actualizar(int $idCampania, array $datos): void
@@ -109,9 +112,7 @@ final class CampaniaDAO
     }
 
     /**
-     * "Soft delete" / Desactivación manual.
-     * Es preferible esto a borrar el registro físicamente (DELETE) para preservar
-     * las estadísticas de clics e impresiones (tracks) de campañas pasadas.
+     * Desactiva la campaña para conservar sus estadísticas de clics e impresiones.
      */
     public function desactivar(int $idCampania): void
     {
@@ -121,7 +122,7 @@ final class CampaniaDAO
     }
 
     /**
-     * Registra métricas de rendimiento (impresiones o clics) en tiempo real.
+     * Registra las impresiones o los clics de una campaña.
      * Prevención de SQL Injection: Aunque se interpola `$columna` directamente en la consulta,
      * está estrictamente controlado por el operador ternario (solo puede ser 'clics' o 'vistas').
      */

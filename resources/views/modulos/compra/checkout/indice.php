@@ -1,27 +1,30 @@
 <?php
-$articulos = $resumen['articulos'];
-?>
-<section>
+
+/**
+ * @var string $atributoMensajeOculto
+ * @var string $mensaje
+ * @var string $atributoErrorOculto
+ * @var mixed $error
+ * @var string $atributoCheckoutConArticulosOculto
+ * @var string $atributoCheckoutSinArticulosOculto
+ */ ?><section>
     <div class="container">
         <div class="auth-wrap panel">
             <h1>Finalizar pedido</h1>
-            <?php if ($mensaje): ?>
-                <div class="alert alert-success"><?= e($mensaje) ?></div>
-                <a class="btn btn-ghost" href="<?= e(url('panel/pedidos')) ?>">Ver mis pedidos</a>
-            <?php endif; ?>
-            <?php if ($error): ?>
-                <div class="alert alert-error"><?= e($error) ?></div>
-            <?php endif; ?>
-            <?php if ($articulos): ?>
+            <div class="alert alert-success" <?= $atributoMensajeOculto ?>><?= e($mensaje) ?></div>
+            <a class="btn btn-ghost" <?= $atributoMensajeOculto ?> href="<?= e(url_interna('panel/pedidos')) ?>">Ver mis pedidos</a>
+            <div class="alert alert-error" <?= $atributoErrorOculto ?>><?= e($error) ?></div>
+            <div <?= $atributoCheckoutConArticulosOculto ?>>
                 <p>Este proyecto registra una solicitud de compra; no procesa pagos en línea.</p>
-                <form method="post" action="<?= e(url('checkout')) ?>">
+                <form method="post" action="<?= e(url_interna('checkout')) ?>">
                     <?= csrf_field() ?>
                     <button class="btn btn-primary" style="width:100%">Confirmar pedido</button>
                 </form>
-            <?php else: ?>
+            </div>
+            <div <?= $atributoCheckoutSinArticulosOculto ?>>
                 <p>No hay productos pendientes.</p>
-                <a class="btn btn-primary" href="<?= e(url('catalog')) ?>">Volver al catálogo</a>
-            <?php endif; ?>
+                <a class="btn btn-primary" href="<?= e(url_interna('catalog')) ?>">Volver al catálogo</a>
+            </div>
         </div>
     </div>
 </section>

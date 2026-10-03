@@ -3,7 +3,10 @@
         <div>
             <span class="eyebrow">Empresa local</span>
             <h1>MD Technology Digital Cell S.A.C.</h1>
-            <p>Negocio dedicado a la comercialización de celulares y audífonos originales de marcas reconocidas. La propuesta web busca ampliar la presencia digital, facilitar la consulta de productos y centralizar la gestión del catálogo e inventario.</p>
+
+            <p>
+                Negocio dedicado a la comercialización de celulares y audífonos originales de marcas reconocidas. La propuesta web busca ampliar la presencia digital, facilitar la consulta de productos y centralizar la gestión del catálogo e inventario.
+            </p>
             <div class="feature-grid" style="grid-template-columns:1fr 1fr">
                 <div class="feature">
                     <h3>Ubicación</h3>
@@ -15,16 +18,22 @@
                 </div>
                 <div class="feature">
                     <h3>Misión</h3>
-                    <p>Ofrecer celulares y audífonos originales, con asesoría personalizada y atención confiable, para satisfacer las necesidades tecnológicas de nuestros clientes.</p>
+
+                    <p>
+                Ofrecer celulares y audífonos originales, con asesoría personalizada y atención confiable, para satisfacer las necesidades tecnológicas de nuestros clientes.
+                    </p>
                 </div>
                 <div class="feature">
                     <h3>Visión</h3>
-                    <p>Ser una empresa referente en Bagua en la venta de tecnología, reconocida por la calidad de sus productos, la confianza de sus clientes y la innovación en su atención.</p>
+
+                    <p>
+                Ser una empresa referente en Bagua en la venta de tecnología, reconocida por la calidad de sus productos, la confianza de sus clientes y la innovación en su atención.
+                    </p>
                 </div>
             </div>
         </div>
         <div class="hero-card">
-            <img src="<?= e(asset('assets/img/publico/nosotros/local.jpg')) ?>" alt="Local MD Technology Digital Cell">
+            <img src="<?= e(url_recurso_estatico('assets/img/publico/nosotros/local.jpg')) ?>" alt="Local MD Technology Digital Cell">
         </div>
     </div>
 </section>

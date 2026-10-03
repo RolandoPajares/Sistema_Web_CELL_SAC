@@ -9,8 +9,11 @@ use App\Nucleo\Http\Respuesta;
 
 final class CuentaController
 {
+    /**
+     * Prepara los datos de la página y muestra el listado principal del módulo.
+     */
     public function indice(Solicitud $solicitud): Respuesta
     {
-        return redirect('panel');
+        return redirigir('panel');
     }
 }

@@ -9,14 +9,17 @@ use App\Soporte\Excepciones\ExcepcionValidacion;
 
 final class SolicitudMovimientoInventario
 {
+    /**
+     * Comprueba que los datos cumplan las reglas antes de continuar.
+     */
     public static function validar(Solicitud $solicitud): array
     {
-        $productoId = filter_var($solicitud->entrada('producto_id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $idProducto = filter_var($solicitud->entrada('producto_id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $tipo = trim((string) $solicitud->entrada('tipo_movimiento', ''));
         $cantidad = filter_var($solicitud->entrada('cantidad'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $notas = trim((string) $solicitud->entrada('notas', ''));
         $errores = [];
-        if ($productoId === false) {
+        if ($idProducto === false) {
             $errores['producto_id'] = 'Selecciona un producto válido.';
         }
         if (!in_array($tipo, ['entrada', 'salida', 'ajuste'], true)) {
@@ -32,7 +35,7 @@ final class SolicitudMovimientoInventario
             throw new ExcepcionValidacion($errores);
         }
 
-        return ['producto_id' => (int) $productoId, 'tipo_movimiento' => $tipo,
+        return ['producto_id' => (int) $idProducto, 'tipo_movimiento' => $tipo,
             'cantidad' => (int) $cantidad, 'notas' => $notas];
     }
 }

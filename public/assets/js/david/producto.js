@@ -1,210 +1,255 @@
-
+/**
+ * Scripts para la Galería de Detalle y el Modal del Catálogo
+ * Maneja la interactividad de las imágenes de productos, navegación por miniaturas,
+ * zoom, flechas de desplazamiento y la gestión de apertura y cierre del modal.
+ */
 
 // Galería del detalle individual; usa únicamente las imágenes registradas en el producto.
 (() => {
-  const root = document.querySelector('[data-product-detail]');
-  if (!root) return;
-  const main = root.querySelector('[data-main-product-image]');
-  const placeholder = root.querySelector('[data-image-placeholder]');
-  const thumbsBox = root.querySelector('[data-gallery-thumbs]');
-  let visible = [...root.querySelectorAll('.gallery-thumb')].filter(button => !button.hidden);
-
-  const setMain = (src, btn) => {
-    if (src && main) {
-      main.src = src;
-      main.hidden = false;
-      if (placeholder) placeholder.hidden = true;
+    const raizGaleria = document.querySelector("[data-product-detail]");
+    
+    if (!raizGaleria) {
+        return;
     }
-    root.querySelectorAll('.gallery-thumb').forEach(x => x.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-  };
 
-  const updateArrows = () => {
-    const show = visible.length > 1;
-    const previous = root.querySelector('[data-gallery-prev]');
-    const next = root.querySelector('[data-gallery-next]');
-    if (previous) previous.hidden = !show;
-    if (next) next.hidden = !show;
-  };
+    const imagenPrincipal = raizGaleria.querySelector("[data-main-product-image]");
+    const marcadorPosicion = raizGaleria.querySelector("[data-image-placeholder]");
+    const cajaMiniaturas = raizGaleria.querySelector("[data-gallery-thumbs]");
+    
+    let miniaturasVisibles = [...raizGaleria.querySelectorAll(".gallery-thumb")].filter(
+        (boton) => !boton.hidden
+    );
 
-  thumbsBox?.addEventListener('click', e => {
-    const b = e.target.closest('.gallery-thumb');
-    if (b && !b.hidden) {
-      e.preventDefault();
-      visible = [...root.querySelectorAll('.gallery-thumb')].filter(button => !button.hidden);
-      setMain(b.dataset.src, b);
+    const establecerImagenPrincipal = (fuenteImagen, botonMiniatura) => {
+        if (fuenteImagen && imagenPrincipal) {
+            imagenPrincipal.src = fuenteImagen;
+            imagenPrincipal.hidden = false;
+            
+            if (marcadorPosicion) {
+                marcadorPosicion.hidden = true;
+            }
+        }
+
+        raizGaleria
+            .querySelectorAll(".gallery-thumb")
+            .forEach((elementoMiniatura) => elementoMiniatura.classList.remove("active"));
+            
+        if (botonMiniatura) {
+            botonMiniatura.classList.add("active");
+        }
+    };
+
+    const actualizarFlechasNavegacion = () => {
+        const mostrarFlechas = miniaturasVisibles.length > 1;
+        const botonAnterior = raizGaleria.querySelector("[data-gallery-prev]");
+        const botonSiguiente = raizGaleria.querySelector("[data-gallery-next]");
+        
+        if (botonAnterior) {
+            botonAnterior.hidden = !mostrarFlechas;
+        }
+        
+        if (botonSiguiente) {
+            botonSiguiente.hidden = !mostrarFlechas;
+        }
+    };
+
+    cajaMiniaturas?.addEventListener("click", (evento) => {
+        const miniaturaObjetivo = evento.target.closest(".gallery-thumb");
+        
+        if (miniaturaObjetivo && !miniaturaObjetivo.hidden) {
+            evento.preventDefault();
+            
+            miniaturasVisibles = [...raizGaleria.querySelectorAll(".gallery-thumb")].filter(
+                (boton) => !boton.hidden
+            );
+            
+            establecerImagenPrincipal(miniaturaObjetivo.dataset.src, miniaturaObjetivo);
+        }
+    });
+
+    const avanzarPasoGaleria = (desplazamiento) => {
+        if (!miniaturasVisibles.length) {
+            return;
+        }
+
+        let indiceActual = miniaturasVisibles.findIndex((elemento) => elemento.classList.contains("active"));
+        indiceActual = (indiceActual + desplazamiento + miniaturasVisibles.length) % miniaturasVisibles.length;
+        
+        establecerImagenPrincipal(
+            miniaturasVisibles[indiceActual].dataset.src, 
+            miniaturasVisibles[indiceActual]
+        );
+    };
+
+    raizGaleria.querySelector("[data-gallery-prev]")?.addEventListener("click", (evento) => {
+        evento.preventDefault();
+        avanzarPasoGaleria(-1);
+    });
+
+    raizGaleria.querySelector("[data-gallery-next]")?.addEventListener("click", (evento) => {
+        evento.preventDefault();
+        avanzarPasoGaleria(1);
+    });
+
+    const ocultarMiniaturaNoDisponible = (imagenMiniatura) => {
+        imagenMiniatura.closest(".gallery-thumb")?.remove();
+        
+        miniaturasVisibles = [...raizGaleria.querySelectorAll(".gallery-thumb")].filter(
+            (boton) => !boton.hidden
+        );
+        
+        actualizarFlechasNavegacion();
+    };
+
+    cajaMiniaturas?.querySelectorAll(".gallery-thumb img").forEach((imagenMiniatura) => {
+        imagenMiniatura.addEventListener("error", () => ocultarMiniaturaNoDisponible(imagenMiniatura), {
+            once: true,
+        });
+        
+        if (imagenMiniatura.complete && imagenMiniatura.naturalWidth === 0) {
+            ocultarMiniaturaNoDisponible(imagenMiniatura);
+        }
+    });
+
+    const mostrarMarcadorPosicion = () => {
+        if (imagenPrincipal) {
+            imagenPrincipal.hidden = true;
+        }
+        
+        if (marcadorPosicion) {
+            marcadorPosicion.hidden = false;
+        }
+        
+        if (cajaMiniaturas) {
+            cajaMiniaturas.hidden = true;
+        }
+    };
+
+    imagenPrincipal?.addEventListener("error", mostrarMarcadorPosicion, { once: true });
+    
+    if (imagenPrincipal?.getAttribute("src") && imagenPrincipal.complete && imagenPrincipal.naturalWidth === 0) {
+        mostrarMarcadorPosicion();
     }
-  });
-  const step = n => {
-    if (!visible.length) return;
-    let i = visible.findIndex(x => x.classList.contains('active'));
-    i = (i + n + visible.length) % visible.length;
-    setMain(visible[i].dataset.src, visible[i]);
-  };
-  root.querySelector('[data-gallery-prev]')?.addEventListener('click', e => { e.preventDefault(); step(-1); });
-  root.querySelector('[data-gallery-next]')?.addEventListener('click', e => { e.preventDefault(); step(1); });
 
-  const hideUnavailableThumb = image => {
-    image.closest('.gallery-thumb')?.remove();
-    visible = [...root.querySelectorAll('.gallery-thumb')].filter(button => !button.hidden);
-    updateArrows();
-  };
-  thumbsBox?.querySelectorAll('.gallery-thumb img').forEach(image => {
-    image.addEventListener('error', () => hideUnavailableThumb(image), { once: true });
-    if (image.complete && image.naturalWidth === 0) hideUnavailableThumb(image);
-  });
-  const showPlaceholder = () => {
-    main.hidden = true;
-    if (placeholder) placeholder.hidden = false;
-    if (thumbsBox) thumbsBox.hidden = true;
-  };
-  main?.addEventListener('error', showPlaceholder, { once: true });
-  if (main?.getAttribute('src') && main.complete && main.naturalWidth === 0) showPlaceholder();
+    if (miniaturasVisibles.length && imagenPrincipal) {
+        establecerImagenPrincipal(miniaturasVisibles[0].dataset.src, miniaturasVisibles[0]);
+    } else if (imagenPrincipal) {
+        imagenPrincipal.hidden = true;
+    }
 
-  if (visible.length && main) setMain(visible[0].dataset.src, visible[0]);
-  else if (main) main.hidden = true;
-  if (!visible.length && placeholder) placeholder.hidden = false;
-  updateArrows();
+    if (!miniaturasVisibles.length && marcadorPosicion) {
+        marcadorPosicion.hidden = false;
+    }
+    
+    actualizarFlechasNavegacion();
 })();
 
-// Modal y galería del catálogo público. Se activa solo en /catalog.
+// El catálogo ya recibe del servidor los datos consultados por el controlador.
 (() => {
-  const modal = document.querySelector('[data-catalog-modal]');
-  if (!modal || typeof modal.showModal !== 'function') return;
+    const formularioOrden = document.querySelector("[data-catalog-sort]");
+    formularioOrden?.addEventListener("change", () =>
+        formularioOrden.form?.requestSubmit()
+    );
 
-  const mainImage = modal.querySelector('[data-modal-main-image]');
-  const imagePlaceholder = modal.querySelector('[data-modal-image-placeholder]');
-  const thumbnails = modal.querySelector('[data-modal-thumbnails]');
-  const previous = modal.querySelector('[data-modal-prev]');
-  const next = modal.querySelector('[data-modal-next]');
-  const zoomButton = modal.querySelector('[data-modal-zoom]');
-  const openers = document.querySelectorAll('[data-open-product]');
-  let images = [];
-  let selectedImage = 0;
-  let activeOpener = null;
-
-  const text = (selector, value) => {
-    const element = modal.querySelector(selector);
-    if (element) element.textContent = value || '';
-    return element;
-  };
-
-  const setImage = (index) => {
-    if (!images.length || !mainImage) return;
-    selectedImage = (index + images.length) % images.length;
-    mainImage.src = images[selectedImage];
-    const brand = modal.querySelector('[data-modal-brand]')?.textContent || '';
-    const name = modal.querySelector('[data-modal-name]')?.textContent || '';
-    mainImage.alt = `${brand} ${name}`.trim();
-    mainImage.hidden = false;
-    if (imagePlaceholder) imagePlaceholder.hidden = true;
-    if (zoomButton) zoomButton.classList.remove('is-zoomed');
-
-    if (thumbnails) {
-      thumbnails.querySelectorAll('button').forEach((button, index) => {
-        button.classList.toggle('is-active', index === selectedImage);
-        button.setAttribute('aria-current', index === selectedImage ? 'true' : 'false');
-      });
-    }
-  };
-
-  const buildGallery = (values) => {
-    images = Array.isArray(values)
-      ? values.map((value) => String(value || '').trim()).filter((value) => {
-          if (!value) return false;
-          try {
-            const protocol = new URL(value, document.baseURI).protocol;
-            return protocol === 'http:' || protocol === 'https:';
-          } catch {
-            return false;
-          }
-        })
-      : [];
-    selectedImage = 0;
-    if (zoomButton) zoomButton.classList.remove('is-zoomed');
-
-    if (thumbnails) {
-      thumbnails.replaceChildren();
-      thumbnails.hidden = images.length < 2;
-      images.forEach((source, index) => {
-        const button = document.createElement('button');
-        const image = document.createElement('img');
-        button.type = 'button';
-        button.className = 'catalog-modal-thumb';
-        button.setAttribute('aria-label', `Ver imagen ${index + 1}`);
-        button.addEventListener('click', () => setImage(index));
-        image.src = source;
-        image.alt = '';
-        button.append(image);
-        thumbnails.append(button);
-      });
+    const elementoModal = document.querySelector("[data-catalog-modal]");
+    if (!elementoModal || typeof elementoModal.showModal !== "function") {
+        return;
     }
 
-    const hasGallery = images.length > 1;
-    if (previous) previous.hidden = !hasGallery;
-    if (next) next.hidden = !hasGallery;
-    if (images.length) {
-      setImage(0);
-    } else {
-      if (mainImage) {
-        mainImage.removeAttribute('src');
-        mainImage.hidden = true;
-      }
-      if (imagePlaceholder) imagePlaceholder.hidden = false;
+    const imagenPrincipalModal = elementoModal.querySelector("[data-modal-main-image]");
+    const marcadorImagenModal = elementoModal.querySelector("[data-modal-image-placeholder]");
+    const miniaturasModal = [...elementoModal.querySelectorAll("[data-modal-thumb]")];
+    const botonZoomModal = elementoModal.querySelector("[data-modal-zoom]");
+    
+    let indiceImagenSeleccionada = 0;
+    const imagenesDisponiblesModal = miniaturasModal
+        .map((miniatura) => miniatura.dataset.src || "")
+        .filter((rutaImagen) => rutaImagen !== "");
+
+    const mostrarImagenModal = (indice) => {
+        if (!imagenesDisponiblesModal.length || !imagenPrincipalModal) {
+            return;
+        }
+
+        indiceImagenSeleccionada = (indice + imagenesDisponiblesModal.length) % imagenesDisponiblesModal.length;
+        imagenPrincipalModal.src = imagenesDisponiblesModal[indiceImagenSeleccionada];
+        imagenPrincipalModal.hidden = false;
+        
+        if (marcadorImagenModal) {
+            marcadorImagenModal.hidden = true;
+        }
+        
+        botonZoomModal?.classList.remove("is-zoomed");
+
+        miniaturasModal.forEach((miniatura, indiceMiniatura) => {
+            const estaSeleccionada = indiceMiniatura === indiceImagenSeleccionada;
+            miniatura.classList.toggle("is-active", estaSeleccionada);
+            miniatura.setAttribute(
+                "aria-current",
+                estaSeleccionada ? "true" : "false"
+            );
+        });
+    };
+
+    miniaturasModal.forEach((miniatura, indice) => {
+        miniatura.addEventListener("click", () => mostrarImagenModal(indice));
+    });
+
+    imagenPrincipalModal?.addEventListener(
+        "error",
+        () => {
+            imagenPrincipalModal.hidden = true;
+            
+            if (marcadorImagenModal) {
+                marcadorImagenModal.hidden = false;
+            }
+            
+            if (miniaturasModal.length === 0) {
+                return;
+            }
+            
+            miniaturasModal[0].hidden = true;
+        },
+        { once: true }
+    );
+
+    botonZoomModal?.addEventListener("click", () => {
+        if (imagenPrincipalModal && !imagenPrincipalModal.hidden) {
+            botonZoomModal.classList.toggle("is-zoomed");
+        }
+    });
+
+    // Elimina el parámetro del producto al cerrar para que una recarga no vuelva a abrir el detalle.
+    const quitarProductoDeLaDireccion = () => {
+        const direccionUrl = new URL(window.location.href);
+        
+        if (!direccionUrl.searchParams.has("producto")) {
+            return;
+        }
+        
+        direccionUrl.searchParams.delete("producto");
+        window.history.replaceState(window.history.state, "", direccionUrl);
+    };
+
+    elementoModal.querySelectorAll("[data-modal-close]").forEach((botonCerrar) => {
+        botonCerrar.addEventListener("click", () => elementoModal.close());
+    });
+    
+    elementoModal.addEventListener("click", (evento) => {
+        if (evento.target === elementoModal) {
+            elementoModal.close();
+        }
+    });
+    
+    elementoModal.addEventListener("close", quitarProductoDeLaDireccion);
+
+    if (imagenesDisponiblesModal.length) {
+        mostrarImagenModal(0);
     }
-  };
 
-  openers.forEach((opener) => opener.addEventListener('click', () => {
-    let product;
-    try {
-      product = JSON.parse(opener.dataset.productDetails || '{}');
-    } catch {
-      return;
+    // El atributo open permite mostrar una alternativa en línea si el navegador bloquea scripts.
+    if (elementoModal.hasAttribute("open")) {
+        elementoModal.removeAttribute("open");
+        elementoModal.showModal();
     }
-    if (!product || !product.id) return;
-
-    activeOpener = opener;
-    text('[data-modal-brand]', product.marca);
-    text('[data-modal-name]', product.nombre);
-    text('[data-modal-price]', product.precio);
-
-    const description = text('[data-modal-description]', product.descripcion);
-    if (description) description.hidden = !String(product.descripcion || '').trim();
-
-    const colorSection = modal.querySelector('[data-modal-color-section]');
-    text('[data-modal-color]', product.color);
-    if (colorSection) colorSection.hidden = !String(product.color || '').trim();
-
-    const storageSection = modal.querySelector('[data-modal-storage-section]');
-    text('[data-modal-storage]', product.almacenamiento);
-    if (storageSection) storageSection.hidden = !String(product.almacenamiento || '').trim();
-
-    const cartId = modal.querySelector('[data-modal-cart-id]');
-    if (cartId) cartId.value = String(product.id);
-    buildGallery(product.imagenes);
-    modal.showModal();
-  }));
-
-  modal.querySelectorAll('[data-modal-close]').forEach((button) => {
-    button.addEventListener('click', () => modal.close());
-  });
-  modal.addEventListener('click', (event) => {
-    if (event.target === modal) modal.close();
-  });
-  modal.addEventListener('close', () => {
-    if (activeOpener) activeOpener.focus({ preventScroll: true });
-  });
-  previous?.addEventListener('click', () => setImage(selectedImage - 1));
-  next?.addEventListener('click', () => setImage(selectedImage + 1));
-  zoomButton?.addEventListener('click', () => {
-    if (mainImage && !mainImage.hidden) zoomButton.classList.toggle('is-zoomed');
-  });
-  modal.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft' && images.length > 1) setImage(selectedImage - 1);
-    if (event.key === 'ArrowRight' && images.length > 1) setImage(selectedImage + 1);
-  });
-
-  const sort = document.querySelector('[data-catalog-sort]');
-  sort?.addEventListener('change', () => sort.form?.requestSubmit());
 })();
-

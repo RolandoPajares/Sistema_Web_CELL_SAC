@@ -16,7 +16,7 @@ final class Conexion implements GestorTransaccionesInterfaz
      */
     private string $host = '127.0.0.1';
     private int $puerto = 3306;
-    private string $dbname = 'md_tecnologia_digital_cell';
+    private string $nombreBaseDatosPredeterminado = 'md_tecnologia_digital_cell';
     private string $charset = 'utf8mb4';
 
     private ?PDO $pdo = null;
@@ -32,6 +32,9 @@ final class Conexion implements GestorTransaccionesInterfaz
         $this->resuelta = $pdo !== null;
     }
 
+    /**
+     * Obtiene la conexión PDO y detiene la operación si no está disponible.
+     */
     public function pdo(): ?PDO
     {
         if ($this->resuelta) {
@@ -53,7 +56,7 @@ final class Conexion implements GestorTransaccionesInterfaz
 
             $baseDatos = (string) $this->configuracion->obtener(
                 'database.database',
-                $this->dbname
+                $this->nombreBaseDatosPredeterminado
             );
 
             $juegoCaracteres = (string) $this->configuracion->obtener(
@@ -87,6 +90,9 @@ final class Conexion implements GestorTransaccionesInterfaz
         return $this->pdo;
     }
 
+    /**
+     * Devuelve la conexión PDO o lanza una excepción si no está disponible.
+     */
     public function pdoObligatorio(): PDO
     {
         $pdo = $this->pdo();
@@ -102,6 +108,9 @@ final class Conexion implements GestorTransaccionesInterfaz
         return $pdo;
     }
 
+    /**
+     * Ejecuta la operación dentro de una transacción y revierte los cambios si ocurre un error.
+     */
     public function transaccion(callable $operacion): mixed
     {
         $pdo = $this->pdoObligatorio();

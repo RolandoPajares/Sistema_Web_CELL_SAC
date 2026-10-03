@@ -12,17 +12,27 @@ final class CategoriaServicio
     {
     }
 
+    /**
+     * Devuelve todos los registros de la entidad administrada por el repositorio.
+     */
     public function todas(): array
     {
         return $this->categorias->todas();
     }
 
+    /**
+     * Devuelve únicamente los registros activos de la entidad.
+     */
     public function activas(): array
     {
         return $this->categorias->activas();
     }
 
-    /** @return array{total:int,activas:int,con_productos:int,sin_productos:int} */
+    /**
+     * Calcula un resumen consolidado de la información solicitada.
+     *
+     * @return array{total:int,activas:int,con_productos:int,sin_productos:int}
+     */
     public function resumen(): array
     {
         $categorias = $this->todas();
@@ -35,29 +45,32 @@ final class CategoriaServicio
         ];
     }
 
-    public function buscar(int $id): ?array
+    public function buscar(int $idCategoria): ?array
     {
-        return $this->categorias->buscar($id);
+        return $this->categorias->buscar($idCategoria);
     }
 
-    public function guardar(array $datos, ?int $id = null): int
+    public function guardar(array $datos, ?int $idCategoria = null): int
     {
-        if ($this->categorias->existeNombre($datos['nombre'], $id)) {
+        if ($this->categorias->existeNombre($datos['nombre'], $idCategoria)) {
             throw new \DomainException('Ya existe una categoría con ese nombre.');
         }
-        if ($id === null) {
+        if ($idCategoria === null) {
             return $this->categorias->crear($datos);
         }
-        if ($this->categorias->buscar($id) === null) {
+        if ($this->categorias->buscar($idCategoria) === null) {
             throw new \DomainException('La categoría no existe.');
         }
-        $this->categorias->actualizar($id, $datos);
+        $this->categorias->actualizar($idCategoria, $datos);
 
-        return $id;
+        return $idCategoria;
     }
 
-    public function desactivar(int $id): void
+    /**
+     * Marca como inactivo el registro seleccionado, sin borrar su historial.
+     */
+    public function desactivar(int $idCategoria): void
     {
-        $this->categorias->desactivar($id);
+        $this->categorias->desactivar($idCategoria);
     }
 }

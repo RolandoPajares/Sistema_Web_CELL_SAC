@@ -1,52 +1,245 @@
-// Dashboard interno: calendario y periodo de compras.
+/**
+ * Scripts de Interfaz y Módulos Administrativos
+ * Este script maneja la interactividad del panel administrativo: selectores de
+ * fecha, filtros dinámicos en tablas, exportación a CSV y paneles de proveedores.
+ */
+
+// Tablero interno: filtros de fecha y periodo de compras.
 (() => {
-  const date = document.querySelector('[data-dashboard-date]');
-  const dateLabel = document.querySelector('[data-dashboard-date-label]');
-  if (date) {
-    const open = () => { if (typeof date.showPicker === 'function') date.showPicker(); else date.click(); };
-    date.closest('.boton-fecha')?.addEventListener('click', (e) => { if (e.target !== date) { e.preventDefault(); open(); } });
-    date.addEventListener('change', () => {
-      if (!date.value || !dateLabel) return;
-      const d = new Date(date.value + 'T12:00:00');
-      dateLabel.textContent = d.toLocaleDateString('es-PE', { day:'2-digit', month:'short', year:'numeric' });
+    // Selección de elementos DOM para los filtros de fecha del tablero.
+    const selectorFecha = document.querySelector("[data-dashboard-date]");
+    const etiquetaFecha = document.querySelector("[data-dashboard-date-label]");
+
+    if (selectorFecha) {
+        // Función auxiliar para forzar la apertura del calendario nativo
+        const abrirSelector = () => {
+            if (typeof selectorFecha.showPicker === "function") {
+                selectorFecha.showPicker();
+            } else {
+                selectorFecha.click();
+            }
+        };
+
+        // Delegación de eventos para abrir el calendario al hacer clic en el contenedor visual
+        const contenedorBotonFecha = selectorFecha.closest(".boton-fecha");
+        contenedorBotonFecha?.addEventListener("click", (evento) => {
+            if (evento.target !== selectorFecha) {
+                evento.preventDefault();
+                abrirSelector();
+            }
+        });
+
+        // Actualización de la etiqueta de texto cuando el usuario selecciona una fecha
+        selectorFecha.addEventListener("change", () => {
+            if (!selectorFecha.value || !etiquetaFecha) {
+                return;
+            }
+
+            const fechaObjeto = new Date(selectorFecha.value + "T12:00:00");
+            etiquetaFecha.textContent = fechaObjeto.toLocaleDateString("es-PE", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+            });
+        });
+    }
+
+    // Manejo del cambio en el selector de periodo de meses para recargar la vista
+    const selectorPeriodo = document.querySelector("[data-dashboard-period]");
+    selectorPeriodo?.addEventListener("change", (evento) => {
+        const urlActual = new URL(window.location.href);
+        urlActual.searchParams.set("months", evento.target.value);
+        window.location.href = urlActual.toString();
     });
-  }
-  document.querySelector('[data-dashboard-period]')?.addEventListener('change', (e) => {
-    const u = new URL(window.location.href); u.searchParams.set('months', e.target.value); window.location.href = u.toString();
-  });
 })();
 
-// Modulos internos: calendario y filtros funcionales.
+// Módulos Internos: Calendario, Filtros Dinámicos y Exportación CSV
 (() => {
-  document.querySelectorAll('[data-module-date]').forEach(input => {
-    const label=input.closest('.boton-fecha'); const text=label?.querySelector('[data-module-date-label]');
-    label?.addEventListener('click', e=>{ if(e.target!==input){e.preventDefault(); if(typeof input.showPicker==='function') input.showPicker(); else input.click();} });
-    input.addEventListener('change',()=>{if(!input.value||!text)return; const d=new Date(input.value+'T12:00:00'); text.textContent=d.toLocaleDateString('es-PE',{day:'2-digit',month:'short',year:'numeric'});});
-  });
-  const filters=document.querySelector('[data-module-filters]'); const table=document.querySelector('[data-filter-table]');
-  if(!table) return;
-  const search=filters?.querySelector('[data-filter-search]'), status=filters?.querySelector('[data-filter-status]'), date=filters?.querySelector('[data-filter-date]'), dateText=filters?.querySelector('[data-filter-date-label]');
-  filters?.querySelector('.module-filter-date')?.addEventListener('click',e=>{if(e.target!==date){e.preventDefault(); if(typeof date.showPicker==='function')date.showPicker(); else date.click();}});
-  date?.addEventListener('change',()=>{if(date.value&&dateText){const d=new Date(date.value+'T12:00:00');dateText.textContent=d.toLocaleDateString('es-PE',{day:'2-digit',month:'short',year:'numeric'});}});
-  const apply=()=>{const q=(search?.value||'').trim().toLowerCase(), st=(status?.value||'').toLowerCase(); let shown=0; table.querySelectorAll('[data-filter-row]').forEach(row=>{const t=row.textContent.toLowerCase(); const ok=(!q||t.includes(q))&&(!st||t.includes(st)); row.hidden=!ok;if(ok)shown++;}); const empty=table.querySelector('[data-filter-empty]');if(empty)empty.hidden=shown!==0;};
-  filters?.querySelector('[data-apply-filters]')?.addEventListener('click',apply); search?.addEventListener('input',apply); status?.addEventListener('change',apply);
-  table.querySelector('[data-close-detail]')?.addEventListener('click',()=>{const d=table.querySelector('.detalle-mockup');if(d)d.hidden=true;});
-  table.querySelector('[data-export-table]')?.addEventListener('click',()=>{const rows=[...table.querySelectorAll('table tr')].filter(r=>!r.hidden).map(r=>[...r.children].map(c=>'"'+c.textContent.trim().replaceAll('"','""')+'"').join(',')); const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8'}));a.download='reporte.csv';a.click();URL.revokeObjectURL(a.href);});
+    // Inicialización de múltiples selectores de fecha en los módulos
+    const elementosFechaModulo = document.querySelectorAll("[data-module-date]");
+    
+    elementosFechaModulo.forEach((inputFecha) => {
+        const contenedorBoton = inputFecha.closest(".boton-fecha");
+        const etiquetaTexto = contenedorBoton?.querySelector("[data-module-date-label]");
+
+        // Apertura interactiva del calendario por contenedor
+        contenedorBoton?.addEventListener("click", (evento) => {
+            if (evento.target !== inputFecha) {
+                evento.preventDefault();
+                
+                if (typeof inputFecha.showPicker === "function") {
+                    inputFecha.showPicker();
+                } else {
+                    inputFecha.click();
+                }
+            }
+        });
+
+        // Formateo visual de la fecha seleccionada
+        inputFecha.addEventListener("change", () => {
+            if (!inputFecha.value || !etiquetaTexto) {
+                return;
+            }
+
+            const fechaObjeto = new Date(inputFecha.value + "T12:00:00");
+            etiquetaTexto.textContent = fechaObjeto.toLocaleDateString("es-PE", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+            });
+        });
+    });
+
+    // Referencias principales para la tabla y sus filtros de búsqueda
+    const filtrosContenedor = document.querySelector("[data-module-filters]");
+    const tablaFiltro = document.querySelector("[data-filter-table]");
+
+    if (!tablaFiltro) {
+        return;
+    }
+
+    const campoBusqueda = filtrosContenedor?.querySelector("[data-filter-search]");
+    const selectorEstado = filtrosContenedor?.querySelector("[data-filter-status]");
+    const campoFechaFiltro = filtrosContenedor?.querySelector("[data-filter-date]");
+    const etiquetaFechaFiltro = filtrosContenedor?.querySelector("[data-filter-date-label]");
+
+    // Configuración del botón de calendario específico para filtros
+    const contenedorFiltroFecha = filtrosContenedor?.querySelector(".module-filter-date");
+    contenedorFiltroFecha?.addEventListener("click", (evento) => {
+        if (evento.target !== campoFechaFiltro) {
+            evento.preventDefault();
+            
+            if (typeof campoFechaFiltro.showPicker === "function") {
+                campoFechaFiltro.showPicker();
+            } else {
+                campoFechaFiltro.click();
+            }
+        }
+    });
+
+    campoFechaFiltro?.addEventListener("change", () => {
+        if (campoFechaFiltro.value && etiquetaFechaFiltro) {
+            const fechaObjeto = new Date(campoFechaFiltro.value + "T12:00:00");
+            etiquetaFechaFiltro.textContent = fechaObjeto.toLocaleDateString("es-PE", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+            });
+        }
+    });
+
+    // Algoritmo para filtrar las filas de la tabla en tiempo real
+    const aplicarFiltros = () => {
+        const textoBusqueda = (campoBusqueda?.value || "").trim().toLowerCase();
+        const estadoSeleccionado = (selectorEstado?.value || "").toLowerCase();
+        let filasVisibles = 0;
+
+        tablaFiltro.querySelectorAll("[data-filter-row]").forEach((fila) => {
+            const contenidoFila = fila.textContent.toLowerCase();
+            const cumpleBusqueda = !textoBusqueda || contenidoFila.includes(textoBusqueda);
+            const cumpleEstado = !estadoSeleccionado || contenidoFila.includes(estadoSeleccionado);
+            const filaValida = cumpleBusqueda && cumpleEstado;
+
+            // Oculta o muestra la fila según los criterios de búsqueda
+            fila.hidden = !filaValida;
+            if (filaValida) {
+                filasVisibles++;
+            }
+        });
+
+        // Control de visualización para el mensaje de "sin resultados"
+        const mensajeVacio = tablaFiltro.querySelector("[data-filter-empty]");
+        if (mensajeVacio) {
+            mensajeVacio.hidden = filasVisibles !== 0;
+        }
+    };
+
+    // Asociación de eventos para disparar el filtrado
+    const botonAplicarFiltros = filtrosContenedor?.querySelector("[data-apply-filters]");
+    botonAplicarFiltros?.addEventListener("click", aplicarFiltros);
+    
+    campoBusqueda?.addEventListener("input", aplicarFiltros);
+    selectorEstado?.addEventListener("change", aplicarFiltros);
+
+    // Cierre del detalle flotante de la tabla.
+    const botonCerrarDetalle = tablaFiltro.querySelector("[data-close-detail]");
+    botonCerrarDetalle?.addEventListener("click", () => {
+        const detalleTablaFlotante = tablaFiltro.querySelector(".detalle-mockup");
+        if (detalleTablaFlotante) {
+            detalleTablaFlotante.hidden = true;
+        }
+    });
+
+    // Lógica para exportar los datos visibles de la tabla a un archivo CSV
+    const botonExportarTabla = tablaFiltro.querySelector("[data-export-table]");
+    botonExportarTabla?.addEventListener("click", () => {
+        const filasVisiblesCsv = [...tablaFiltro.querySelectorAll("table tr")]
+            .filter((fila) => !fila.hidden)
+            .map((fila) =>
+                [...fila.children]
+                    .map((columna) => '"' + columna.textContent.trim().replaceAll('"', '""') + '"')
+                    .join(",")
+            );
+
+        // Generación y descarga automática del archivo CSV en el navegador
+        const archivoCsv = new Blob([filasVisiblesCsv.join("\n")], {
+            type: "text/csv;charset=utf-8" 
+        });
+        
+        const enlaceDescarga = document.createElement("a");
+        enlaceDescarga.href = URL.createObjectURL(archivoCsv);
+        enlaceDescarga.download = "reporte.csv";
+        enlaceDescarga.click();
+        
+        URL.revokeObjectURL(enlaceDescarga.href);
+    });
 })();
 
-// Alertas de reposición: muestra el proveedor vinculado al producto crítico.
+// Alertas de Reposición: Panel de Proveedor Vinculado a Productos Críticos
 (() => {
-  const root=document.querySelector('.modulo-listado-real');
-  const panel=root?.querySelector('[data-provider-panel]');
-  if(!root||!panel) return;
-  root.querySelectorAll('[data-provider-detail]').forEach(btn=>btn.addEventListener('click',()=>{
-    const row=btn.closest('[data-record]'); let data={};
-    try{data=JSON.parse(row?.dataset.record||'{}')}catch(_){data={}}
-    panel.querySelector('[data-p-product]').textContent=data.producto||'—';
-    panel.querySelector('[data-p-name]').textContent=data.proveedor||'Sin proveedor asignado';
-    panel.querySelector('[data-p-email]').textContent=data.correo_proveedor||'—';
-    panel.querySelector('[data-p-phone]').textContent=data.telefono_proveedor||'—';
-    panel.hidden=false; panel.scrollIntoView({behavior:'smooth',block:'nearest'});
-  }));
-  panel.querySelector('[data-close-provider]')?.addEventListener('click',()=>panel.hidden=true);
+    const raizListado = document.querySelector(".modulo-listado-real");
+    const panelProveedor = raizListado?.querySelector("[data-provider-panel]");
+
+    if (!raizListado || !panelProveedor) {
+        return;
+    }
+
+    // Intercepta los clics en los detalles de proveedor de cada producto en stock crítico
+    raizListado.querySelectorAll("[data-provider-detail]").forEach((botonDetalle) => {
+        botonDetalle.addEventListener("click", () => {
+            const filaRegistro = botonDetalle.closest("[data-record]");
+            let datosRegistro = {};
+
+            // Extracción segura de los datos JSON almacenados en el dataset de la fila
+            try {
+                datosRegistro = JSON.parse(filaRegistro?.dataset.record || "{}");
+            } catch (_) {
+                datosRegistro = {};
+            }
+
+            // Mapeo de los datos del proveedor hacia el panel lateral de visualización
+            const elementoProducto = panelProveedor.querySelector("[data-p-product]");
+            const elementoNombre = panelProveedor.querySelector("[data-p-name]");
+            const elementoCorreo = panelProveedor.querySelector("[data-p-email]");
+            const elementoTelefono = panelProveedor.querySelector("[data-p-phone]");
+
+            elementoProducto.textContent = datosRegistro.producto || "—";
+            elementoNombre.textContent = datosRegistro.proveedor || "Sin proveedor asignado";
+            elementoCorreo.textContent = datosRegistro.correo_proveedor || "—";
+            elementoTelefono.textContent = datosRegistro.telefono_proveedor || "—";
+
+            // Muestra el panel y hace scroll automático hacia él con animación suave
+            panelProveedor.hidden = false;
+            panelProveedor.scrollIntoView({ 
+                behavior: "smooth", 
+                block: "nearest" 
+            });
+        });
+    });
+
+    // Botón para cerrar u ocultar el panel de información del proveedor
+    const botonCerrarPanel = panelProveedor.querySelector("[data-close-provider]");
+    botonCerrarPanel?.addEventListener("click", () => {
+        panelProveedor.hidden = true;
+    });
 })();

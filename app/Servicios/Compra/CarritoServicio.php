@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Servicios\Compra;
 
+use App\Modelos\Productos\Producto;
 use App\Servicios\Productos\ProductoServicio;
 use App\Soporte\Sesion\GestorSesion;
 
@@ -29,6 +30,9 @@ final class CarritoServicio
         $this->sesion->guardar('cart', $carrito);
     }
 
+    /**
+     * Quita del carrito el producto indicado.
+     */
     public function eliminar(int $idProducto): void
     {
         $carrito = (array) $this->sesion->obtener('cart', []);
@@ -36,16 +40,23 @@ final class CarritoServicio
         $this->sesion->guardar('cart', $carrito);
     }
 
+    /**
+     * Limpia el estado actual y elimina los datos temporales asociados.
+     */
     public function limpiar(): void
     {
         $this->sesion->eliminar('cart');
     }
 
-    /** @return array{articulos:array<int,array<string,mixed>>,total:float} */
+    /**
+     * Calcula un resumen consolidado de la información solicitada.
+     *
+     * @return array{articulos:array<int,array<string,mixed>>,total:float}
+     */
     public function resumen(): array
     {
         $articulos = [];
-        $total = 0.0;
+        $totalCentimos = 0;
 
         foreach ((array) $this->sesion->obtener('cart', []) as $idProducto => $cantidad) {
             $producto = $this->productos->buscarActivo((int) $idProducto);
@@ -55,16 +66,26 @@ final class CarritoServicio
             }
 
             $cantidad = max(1, (int) $cantidad);
+            $precioCentimos = Producto::desdeRegistro($producto)->precioEfectivoEnCentimos();
+            $producto['precio'] = $precioCentimos / 100;
             $producto['cantidad'] = $cantidad;
-            $producto['subtotal'] = (float) $producto['precio'] * $cantidad;
-            $total += $producto['subtotal'];
+            $subtotalCentimos = Producto::subtotalEnCentimos($precioCentimos, $cantidad);
+            if ($totalCentimos > Producto::MAXIMO_CENTIMOS - $subtotalCentimos) {
+                throw new \DomainException('El total excede el importe permitido para el pedido.');
+            }
+            $producto['subtotal'] = $subtotalCentimos / 100;
+            $totalCentimos += $subtotalCentimos;
             $articulos[] = $producto;
         }
 
-        return ['articulos' => $articulos, 'total' => $total];
+        return ['articulos' => $articulos, 'total' => $totalCentimos / 100];
     }
 
-    /** @return array<int, int> */
+    /**
+     * Obtiene los datos originales necesarios para construir la respuesta.
+     *
+     * @return array<int, int>
+     */
     public function datosCrudos(): array
     {
         return (array) $this->sesion->obtener('cart', []);

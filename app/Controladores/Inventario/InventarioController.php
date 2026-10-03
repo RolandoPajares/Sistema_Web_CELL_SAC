@@ -7,6 +7,7 @@ namespace App\Controladores\Inventario;
 use App\Nucleo\Http\Solicitud;
 use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Presentacion\Vista;
+use App\Nucleo\Presentacion\Administracion\PresentadorInventario;
 use App\Servicios\Auditoria\AuditoriaServicio;
 use App\Servicios\Inventario\InventarioServicio;
 use App\Soporte\Excepciones\ExcepcionValidacion;
@@ -26,13 +27,27 @@ final class InventarioController
     ) {
     }
 
+    /**
+     * Prepara los datos de la página y muestra el listado principal del módulo.
+     */
     public function indice(Solicitud $solicitud): Respuesta
     {
+        $existencias = $this->inventario->existencias();
+        $movimientos = $this->inventario->movimientos();
+        $resumen = $this->inventario->resumen();
+        $presentacion = PresentadorInventario::presentar($existencias, $movimientos, $resumen);
+
         return $this->vista->renderizar('roles.internos.administrador.inventario.indice', [
-            'tituloPagina' => 'Inventario', 'existencias' => $this->inventario->existencias(),
-            'movimientos' => $this->inventario->movimientos(),
-            'resumen' => $this->inventario->resumen(),
-            'error' => $this->mensajes->extraer('error'), 'exito' => $this->mensajes->extraer('success'),
+            'tituloPagina' => 'Inventario',
+            'existencias' => $existencias,
+            'existenciasInventario' => $presentacion['existenciasInventario'],
+            'fechaHoyVista' => $presentacion['fechaHoyVista'],
+            'categoriasInventario' => $presentacion['categoriasInventario'],
+            'tarjetasKpi' => $presentacion['tarjetasKpi'],
+            'movimientos' => $presentacion['movimientos'],
+            'resumen' => $resumen,
+            'error' => $this->mensajes->extraer('error'),
+            'exito' => $this->mensajes->extraer('success'),
         ], 'administrador');
     }
 
@@ -40,8 +55,8 @@ final class InventarioController
     {
         try {
             $datos = SolicitudMovimientoInventario::validar($solicitud);
-            $id = $this->inventario->registrar($datos, (int) (current_user()['id'] ?? 0));
-            $this->auditoria->registrar('inventory.movement.created', 'inventory_movement', $id, null, $datos, $solicitud->direccionIp());
+            $idMovimiento = $this->inventario->registrar($datos, (int) (usuario_actual()['id'] ?? 0));
+            $this->auditoria->registrar('inventory.movement.created', 'inventory_movement', $idMovimiento, null, $datos, $solicitud->direccionIp());
             $this->mensajes->exito('Movimiento de inventario registrado correctamente.');
         } catch (ExcepcionValidacion $excepcion) {
             $errores = $excepcion->errores();
@@ -52,6 +67,6 @@ final class InventarioController
             $this->registro->error('No se pudo registrar el movimiento de inventario.', ['message' => $excepcion->getMessage()]);
             $this->mensajes->error('No se pudo registrar el movimiento de inventario.');
         }
-        return redirect('admin/inventory');
+        return redirigir('admin/inventory');
     }
 }

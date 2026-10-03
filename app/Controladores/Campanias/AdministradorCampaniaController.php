@@ -7,6 +7,7 @@ namespace App\Controladores\Campanias;
 use App\Nucleo\Http\Solicitud;
 use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Presentacion\Vista;
+use App\Nucleo\Presentacion\Administracion\PresentadorCampanias;
 use App\Servicios\Campanias\CampaniaServicio;
 use App\Soporte\Mensajes\MensajeFlashServicio;
 use App\Servicios\Auditoria\AuditoriaServicio;
@@ -22,29 +23,42 @@ final class AdministradorCampaniaController
     ) {
     }
 
+    /**
+     * Prepara los datos de la página y muestra el listado principal del módulo.
+     */
     public function indice(Solicitud $solicitud): Respuesta
     {
         $idEdicion = filter_var($solicitud->consulta('edit'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-
-        return $this->vista->renderizar('roles.internos.administrador.campanias.indice', [
+        $campanias = $this->campanias->todosParaAdministrador();
+        $resumen = $this->campanias->resumen();
+        $edicion = $idEdicion !== false ? $this->campanias->buscar((int) $idEdicion) : null;
+        $edicion = is_array($edicion) ? $edicion : null;
+        $presentacion = PresentadorCampanias::presentar($campanias, $resumen, $edicion);
+        $baseDatosDisponible = $this->campanias->conexionDisponible();
+        $datosVista = array_merge($presentacion, [
             'tituloPagina' => 'Publicidad',
-            'baseDatosDisponible' => $this->campanias->conexionDisponible(),
-            'campanias' => $this->campanias->todosParaAdministrador(),
-            'resumen' => $this->campanias->resumen(),
-            'edicion' => $idEdicion !== false ? $this->campanias->buscar((int) $idEdicion) : null,
+            'baseDatosDisponible' => $baseDatosDisponible,
+            'atributoBaseDatosDisponibleOculto' => $baseDatosDisponible ? 'hidden' : '',
+            'atributoContenidoCampaniasOculto' => $baseDatosDisponible ? '' : 'hidden',
+            'resumen' => $resumen,
             'exito' => $this->mensajesFlash->extraer('success'),
             'error' => $this->mensajesFlash->extraer('error'),
-        ], 'administrador');
-    }
+        ]);
 
+        return $this->vista->renderizar(
+            'roles.internos.administrador.campanias.indice',
+            $datosVista,
+            'administrador'
+        );
+    }
     public function guardar(Solicitud $solicitud): Respuesta
     {
         try {
-            $id = filter_var($solicitud->entrada('id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-            $anterior = $id !== false ? $this->campanias->buscar((int) $id) : null;
-            $idGuardado = $this->campanias->guardar($solicitud->todos(), $id !== false ? (int) $id : null);
+            $idCampania = filter_var($solicitud->entrada('id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            $anterior = $idCampania !== false ? $this->campanias->buscar((int) $idCampania) : null;
+            $idGuardado = $this->campanias->guardar($solicitud->todos(), $idCampania !== false ? (int) $idCampania : null);
             $this->auditoria->registrar(
-                $id === false ? 'campaign.created' : 'campaign.updated',
+                $idCampania === false ? 'campaign.created' : 'campaign.updated',
                 'campaign',
                 $idGuardado,
                 $anterior,
@@ -58,24 +72,27 @@ final class AdministradorCampaniaController
             $this->mensajesFlash->error('No se pudo guardar la campaña.');
         }
 
-        return redirect('admin/campaigns');
+        return redirigir('admin/campaigns');
     }
 
+    /**
+     * Marca como inactivo el registro seleccionado, sin borrar su historial.
+     */
     public function desactivar(Solicitud $solicitud): Respuesta
     {
         try {
-            $id = filter_var($solicitud->parametroRuta('id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-            if ($id === false) {
+            $idCampania = filter_var($solicitud->parametroRuta('id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            if ($idCampania === false) {
                 throw new \InvalidArgumentException('El ID de la campaña no es válido.');
             }
-            $anterior = $this->campanias->buscar((int) $id);
-            $this->campanias->desactivar((int) $id);
-            $this->auditoria->registrar('campaign.deactivated', 'campaign', (int) $id, $anterior, ['activo' => 0], $solicitud->direccionIp());
+            $anterior = $this->campanias->buscar((int) $idCampania);
+            $this->campanias->desactivar((int) $idCampania);
+            $this->auditoria->registrar('campaign.deactivated', 'campaign', (int) $idCampania, $anterior, ['activo' => 0], $solicitud->direccionIp());
             $this->mensajesFlash->exito('Campaña desactivada.');
         } catch (Throwable) {
             $this->mensajesFlash->error('No se pudo desactivar la campaña.');
         }
 
-        return redirect('admin/campaigns');
+        return redirigir('admin/campaigns');
     }
 }

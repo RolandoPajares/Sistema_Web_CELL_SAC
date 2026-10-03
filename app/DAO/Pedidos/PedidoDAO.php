@@ -14,11 +14,17 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
     {
     }
 
+    /**
+     * Indica si el repositorio puede consultar la base de datos.
+     */
     public function estaDisponible(): bool
     {
         return $this->conexion->pdo() !== null;
     }
 
+    /**
+     * Crea o guarda la información relacionada con «pedido pendiente».
+     */
     public function crearPedidoPendiente(int $idUsuario, float $total): int
     {
         $sentencia = $this->pdo()->prepare('INSERT INTO pedidos(usuario_id, total, estado) VALUES(?, ?, ?)');
@@ -27,6 +33,9 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
         return (int) $this->pdo()->lastInsertId();
     }
 
+    /**
+     * Crea o guarda la información relacionada con «detalle».
+     */
     public function agregarDetalle(int $idPedido, int $idProducto, int $cantidad, float $precio): void
     {
         $sentencia = $this->pdo()->prepare(
@@ -35,6 +44,9 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
         $sentencia->execute([$idPedido, $idProducto, $cantidad, $precio]);
     }
 
+    /**
+     * Devuelve la lista de registros relacionados con «con usuarios».
+     */
     public function todosConUsuarios(): array
     {
         $sentencia = $this->pdo()->prepare(
@@ -48,6 +60,9 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
         return $sentencia->fetchAll();
     }
 
+    /**
+     * Cuenta los elementos que cumplen las condiciones recibidas.
+     */
     public function contar(): int
     {
         $sentencia = $this->pdo()->prepare('SELECT COUNT(*) FROM pedidos');
@@ -55,6 +70,9 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
         return (int) $sentencia->fetchColumn();
     }
 
+    /**
+     * Obtiene el pedido por su identificador e incluye sus líneas de detalle.
+     */
     public function buscarConDetalle(int $idPedido): ?array
     {
         $cabecera = $this->pdo()->prepare(
@@ -67,7 +85,7 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
             return null;
         }
         $detalle = $this->pdo()->prepare(
-            'SELECT dp.producto_id, p.marca, p.nombre, dp.cantidad, dp.precio_unitario,
+            'SELECT dp.producto_id, p.marca, p.nombre, p.categoria, p.url_imagen, dp.cantidad, dp.precio_unitario,
                     dp.cantidad * dp.precio_unitario AS subtotal
              FROM detalle_pedidos dp JOIN productos p ON p.id = dp.producto_id
              WHERE dp.pedido_id = :pedido ORDER BY dp.id'
@@ -78,6 +96,9 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
         return $pedido;
     }
 
+    /**
+     * Actualiza la información relacionada con «estado».
+     */
     public function actualizarEstado(int $idPedido, string $estado): void
     {
         $sentencia = $this->pdo()->prepare('UPDATE pedidos SET estado = :estado WHERE id = :id');
@@ -87,6 +108,35 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
         }
     }
 
+    /** Actualiza el pedido dentro del segmento de clientes asignado al módulo. */
+    public function actualizarEstadoParaRolCliente(int $idPedido, string $estado, string $rolCliente): void
+    {
+        if (!in_array($rolCliente, ['cliente_minorista', 'cliente_mayorista'], true)) {
+            throw new \DomainException('El segmento de pedidos no es válido.');
+        }
+
+        $sentencia = $this->pdo()->prepare(
+            'UPDATE pedidos SET estado = :estado
+             WHERE id = :id
+               AND usuario_id IN (SELECT id FROM usuarios WHERE rol = :rol)'
+        );
+        $sentencia->execute([':estado' => $estado, ':id' => $idPedido, ':rol' => $rolCliente]);
+        if ($sentencia->rowCount() === 0) {
+            $comprobacion = $this->pdo()->prepare(
+                'SELECT COUNT(*) FROM pedidos p
+                 JOIN usuarios u ON u.id = p.usuario_id
+                 WHERE p.id = :id AND u.rol = :rol'
+            );
+            $comprobacion->execute([':id' => $idPedido, ':rol' => $rolCliente]);
+            if ((int) $comprobacion->fetchColumn() === 0) {
+                throw new \DomainException('El pedido no existe o no pertenece a este módulo.');
+            }
+        }
+    }
+
+    /**
+     * Cuenta los elementos relacionados con «por estado».
+     */
     public function contarPorEstado(): array
     {
         $sentencia = $this->pdo()->prepare('SELECT estado, COUNT(*) AS total FROM pedidos GROUP BY estado');
@@ -100,6 +150,9 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
         return $resultado;
     }
 
+    /**
+     * Cuenta los elementos relacionados con «ventas registradas».
+     */
     public function contarVentasRegistradas(): int
     {
         $sentencia = $this->pdo()->prepare('SELECT COUNT(*) FROM pedidos WHERE estado <> :cancelado');
@@ -107,6 +160,9 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
         return (int) $sentencia->fetchColumn();
     }
 
+    /**
+     * Calcula las ventas y pedidos acumulados durante el periodo indicado.
+     */
     public function totalVentasPeriodo(): float
     {
         $sentencia = $this->pdo()->prepare(
@@ -117,6 +173,9 @@ final class PedidoDAO implements RepositorioPedidoInterfaz
         return (float) $sentencia->fetchColumn();
     }
 
+    /**
+     * Obtiene la conexión PDO y detiene la operación si no está disponible.
+     */
     private function pdo(): PDO
     {
         return $this->conexion->pdoObligatorio();

@@ -12,6 +12,9 @@ final class GestorTokenCsrf
     {
     }
 
+    /**
+     * Genera o recupera el token asociado al contexto actual.
+     */
     public function token(): string
     {
         if (!$this->sesion->tiene('_csrf_token')) {
@@ -21,6 +24,9 @@ final class GestorTokenCsrf
         return (string) $this->sesion->obtener('_csrf_token');
     }
 
+    /**
+     * Comprueba que los datos cumplan las reglas antes de continuar.
+     */
     public function validar(?string $token): bool
     {
         return is_string($token)
@@ -28,6 +34,9 @@ final class GestorTokenCsrf
             && hash_equals((string) $this->sesion->obtener('_csrf_token'), $token);
     }
 
+    /**
+     * Prepara el campo de formulario con sus atributos y valor.
+     */
     public function campo(): string
     {
         return '<input type="hidden" name="csrf" value="' . htmlspecialchars($this->token(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">';

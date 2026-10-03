@@ -1,4 +1,31 @@
-<section class="panel modulo-filtros"><label><i class="bi bi-search"></i><input type="search" placeholder="Buscar productos o direcciones..."></label><button><i class="bi bi-funnel"></i> Todas las categorías</button><button><i class="bi bi-sort-down"></i> Más relevantes</button></section>
-<div class="rejilla-productos-panel"><?php foreach (['iPhone 15 128GB','Samsung Galaxy A55','Xiaomi Redmi Note 13','AirPods Pro 2','JBL Flip 6','Lenovo ThinkPad E14','Apple Watch SE','Cargador USB-C 20W'] as $i => $producto) :
-    ?><article><span class="etiqueta-producto"><?= $i % 3 === 0 ? 'Oferta' : 'Disponible' ?></span><div class="producto-ilustrado"><i class="bi <?= e(['bi-phone','bi-phone','bi-phone','bi-earbuds','bi-speaker','bi-laptop','bi-smartwatch','bi-plug'][$i]) ?>"></i></div><small><?= e(['Apple','Samsung','Xiaomi','Apple','JBL','Lenovo','Apple','Baseus'][$i]) ?></small><h3><?= e($producto) ?></h3><div class="valoracion">★★★★★ <span>4.<?= 5 + ($i % 4) ?></span></div><strong>S/ <?= number_format(129 + ($i * 410), 2) ?></strong><button class="btn btn-primary"><i class="bi bi-cart-plus"></i> Agregar</button></article><?php
-                                     endforeach; ?></div>
+<?php
+/**
+ * @var array<array-key, mixed> $datosDemostracion
+ */ ?><section class="panel modulo-filtros">
+    <label><i class="bi bi-search"></i><input type="search" placeholder="Buscar productos o direcciones..."></label>
+    <button><i class="bi bi-funnel"></i> Todas las categorías
+    </button>
+    <button><i class="bi bi-sort-down"></i> Más relevantes
+    </button>
+</section>
+<div class="rejilla-productos-panel">
+    <?php foreach ($datosDemostracion['productos_tarjetas'] as $producto) :
+        ?>
+    <article>
+        <span class="etiqueta-producto"><?= e($producto['etiqueta']) ?></span>
+        <div class="producto-ilustrado">
+            <i class="bi <?= e($producto['icono']) ?>"></i>
+        </div>
+        <small><?= e($producto['marca']) ?></small>
+        <h3>
+            <?= e($producto['nombre']) ?>
+        </h3>
+        <div class="valoracion">
+            <span aria-hidden="true"><i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i></span> <span><?= e($producto['valoracion']) ?></span>
+        </div>
+        <strong>S/ <?= e($producto['precio']) ?></strong>
+        <button class="btn btn-primary"><i class="bi bi-cart-plus"></i> Agregar
+        </button>
+    </article>
+    <?php
+                endforeach; ?></div>

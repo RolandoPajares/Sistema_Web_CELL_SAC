@@ -7,6 +7,7 @@ namespace App\Controladores\Pedidos;
 use App\Nucleo\Http\Solicitud;
 use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Presentacion\Vista;
+use App\Nucleo\Presentacion\Administracion\PresentadorPedidosAdministrador;
 use App\Servicios\Pedidos\PedidoServicio;
 use App\Soporte\Excepciones\ExcepcionValidacion;
 use App\Soporte\Mensajes\MensajeFlashServicio;
@@ -25,47 +26,74 @@ final class AdministradorPedidoController
     ) {
     }
 
+    /**
+     * Prepara los datos de la página y muestra el listado principal del módulo.
+     */
     public function indice(Solicitud $solicitud): Respuesta
     {
+        $pedidos = $this->pedidos->todosConUsuarios();
+        $conteos = $this->pedidos->contarPorEstado();
+        $presentacion = PresentadorPedidosAdministrador::presentarLista($pedidos, $conteos);
+
         return $this->vista->renderizar('roles.internos.administrador.pedidos.indice', [
             'tituloPagina' => 'Pedidos',
-            'pedidos' => $this->pedidos->todosConUsuarios(),
-            'conteos' => $this->pedidos->contarPorEstado(),
-            'detalle' => null,
+            'pedidos' => $presentacion['pedidos'],
+            'atributoPedidosVaciosOculto' => $presentacion['pedidos'] === [] ? '' : 'hidden',
+            'atributoPedidoDetalleOculto' => 'hidden',
+            'atributoPedidoDetalleVacioOculto' => '',
+            'conteos' => $conteos,
+            'tarjetasKpi' => $presentacion['tarjetasKpi'],
+            'estadosPedido' => SolicitudEstadoPedido::ESTADOS,
+            'detalle' => PresentadorPedidosAdministrador::presentarDetalle([]),
             'error' => $this->mensajes->extraer('error'),
             'exito' => $this->mensajes->extraer('success'),
         ], 'administrador');
     }
 
+    /**
+     * Obtiene los datos de detalle del registro solicitado.
+     */
     public function detalle(Solicitud $solicitud): Respuesta
     {
-        $id = filter_var($solicitud->parametroRuta('id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        if ($id === false || ($detalle = $this->pedidos->buscarConDetalle((int) $id)) === null) {
+        $idPedido = filter_var($solicitud->parametroRuta('id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if ($idPedido === false || ($detalle = $this->pedidos->buscarConDetalle((int) $idPedido)) === null) {
             $this->mensajes->error('El pedido solicitado no existe.');
-            return redirect('admin/orders');
+            return redirigir('admin/orders');
         }
 
+        $pedidos = $this->pedidos->todosConUsuarios();
+        $conteos = $this->pedidos->contarPorEstado();
+        $presentacion = PresentadorPedidosAdministrador::presentarLista($pedidos, $conteos, (int) $idPedido);
+        $detalle = PresentadorPedidosAdministrador::presentarDetalle($detalle);
+
         return $this->vista->renderizar('roles.internos.administrador.pedidos.indice', [
-            'tituloPagina' => 'Pedidos', 'pedidos' => $this->pedidos->todosConUsuarios(),
-            'conteos' => $this->pedidos->contarPorEstado(), 'detalle' => $detalle,
+            'tituloPagina' => 'Pedidos', 'pedidos' => $presentacion['pedidos'],
+            'atributoPedidosVaciosOculto' => $presentacion['pedidos'] === [] ? '' : 'hidden',
+            'atributoPedidoDetalleOculto' => '',
+            'atributoPedidoDetalleVacioOculto' => 'hidden',
+            'conteos' => $conteos, 'tarjetasKpi' => $presentacion['tarjetasKpi'], 'detalle' => $detalle,
+            'estadosPedido' => SolicitudEstadoPedido::ESTADOS,
             'error' => $this->mensajes->extraer('error'), 'exito' => $this->mensajes->extraer('success'),
         ], 'administrador');
     }
 
+    /**
+     * Actualiza la información relacionada con «estado».
+     */
     public function actualizarEstado(Solicitud $solicitud): Respuesta
     {
-        $id = filter_var($solicitud->parametroRuta('id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $idPedido = filter_var($solicitud->parametroRuta('id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         try {
-            if ($id === false) {
+            if ($idPedido === false) {
                 throw new \DomainException('El identificador del pedido no es válido.');
             }
             $estado = SolicitudEstadoPedido::validar($solicitud);
-            $anterior = $this->pedidos->buscarConDetalle((int) $id);
-            $this->pedidos->actualizarEstado((int) $id, $estado);
+            $anterior = $this->pedidos->buscarConDetalle((int) $idPedido);
+            $this->pedidos->actualizarEstado((int) $idPedido, $estado);
             $this->auditoria->registrar(
                 'order.status.updated',
                 'order',
-                (int) $id,
+                (int) $idPedido,
                 ['estado' => $anterior['estado'] ?? null],
                 ['estado' => $estado],
                 $solicitud->direccionIp()
@@ -81,6 +109,7 @@ final class AdministradorPedidoController
             $this->mensajes->error('No se pudo actualizar el estado del pedido.');
         }
 
-        return redirect('admin/orders/' . ($id === false ? '' : (int) $id));
+        return redirigir('admin/orders/' . ($idPedido === false ? '' : (int) $idPedido));
     }
+
 }

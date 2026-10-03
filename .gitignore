@@ -13,3 +13,5 @@
 /.phpunit.cache/
 /.phpunit.result.cache
 *.tmp
+/debug.log
+/.git/

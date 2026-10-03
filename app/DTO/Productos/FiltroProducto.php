@@ -2,7 +2,7 @@
 
 declare(strict_types=1); 
 
-namespace App\DTO\Productos;
+namespace App\DTO\Productos; // Define el espacio de nombres para la clase FiltroProducto, indicando que pertenece al módulo de productos dentro de la aplicación   
 
 final class FiltroProducto
 {

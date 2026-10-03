@@ -14,6 +14,9 @@ final class CsrfMiddleware
     {
     }
 
+    /**
+     * Valida el token CSRF antes de permitir que continúe la solicitud.
+     */
     public function manejar(Solicitud $solicitud, callable $siguiente): Respuesta
     {
         if (!$this->csrf->validar((string) $solicitud->entrada('csrf', ''))) {

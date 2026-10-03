@@ -12,7 +12,11 @@ final class EjecutorMigraciones
     {
     }
 
-    /** @return array<int, string> */
+    /**
+     * Devuelve las migraciones que todavía no aparecen registradas como ejecutadas.
+     *
+     * @return array<int, string>
+     */
     public function pendientes(string $directorio): array
     {
         $this->asegurarTabla();
@@ -26,7 +30,11 @@ final class EjecutorMigraciones
         ));
     }
 
-    /** @return array<int, string> */
+    /**
+     * Ejecuta las migraciones pendientes y registra cada ejecución.
+     *
+     * @return array<int, string>
+     */
     public function migrar(string $directorio): array
     {
         $pendientes = $this->pendientes($directorio);
@@ -55,7 +63,11 @@ final class EjecutorMigraciones
         return array_map('basename', $pendientes);
     }
 
-    /** @return array<int, array{migracion:string,ejecutada:bool}> */
+    /**
+     * Devuelve el estado actual del recurso o proceso consultado.
+     *
+     * @return array<int, array{migracion:string,ejecutada:bool}>
+     */
     public function estado(string $directorio): array
     {
         $pendientes = array_map('basename', $this->pendientes($directorio));
@@ -71,6 +83,9 @@ final class EjecutorMigraciones
         );
     }
 
+    /**
+     * Crea la tabla de control de migraciones si todavía no existe.
+     */
     private function asegurarTabla(): void
     {
         $this->conexion->pdoObligatorio()->exec(

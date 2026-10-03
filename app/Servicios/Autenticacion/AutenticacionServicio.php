@@ -14,7 +14,10 @@ final class AutenticacionServicio
     {
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * Valida las credenciales e inicia la sesión del usuario.
+     * @return array<string, mixed>
+     */
     public function iniciarSesion(string $correo, string $contrasena): array
     {
         if (!$this->usuarios->estaDisponible()) {
@@ -23,6 +26,7 @@ final class AutenticacionServicio
 
         $usuario = $this->usuarios->buscarPorCorreo($correo);
 
+        // password_verify compara la contraseña recibida con el hash almacenado.
         if (!$usuario || !password_verify($contrasena, (string) $usuario['contrasena'])) {
             throw new ExcepcionAutenticacion('Credenciales incorrectas.');
         }
@@ -39,7 +43,10 @@ final class AutenticacionServicio
         return $usuarioSesion;
     }
 
-    /** @param array{nombre:string,correo:string,contrasena:string} $datos */
+    /**
+     * Crea una cuenta de cliente después de validar sus datos y genera el hash de la contraseña.
+     * @param array{nombre:string,correo:string,contrasena:string} $datos
+     */
     public function registrar(array $datos): void
     {
         if (!$this->usuarios->estaDisponible()) {
@@ -53,11 +60,15 @@ final class AutenticacionServicio
         $this->usuarios->crear([
             'nombre' => $datos['nombre'],
             'correo' => $datos['correo'],
+            // password_hash genera el hash que se guarda para esta contraseña.
             'contrasena' => password_hash($datos['contrasena'], PASSWORD_DEFAULT),
             'rol' => 'cliente_minorista',
         ]);
     }
 
+    /**
+     * Cierra la sesión activa y limpia los datos asociados.
+     */
     public function cerrarSesion(): void
     {
         $this->sesion->destruir();

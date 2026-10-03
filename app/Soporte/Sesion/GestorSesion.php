@@ -6,8 +6,12 @@ namespace App\Soporte\Sesion;
 
 final class GestorSesion
 {
-    /** @param array<string, mixed> $configuracion */
-    public static function start(array $configuracion): void
+    /**
+     * Inicia la sesión con la configuración definida para la aplicación.
+     *
+     * @param array<string, mixed> $configuracion
+     */
+    public static function iniciar(array $configuracion): void
     {
         if (PHP_SAPI === 'cli') {
             $_SESSION ??= [];
@@ -43,26 +47,41 @@ final class GestorSesion
         session_start();
     }
 
+    /**
+     * Devuelve el valor guardado en la sesión o el valor predeterminado.
+     */
     public function obtener(string $clave, mixed $predeterminado = null): mixed
     {
         return $_SESSION[$clave] ?? $predeterminado;
     }
 
+    /**
+     * Guarda el valor indicado en la sesión bajo la clave recibida.
+     */
     public function guardar(string $clave, mixed $valor): void
     {
         $_SESSION[$clave] = $valor;
     }
 
+    /**
+     * Indica si la clave existe en la sesión, incluso cuando su valor es nulo.
+     */
     public function tiene(string $clave): bool
     {
         return array_key_exists($clave, $_SESSION);
     }
 
+    /**
+     * Elimina de la sesión el valor asociado a la clave indicada.
+     */
     public function eliminar(string $clave): void
     {
         unset($_SESSION[$clave]);
     }
 
+    /**
+     * Regenera el identificador de sesión para proteger la sesión autenticada.
+     */
     public function regenerar(): void
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
@@ -70,6 +89,9 @@ final class GestorSesion
         }
     }
 
+    /**
+     * Destruye la sesión actual y elimina su cookie asociada.
+     */
     public function destruir(): void
     {
         $_SESSION = [];

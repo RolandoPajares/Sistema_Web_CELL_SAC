@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\DAO\Contacto;
 
+use App\DAO\Contratos\RepositorioContactoInterfaz;
 use App\Nucleo\BaseDatos\Conexion;
 use PDO;
 
-final class ContactoDAO
+final class ContactoDAO implements RepositorioContactoInterfaz
 {
     public function __construct(private Conexion $conexion)
     {

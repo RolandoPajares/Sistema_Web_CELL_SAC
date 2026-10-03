@@ -12,17 +12,27 @@ final class InventarioServicio
     {
     }
 
+    /**
+     * Obtiene la cantidad disponible para el producto o variante solicitada.
+     */
     public function existencias(): array
     {
         return $this->inventario->existencias();
     }
 
+    /**
+     * Devuelve los movimientos de inventario registrados para el periodo solicitado.
+     */
     public function movimientos(): array
     {
         return $this->inventario->movimientos();
     }
 
-    /** @return array{stock_total:int,stock_bajo:int,sin_stock:int,movimientos_hoy:int} */
+    /**
+     * Calcula un resumen consolidado de la información solicitada.
+     *
+     * @return array{stock_total:int,stock_bajo:int,sin_stock:int,movimientos_hoy:int}
+     */
     public function resumen(): array
     {
         $existencias = $this->existencias();
@@ -36,12 +46,30 @@ final class InventarioServicio
         ];
     }
 
-    public function registrar(array $datos, int $usuarioId): int
+    public function registrar(array $datos, int $idUsuario): int
     {
-        if ($usuarioId <= 0) {
+        if ($idUsuario <= 0) {
             throw new \DomainException('No se pudo identificar al usuario responsable.');
         }
 
-        return $this->inventario->registrarMovimiento($datos, $usuarioId);
+        $idProducto = filter_var($datos['producto_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $cantidad = filter_var($datos['cantidad'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $tipo = $datos['tipo_movimiento'] ?? null;
+        $notas = $datos['notas'] ?? null;
+        if ($idProducto === false || $cantidad === false
+            || !is_string($tipo) || !in_array($tipo, ['entrada', 'salida', 'ajuste'], true)
+            || !is_string($notas) || trim($notas) === '' || mb_strlen(trim($notas)) > 500
+        ) {
+            throw new \DomainException('Los datos del movimiento de inventario no son válidos.');
+        }
+
+        $movimiento = [
+            'producto_id' => (int) $idProducto,
+            'tipo_movimiento' => $tipo,
+            'cantidad' => (int) $cantidad,
+            'notas' => trim($notas),
+        ];
+
+        return $this->inventario->registrarMovimiento($movimiento, $idUsuario);
     }
 }

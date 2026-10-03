@@ -1,5 +1,14 @@
+<?php
+/** @var string $tituloModulo 
+ * @var string $mensaje
+ */
+?>
+
 <header class="admin-page-head">
-    <div><span class="eyebrow">Administración</span><h1><?= e($tituloModulo) ?></h1><p><?= e($mensaje) ?></p></div>
+    <div><span class="eyebrow">Administración</span>
+        <h1><?= e($tituloModulo) ?></h1>
+        <p><?= e($mensaje) ?></p>
+    </div>
 </header>
 <section class="panel">
     <h2>Próxima iteración</h2>

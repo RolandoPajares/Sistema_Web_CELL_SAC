@@ -6,11 +6,14 @@ namespace App\Soporte\Configuracion;
 
 final class RepositorioConfiguracion
 {
-    /** @param array<string, mixed> $elementos */
+    /**
+     * @param array<string, mixed> $elementos
+     */
     public function __construct(private array $elementos)
     {
     }
 
+    /** Devuelve el valor de la clave indicada, que puede usar segmentos separados por puntos. */
     public function obtener(string $clave, mixed $predeterminado = null): mixed
     {
         $segmentos = explode('.', $clave);
@@ -27,7 +30,10 @@ final class RepositorioConfiguracion
         return $valor;
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * Devuelve todos los valores almacenados en la configuración.
+     * @return array<string, mixed>
+     */
     public function todos(): array
     {
         return $this->elementos;

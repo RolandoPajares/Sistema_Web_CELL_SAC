@@ -7,9 +7,15 @@ use App\Middleware\CsrfMiddleware;
 use App\Middleware\RolMiddleware;
 use App\Nucleo\Enrutamiento\Enrutador;
 
+/**
+ * Archivo de rutas del panel de roles.
+ * Configura los endpoints protegidos por middlewares de rol y protección CSRF.
+ */
 return static function (Enrutador $enrutador): void {
     $protegida = [RolMiddleware::class];
     $protegidaPost = [RolMiddleware::class, CsrfMiddleware::class];
+
+    // GESTIÓN DE TABLERO Y MÓDULOS DE ROL
 
     $enrutador->obtener('/panel', [PanelRolController::class, 'tablero'], $protegida);
     $enrutador->obtener('/panel/{module}', [PanelRolController::class, 'indice'], $protegida);

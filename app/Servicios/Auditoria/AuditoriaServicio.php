@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Servicios\Auditoria;
 
-use App\DAO\Auditoria\RegistroAuditoriaDAO;
+use App\DAO\Contratos\RepositorioAuditoriaInterfaz;
 use App\Soporte\Registros\RegistradorArchivo;
 
 final class AuditoriaServicio
 {
-    public function __construct(private RegistroAuditoriaDAO $auditoria, private RegistradorArchivo $registro)
+    public function __construct(private RepositorioAuditoriaInterfaz $auditoria, private RegistradorArchivo $registro)
     {
     }
 
     /**
+     * Filtra valores sensibles y registra la acción sin interrumpir la operación si falla la auditoría.
      * @param array<string, mixed>|null $valoresAnteriores
      * @param array<string, mixed>|null $valoresNuevos
      */
@@ -30,7 +31,7 @@ final class AuditoriaServicio
 
         try {
             $this->auditoria->registrar(
-                isset(current_user()['id']) ? (int) current_user()['id'] : null,
+                isset(usuario_actual()['id']) ? (int) usuario_actual()['id'] : null,
                 $accion,
                 $entidad,
                 $idEntidad,
@@ -46,8 +47,12 @@ final class AuditoriaServicio
         }
     }
 
-    /** @return array{desde:string,hasta:string,registros:array<int,array<string,mixed>>,resumen:array<string,int>,actividad:array<int,array<string,mixed>>} */
-    public function consulta(string $desde = '', string $hasta = '', string $entidad = '', int $usuarioId = 0): array
+    /**
+     * Obtiene el valor del parámetro de consulta indicado, si está disponible.
+     *
+     * @return array{desde:string,hasta:string,registros:array<int,array<string,mixed>>,resumen:array<string,int>,actividad:array<int,array<string,mixed>>}
+     */
+    public function consulta(string $desde = '', string $hasta = '', string $entidad = '', int $idUsuario = 0): array
     {
         $fechaHasta = $this->fechaValida($hasta) ?? new \DateTimeImmutable('today');
         $fechaDesde = $this->fechaValida($desde) ?? $fechaHasta->modify('-29 days');
@@ -60,13 +65,15 @@ final class AuditoriaServicio
         return [
             'desde' => $desdeNormalizado,
             'hasta' => $hastaNormalizado,
-            'registros' => $this->auditoria->listar($desdeNormalizado, $hastaNormalizado, trim($entidad), $usuarioId),
+            'registros' => $this->auditoria->listar($desdeNormalizado, $hastaNormalizado, trim($entidad), $idUsuario),
             'resumen' => $this->auditoria->resumen(),
             'actividad' => $this->auditoria->actividadPorEntidad(),
         ];
     }
 
     /**
+     * Copia los datos omitiendo claves y valores que no deben registrarse.
+     *
      * @param array<string, mixed>|null $valores
      * @return array<string, mixed>|null
      */
@@ -79,6 +86,9 @@ final class AuditoriaServicio
         return $valores;
     }
 
+    /**
+     * Comprueba que la fecha recibida tenga un formato válido.
+     */
     private function fechaValida(string $fecha): ?\DateTimeImmutable
     {
         $valor = \DateTimeImmutable::createFromFormat('!Y-m-d', $fecha);

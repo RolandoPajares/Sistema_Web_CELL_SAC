@@ -9,11 +9,16 @@ use App\Soporte\Configuracion\RepositorioConfiguracion;
 
 final class Vista
 {
-    public function __construct(private RepositorioConfiguracion $configuracion)
-    {
+    public function __construct(
+        private RepositorioConfiguracion $configuracion,
+        private CompositorVistas $compositor,
+    ) {
     }
 
-    /** @param array<string, mixed> $datos */
+    /**
+     * Renderiza la vista indicada con los datos preparados por el controlador.
+     * @param array<string, mixed> $datos
+     */
     public function renderizar(string $vista, array $datos = [], string $plantilla = 'aplicacion', int $estado = 200): Respuesta
     {
         $rutaVistas = (string) $this->configuracion->obtener('paths.views');
@@ -24,7 +29,9 @@ final class Vista
             throw new \RuntimeException("La vista {$vista} no existe.");
         }
 
-        extract($datos, EXTR_SKIP);
+        $datosVista = array_merge($this->compositor->datos($plantilla, $datos), $datos);
+        // Las plantillas conservan variables locales para una lectura directa; cada vista documenta su contrato con PHPDoc.
+        extract($datosVista, EXTR_SKIP);
 
         ob_start();
         require $archivoVista;

@@ -14,7 +14,11 @@ final class AsistenteAdministradorServicio
     ) {
     }
 
-    /** @return array{mensaje:string} */
+    /**
+     * Genera una respuesta para el mensaje recibido usando el servicio correspondiente.
+     *
+     * @return array{mensaje:string}
+     */
     public function responder(string $consulta): array
     {
         $texto = mb_strtolower(trim($consulta));
@@ -39,7 +43,7 @@ final class AsistenteAdministradorServicio
         }
 
         if (str_contains($texto, 'venta')) {
-            return ['mensaje' => 'Las ventas no canceladas del mes disponible suman ' . money($estadisticas['ventas_periodo']) . '.'];
+            return ['mensaje' => 'Las ventas no canceladas del mes disponible suman ' . formatear_dinero($estadisticas['ventas_periodo']) . '.'];
         }
 
         if (str_contains($texto, 'inventario')) {
@@ -55,7 +59,7 @@ final class AsistenteAdministradorServicio
         }
 
         if (str_contains($texto, 'resumen') || str_contains($texto, 'negocio') || str_contains($texto, 'hola')) {
-            return ['mensaje' => 'Resumen actual: ' . (int) $estadisticas['productos'] . ' productos activos, ' . (int) $estadisticas['pedidos'] . ' pedidos, ' . (int) $estadisticas['clientes'] . ' clientes activos y ' . money($estadisticas['ventas_periodo']) . ' en ventas del mes disponible.'];
+            return ['mensaje' => 'Resumen actual: ' . (int) $estadisticas['productos'] . ' productos activos, ' . (int) $estadisticas['pedidos'] . ' pedidos, ' . (int) $estadisticas['clientes'] . ' clientes activos y ' . formatear_dinero($estadisticas['ventas_periodo']) . ' en ventas del mes disponible.'];
         }
 
         return ['mensaje' => 'Esta consulta todavía no está disponible. Puedo resumir negocio, ventas, productos, inventario, stock bajo, pedidos pendientes y reportes.'];

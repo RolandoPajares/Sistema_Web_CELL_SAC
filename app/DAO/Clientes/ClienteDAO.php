@@ -14,6 +14,9 @@ final class ClienteDAO implements RepositorioClienteInterfaz
     {
     }
 
+    /**
+     * Devuelve los registros disponibles que cumplen los filtros actuales.
+     */
     public function todos(): array
     {
         return $this->pdo()->query(
@@ -28,19 +31,22 @@ final class ClienteDAO implements RepositorioClienteInterfaz
         )->fetchAll();
     }
 
-    public function buscar(int $id): ?array
+    public function buscar(int $idCliente): ?array
     {
         $sentencia = $this->pdo()->prepare(
             'SELECT id, tipo, documento, razon_social AS empresa, nombre_contacto AS contacto,
                     correo, telefono, ciudad, activo
              FROM clientes WHERE id = :id LIMIT 1'
         );
-        $sentencia->execute([':id' => $id]);
+        $sentencia->execute([':id' => $idCliente]);
         $cliente = $sentencia->fetch();
 
         return $cliente ?: null;
     }
 
+    /**
+     * Comprueba si otro cliente ya utiliza el documento indicado.
+     */
     public function existeDocumento(string $documento, ?int $idExcluido = null): bool
     {
         $sql = 'SELECT COUNT(*) FROM clientes WHERE documento = :documento';
@@ -68,30 +74,52 @@ final class ClienteDAO implements RepositorioClienteInterfaz
         return (int) $this->pdo()->lastInsertId();
     }
 
-    public function actualizar(int $id, array $datos): void
+    public function actualizar(int $idCliente, array $datos, ?string $segmentoPermitido = null): void
     {
-        $sentencia = $this->pdo()->prepare(
-            'UPDATE clientes SET tipo=:tipo, documento=:documento, razon_social=:empresa,
-             nombre_contacto=:contacto, correo=:correo, telefono=:telefono, ciudad=:ciudad WHERE id=:id'
-        );
+        $consulta = 'UPDATE clientes SET tipo=:tipo, documento=:documento, razon_social=:empresa,
+                     nombre_contacto=:contacto, correo=:correo, telefono=:telefono, ciudad=:ciudad WHERE id=:id';
         $parametros = $this->parametros($datos);
-        $parametros[':id'] = $id;
+        $parametros[':id'] = $idCliente;
+        if ($segmentoPermitido !== null) {
+            $consulta .= ' AND tipo=:segmento_permitido';
+            $parametros[':segmento_permitido'] = $segmentoPermitido;
+        }
+        $sentencia = $this->pdo()->prepare($consulta);
         $sentencia->execute($parametros);
-        if ($sentencia->rowCount() === 0 && $this->buscar($id) === null) {
-            throw new \DomainException('El cliente no existe.');
+        if ($sentencia->rowCount() === 0) {
+            $cliente = $this->buscar($idCliente);
+            if ($cliente === null) {
+                throw new \DomainException('El cliente no existe.');
+            }
+            if ($segmentoPermitido !== null && ($cliente['tipo'] ?? null) !== $segmentoPermitido) {
+                throw new \DomainException('El cliente no pertenece al segmento autorizado.');
+            }
         }
     }
 
-    public function desactivar(int $id): void
+    /**
+     * Marca como inactivo el registro seleccionado, sin borrar su historial.
+     */
+    public function desactivar(int $idCliente, ?string $segmentoPermitido = null): void
     {
-        $sentencia = $this->pdo()->prepare('UPDATE clientes SET activo = 0 WHERE id = :id AND activo = 1');
-        $sentencia->execute([':id' => $id]);
+        $consulta = 'UPDATE clientes SET activo = 0 WHERE id = :id AND activo = 1';
+        $parametros = [':id' => $idCliente];
+        if ($segmentoPermitido !== null) {
+            $consulta .= ' AND tipo = :segmento_permitido';
+            $parametros[':segmento_permitido'] = $segmentoPermitido;
+        }
+        $sentencia = $this->pdo()->prepare($consulta);
+        $sentencia->execute($parametros);
         if ($sentencia->rowCount() !== 1) {
             throw new \DomainException('El cliente no existe o ya está inactivo.');
         }
     }
 
-    /** @param array<string, string> $datos */
+    /**
+     * Prepara los parámetros asociados a la consulta o escritura solicitada.
+     *
+     * @param array<string, string> $datos
+     */
     private function parametros(array $datos): array
     {
         return [':tipo' => $datos['tipo'], ':documento' => $datos['documento'], ':empresa' => $datos['empresa'],
@@ -99,6 +127,9 @@ final class ClienteDAO implements RepositorioClienteInterfaz
             ':ciudad' => $datos['ciudad']];
     }
 
+    /**
+     * Obtiene la conexión PDO y detiene la operación si no está disponible.
+     */
     private function pdo(): PDO
     {
         return $this->conexion->pdoObligatorio();

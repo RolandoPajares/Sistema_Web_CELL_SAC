@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nucleo\Enrutamiento;
 
 use App\Nucleo\Http\Solicitud;
+use App\Nucleo\Http\ContextoSolicitud;
 use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Contenedor;
 
@@ -13,11 +14,15 @@ final class Enrutador
     /** @var array<int, array{metodo:string,ruta:string,manejador:array{0:string,1:string},intermediarios:array<int,string>}> */
     private array $rutas = [];
 
+    private ContextoSolicitud $contextoSolicitud;
+
     public function __construct(private Contenedor $contenedor)
     {
+        $this->contextoSolicitud = $contenedor->obtener(ContextoSolicitud::class);
     }
 
     /**
+     * Registra una ruta para el verbo HTTP GET.
      * @param array{0:string,1:string} $manejador
      * @param array<int, class-string> $intermediarios
      */
@@ -27,6 +32,7 @@ final class Enrutador
     }
 
     /**
+     * Registra una ruta para el verbo HTTP POST.
      * @param array{0:string,1:string} $manejador
      * @param array<int, class-string> $intermediarios
      */
@@ -36,6 +42,7 @@ final class Enrutador
     }
 
     /**
+     * Registra una ruta para el verbo HTTP DELETE.
      * @param array{0:string,1:string} $manejador
      * @param array<int, class-string> $intermediarios
      */
@@ -45,6 +52,7 @@ final class Enrutador
     }
 
     /**
+     * Registra una ruta con su manejador y sus intermediarios.
      * @param array{0:string,1:string} $manejador
      * @param array<int, class-string> $intermediarios
      */
@@ -58,8 +66,13 @@ final class Enrutador
         ];
     }
 
+    /**
+     * Busca la ruta que coincide con la solicitud y ejecuta su controlador.
+     */
     public function despachar(Solicitud $solicitud): Respuesta
     {
+        $this->contextoSolicitud->establecer($solicitud);
+
         foreach ($this->rutas as $rutaRegistrada) {
             $parametros = $this->coincidir($rutaRegistrada['metodo'], $rutaRegistrada['ruta'], $solicitud);
 
@@ -68,6 +81,7 @@ final class Enrutador
             }
 
             $solicitud = $solicitud->conParametrosRuta($parametros);
+            $this->contextoSolicitud->establecer($solicitud);
             $manejador = fn (Solicitud $solicitud): Respuesta => $this->invocar(
                 $rutaRegistrada['manejador'],
                 $solicitud
@@ -88,7 +102,11 @@ final class Enrutador
         return new Respuesta('Página no encontrada.', 404);
     }
 
-    /** @return array<string, string>|null */
+    /**
+     * Comprueba si la ruta coincide con el método y la dirección recibidos.
+     *
+     * @return array<string, string>|null
+     */
     private function coincidir(string $metodo, string $rutaRegistrada, Solicitud $solicitud): ?array
     {
         if ($metodo !== $solicitud->metodo()) {
@@ -109,7 +127,11 @@ final class Enrutador
         );
     }
 
-    /** @param array{0:string,1:string} $manejador */
+    /**
+     * Ejecuta el controlador asociado a la ruta encontrada.
+     *
+     * @param array{0:string,1:string} $manejador
+     */
     private function invocar(array $manejador, Solicitud $solicitud): Respuesta
     {
         [$clase, $metodo] = $manejador;

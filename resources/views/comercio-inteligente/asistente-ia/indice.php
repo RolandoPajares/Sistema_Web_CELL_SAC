@@ -3,15 +3,18 @@
         <div class="smart-hero">
             <span class="eyebrow">Asistente virtual del catálogo</span>
             <h1><i class="bi bi-robot" aria-hidden="true"></i> MD Assistant</h1>
-            <p>Conversa con el asistente de forma continua. Puedes preguntar por precios, presupuesto, gaming, cámara, batería, estudio, trabajo o pedir recomendaciones del catálogo.</p>
+
+            <p>
+                Conversa con el asistente de forma continua. Puedes preguntar por precios, presupuesto, gaming, cámara, batería, estudio, trabajo o pedir recomendaciones del catálogo.
+            </p>
         </div>
 
-        <section class="assistant-chat panel" id="assistantChat" data-endpoint="<?= e(url('smart/assistant/reply')) ?>">
+        <section class="assistant-chat panel" id="assistantChat" data-endpoint="<?= e(url_interna('smart/assistant/reply')) ?>">
             <div class="assistant-chat-head">
                 <div class="assistant-avatar">MD</div>
                 <div>
-                    <strong>MD Assistant</strong>
-                    <small><span class="assistant-online-dot"></span> Asistente del catálogo disponible</small>
+                <strong>MD Assistant</strong>
+                <small><span class="assistant-online-dot"></span> Asistente del catálogo disponible</small>
                 </div>
                 <button type="button" class="btn btn-ghost assistant-clear" id="assistantClear">Nueva conversación</button>
             </div>
@@ -20,8 +23,11 @@
                 <article class="assistant-message assistant-message-bot">
                     <div class="assistant-message-avatar">MD</div>
                     <div class="assistant-bubble">
-                        <b>MD Assistant</b>
-                        <p>¡Hola! Puedo ayudarte a elegir un celular, buscar opciones por presupuesto, comparar necesidades o revisar productos disponibles. Escríbeme, por ejemplo: <em>“quiero un celular para gaming menor a S/1500”</em>.</p>
+                <b>MD Assistant</b>
+
+                        <p>
+                ¡Hola! Puedo ayudarte a elegir un celular, buscar opciones por presupuesto, comparar necesidades o revisar productos disponibles. Escríbeme, por ejemplo: <em>“quiero un celular para gaming menor a S/1500”</em>.
+                        </p>
                     </div>
                 </article>
             </div>

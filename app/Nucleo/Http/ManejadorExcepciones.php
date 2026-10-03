@@ -20,6 +20,9 @@ final class ManejadorExcepciones
     {
     }
 
+    /**
+     * Renderiza la vista indicada con los datos preparados por el controlador.
+     */
     public function renderizar(Throwable $excepcion): Respuesta
     {
         $estado = match (true) {

@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace App\DAO\ComercioInteligente;
 
+use App\DAO\Contratos\RepositorioInteligenciaNegocioInterfaz;
 use App\Nucleo\BaseDatos\Conexion;
 
-final class InteligenciaNegocioDAO
+final class InteligenciaNegocioDAO implements RepositorioInteligenciaNegocioInterfaz
 {
     public function __construct(private Conexion $conexion)
     {
     }
 
-    /** @return array{ingresos:float,destacados:array<int,array<string,mixed>>,existencias_bajas:array<int,array<string,mixed>>,diario:array<int,array<string,mixed>>} */
+    /**
+     * Calcula un resumen de la actividad correspondiente al periodo actual.
+     *
+     * @return array{ingresos:float,destacados:array<int,array<string,mixed>>,existencias_bajas:array<int,array<string,mixed>>,diario:array<int,array<string,mixed>>}
+     */
     public function resumenActual(): array
     {
         $pdo = $this->conexion->pdoObligatorio();
@@ -27,7 +32,7 @@ final class InteligenciaNegocioDAO
                  GROUP BY p.id ORDER BY unidades DESC LIMIT 5'
             )->fetchAll(),
             'existencias_bajas' => $pdo->query(
-                'SELECT id, marca, nombre, existencias FROM productos
+                'SELECT id, marca, nombre, categoria, url_imagen, existencias FROM productos
                  WHERE activo = 1 AND existencias <= 8 ORDER BY existencias ASC LIMIT 5'
             )->fetchAll(),
             'diario' => $pdo->query(
@@ -39,7 +44,11 @@ final class InteligenciaNegocioDAO
         ];
     }
 
-    /** @return array<int, array{periodo:string,total:float,pedidos:int}> */
+    /**
+     * Agrupa las ventas por mes para generar el reporte solicitado.
+     *
+     * @return array<int, array{periodo:string,total:float,pedidos:int}>
+     */
     public function ventasMensuales(int $meses = 12): array
     {
         $meses = min(24, max(1, $meses));
@@ -57,7 +66,11 @@ final class InteligenciaNegocioDAO
         return $sentencia->fetchAll();
     }
 
-    /** @return array<int, array<string, mixed>> */
+    /**
+     * Devuelve los pedidos más recientes para mostrarlos en el panel.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function pedidosRecientes(int $limite = 6): array
     {
         $sentencia = $this->conexion->pdoObligatorio()->prepare(
@@ -71,7 +84,11 @@ final class InteligenciaNegocioDAO
         return $sentencia->fetchAll();
     }
 
-    /** @return array{ventas:float,pedidos:int,productos_vendidos:int,clientes:int} */
+    /**
+     * Calcula los indicadores del periodo solicitado.
+     *
+     * @return array{ventas:float,pedidos:int,productos_vendidos:int,clientes:int}
+     */
     public function resumenPeriodo(string $desde, string $hasta): array
     {
         $pdo = $this->conexion->pdoObligatorio();
@@ -98,7 +115,11 @@ final class InteligenciaNegocioDAO
         ];
     }
 
-    /** @return array<int, array{periodo:string,total:float,pedidos:int}> */
+    /**
+     * Agrupa las ventas por día para el periodo del reporte.
+     *
+     * @return array<int, array{periodo:string,total:float,pedidos:int}>
+     */
     public function ventasDiarias(string $desde, string $hasta): array
     {
         $sentencia = $this->conexion->pdoObligatorio()->prepare(
@@ -112,7 +133,11 @@ final class InteligenciaNegocioDAO
         return $sentencia->fetchAll();
     }
 
-    /** @return array<int, array<string, mixed>> */
+    /**
+     * Devuelve las filas de detalle que corresponden al reporte solicitado.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function detalleReporte(string $tipo, string $desde, string $hasta): array
     {
         $pdo = $this->conexion->pdoObligatorio();

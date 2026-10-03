@@ -1,12 +1,14 @@
-<div class="auth-wrap panel">
+<?php
+/**
+ * @var string $atributoErrorOculto
+ * @var mixed $error
+ */ ?><div class="auth-wrap panel">
     <h1>Iniciar sesión</h1>
     <p>Los administradores son enviados automáticamente al panel de gestión.</p>
 
-    <?php if ($error !== ''): ?>
-        <div class="alert alert-error"><?= e($error) ?></div>
-    <?php endif; ?>
+    <div class="alert alert-error" <?= $atributoErrorOculto ?>><?= e($error) ?></div>
 
-    <form method="post" action="<?= e(url('login')) ?>">
+    <form method="post" action="<?= e(url_interna('login')) ?>">
         <?= csrf_field() ?>
         <div class="form-group">
             <label>Correo</label>
@@ -19,5 +21,5 @@
         <button class="btn btn-primary" style="width:100%">Ingresar</button>
     </form>
 
-    <p>No tienes cuenta? <a style="color: var(--primary)" href="<?= e(url('register')) ?>">Registrate aqui</a>.</p>
+    <p>No tienes cuenta? <a style="color: var(--primary)" href="<?= e(url_interna('register')) ?>">Registrate aqui</a>.</p>
 </div>

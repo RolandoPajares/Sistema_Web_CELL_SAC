@@ -2,79 +2,82 @@
 
 declare(strict_types=1);
 
-namespace App\Controladores\Catalogo;
+namespace App\Controladores\Catalogo; // actualiza el espacio de nombres para reflejar la ubicación del controlador dentro del módulo de catálogo
 
-use App\DTO\Productos\FiltroProducto;
-use App\Nucleo\Http\Solicitud;
+use App\Nucleo\Http\Solicitud; // Representa la solicitud HTTP entrante y proporciona métodos para acceder a sus datos.
 use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Presentacion\Vista;
+use App\Nucleo\Presentacion\Productos\PresentadorTarjetaProducto;
+use App\Nucleo\Presentacion\Productos\PresentadorDetalleProducto;
+use App\Nucleo\Presentacion\Catalogo\PresentadorCatalogo;
+use App\Validacion\Productos\SolicitudFiltroCatalogo;
 use App\Servicios\Productos\ProductoServicio;
 use App\Servicios\Categorias\CategoriaServicio;
 
-final class CatalogoController
+// Controlador para gestionar las operaciones del catálogo de productos
+final class CatalogoController //               
 {
-    public function __construct(private Vista $vista, private ProductoServicio $productos, private CategoriaServicio $categorias)
-    {
+// se inyectan dependencias a través del constructor para facilitar la prueba y el mantenimiento del código
+public function __construct(
+        private Vista $vista,  
+        private ProductoServicio $productos,
+        private CategoriaServicio $categorias,
+        private SolicitudFiltroCatalogo $filtrosCatalogo,
+        private PresentadorTarjetaProducto $presentadorTarjetaProducto,
+        private PresentadorDetalleProducto $presentadorDetalleProducto,
+    ) {
     }
 
-    public function indice(Solicitud $solicitud): Respuesta
+    // Declaro un método público llamado indice, que recibe una solicitud y devuelve una respuesta.
+    public function indice(Solicitud $solicitud): Respuesta  // Maneja la solicitud para mostrar el catálogo de productos y devuelve la respuesta HTTP correspondiente
     {
-        $texto = static function (mixed $valor, string $predeterminado = ''): string {
-            return is_scalar($valor) ? trim((string) $valor) : $predeterminado;
-        };
+        // Obtiene todos los productos activos y prepara las opciones de filtro para la vista
         $todosLosProductos = $this->productos->todosActivos();
-        $categorias = array_map('strval', array_column($this->categorias->activas(), 'nombre'));
-        $marcas = array_values(array_unique(array_map('strval', array_column($todosLosProductos, 'marca'))));
-        sort($marcas, SORT_STRING);
+        $opcionesFiltros = PresentadorCatalogo::presentarOpcionesFiltros(
+            $todosLosProductos,
+            $this->categorias->activas()
+        );
 
-        $marca = $texto($solicitud->consulta('brand', $solicitud->consulta('marca')));
-        $categoriaSolicitada = $solicitud->consulta('cat', $solicitud->consulta('category'));
-        $categoria = $texto($categoriaSolicitada);
-        if ($categoriaSolicitada === null) {
-            foreach ($categorias as $categoriaActiva) {
-                if (preg_match('/^celular(?:es)?$/iu', trim($categoriaActiva)) === 1) {
-                    $categoria = $categoriaActiva;
-                    break;
-                }
-            }
-        }
-        $orden = $texto($solicitud->consulta('sort'), 'newest');
-        $filtros = [
-            'q' => mb_substr($texto($solicitud->consulta('q')), 0, 160),
-            'marca' => in_array($marca, $marcas, true) ? $marca : '',
-            'cat' => in_array($categoria, $categorias, true) ? $categoria : '',
-            'min_price' => $texto($solicitud->consulta('min_price')),
-            'max_price' => $texto($solicitud->consulta('max_price')),
-            'sort' => in_array($orden, ['newest', 'price_asc', 'price_desc', 'name'], true) ? $orden : 'newest',
-        ];
-        $precioMinimo = is_numeric($filtros['min_price']) && (float) $filtros['min_price'] >= 0
-            ? (float) $filtros['min_price']
-            : null;
-        $precioMaximo = is_numeric($filtros['max_price']) && (float) $filtros['max_price'] >= 0
-            ? (float) $filtros['max_price']
-            : null;
-        if ($precioMinimo !== null && $precioMaximo !== null && $precioMaximo < $precioMinimo) {
-            [$precioMinimo, $precioMaximo] = [$precioMaximo, $precioMinimo];
-            [$filtros['min_price'], $filtros['max_price']] = [$filtros['max_price'], $filtros['min_price']];
-        }
-        $paginacion = $this->productos->paginar(new FiltroProducto(
-            busqueda: $filtros['q'],
-            marca: $filtros['marca'],
-            categoria: $filtros['cat'],
-            precioMinimo: $precioMinimo,
-            precioMaximo: $precioMaximo,
-            pagina: max(1, (int) $solicitud->consulta('page', 1)),
-            porPagina: 25,
-            orden: $filtros['sort'],
-        ));
+        // Extrae las marcas y categorías disponibles para los filtros de la vista
+        $categorias = $opcionesFiltros['categorias'];
+        $marcas = $opcionesFiltros['marcas'];
 
+        // Valida los filtros de la solicitud y obtiene los productos paginados según los criterios aplicados
+        $resultadoFiltros = $this->filtrosCatalogo->validar($solicitud, $marcas, $categorias);
+        $filtros = $resultadoFiltros['filtros'];
+
+        // Obtiene la paginación de productos según los filtros aplicados y prepara los enlaces para la vista
+        $paginacion = $this->productos->paginar($resultadoFiltros['filtro']);
+        $enlacesVista = PresentadorCatalogo::presentarEnlaces($filtros, $paginacion);
+
+        // El detalle se consulta en el servidor con el repositorio existente; no se envía información del producto en el HTML de las tarjetas.
+        $idProductoDetalle = filter_var($solicitud->consulta('producto'), FILTER_VALIDATE_INT); // Obtiene el ID del producto seleccionado para mostrar su detalle, si se proporciona en la consulta
+        $productoDetalle = is_int($idProductoDetalle) && $idProductoDetalle > 0
+            ? $this->productos->buscarActivoConRelaciones($idProductoDetalle)
+            : null;
+
+            // Prepara los datos del producto seleccionado para el diálogo de detalle, si existe; de lo contrario, prepara un producto vacío con precio cero
+        $detalleProducto = $productoDetalle !== null
+            ? $this->presentadorDetalleProducto->presentar($productoDetalle)
+            : $this->presentadorDetalleProducto->presentar(['precio' => 0]);
+            // Prepara los datos de las tarjetas de producto para la vista, utilizando el presentador correspondiente
+        $tarjetasProducto = $this->presentadorTarjetaProducto->presentarColeccion($paginacion['productos']); // Prepara los datos de las tarjetas de producto para la vista, utilizando el presentador correspondiente
+
+        // Renderiza la vista del catálogo con los datos preparados y devuelve la respuesta HTTP
         return $this->vista->renderizar('publico.catalogo.indice', [
             'tituloPagina' => 'Catálogo',
-            'productos' => $paginacion['productos'],
+            'tarjetasProducto' => $tarjetasProducto,
+            'atributoProductosCatalogoGridOculto' => $tarjetasProducto !== [] ? '' : 'hidden', // Oculta el grid de productos si no hay productos para mostrar
+            'atributoProductosCatalogoVacioOculto' => $tarjetasProducto === [] ? '' : 'hidden',
+            'atributoPaginacionOculto' => $paginacion['ultima_pagina'] > 1 ? '' : 'hidden',
+            'atributoDialogoDetalleAbierto' => $productoDetalle !== null ? 'open' : '', // Abre el diálogo de detalle si se ha seleccionado un producto
             'paginacion' => $paginacion,
             'filtros' => $filtros,
             'marcas' => $marcas,
             'categorias' => $categorias,
+            'enlaceConFiltros' => $enlacesVista['enlaceConFiltros'], // Enlace base para la paginación y filtrado, sin parámetros de consulta adicionales
+            'enlacesPaginacion' => $enlacesVista['enlacesPaginacion'],
+            'detalleProducto' => $detalleProducto,
         ]);
     }
 }

@@ -9,6 +9,9 @@ use App\Soporte\Excepciones\ExcepcionValidacion;
 
 final class SolicitudCliente
 {
+    /**
+     * Comprueba que los datos cumplan las reglas antes de continuar.
+     */
     public static function validar(Solicitud $solicitud): array
     {
         $datos = [];

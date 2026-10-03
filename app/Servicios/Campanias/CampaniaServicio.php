@@ -4,20 +4,26 @@ declare(strict_types=1);
 
 namespace App\Servicios\Campanias;
 
-use App\DAO\Campanias\CampaniaDAO;
+use App\DAO\Contratos\RepositorioCampaniaInterfaz;
 
 final class CampaniaServicio
 {
-    public function __construct(private CampaniaDAO $campanias)
+    public function __construct(private RepositorioCampaniaInterfaz $campanias)
     {
     }
 
+    /**
+     * Indica si hay una conexión activa con la base de datos.
+     */
     public function conexionDisponible(): bool
     {
         return $this->campanias->estaDisponible();
     }
 
-    /** @return array<int, array<string, mixed>> */
+    /**
+     * Devuelve los registros disponibles para el panel de administración.
+     * @return array<int, array<string, mixed>>
+     */
     public function todosParaAdministrador(): array
     {
         if (!$this->conexionDisponible()) {
@@ -27,7 +33,11 @@ final class CampaniaServicio
         return $this->campanias->todosParaAdministrador();
     }
 
-    /** @return array{activas:int,vistas:int,clics:int,ctr:float} */
+    /**
+     * Calcula un resumen consolidado de la información solicitada.
+     *
+     * @return array{activas:int,vistas:int,clics:int,ctr:float}
+     */
     public function resumen(): array
     {
         $campanias = $this->todosParaAdministrador();
@@ -42,7 +52,10 @@ final class CampaniaServicio
         ];
     }
 
-    /** @return array<string, mixed>|null */
+    /**
+     * Busca una campaña cuando la conexión está disponible.
+     * @return array<string, mixed>|null
+     */
     public function buscar(int $idCampania): ?array
     {
         if (!$this->conexionDisponible()) {
@@ -51,7 +64,11 @@ final class CampaniaServicio
         return $this->campanias->buscar($idCampania);
     }
 
-    /** @return array<string, array<string, mixed>> */
+    /**
+     * Devuelve las campañas activas que pueden mostrarse en la ubicación solicitada.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function ubicacionesActivas(): array
     {
         if (!$this->conexionDisponible()) {
@@ -69,7 +86,10 @@ final class CampaniaServicio
         return $ubicaciones;
     }
 
-    /** @param array<string, mixed> $datos */
+    /**
+     * Valida los datos y crea o actualiza la campaña según el identificador recibido.
+     * @param array<string, mixed> $datos
+     */
     public function guardar(array $datos, ?int $idCampania = null): int
     {
         $datosValidados = $this->validar($datos);
@@ -85,6 +105,9 @@ final class CampaniaServicio
         return $this->campanias->crear($datosValidados);
     }
 
+    /**
+     * Marca como inactivo el registro seleccionado, sin borrar su historial.
+     */
     public function desactivar(int $idCampania): void
     {
         if ($idCampania <= 0 || $this->campanias->buscar($idCampania) === null) {
@@ -93,6 +116,9 @@ final class CampaniaServicio
         $this->campanias->desactivar($idCampania);
     }
 
+    /**
+     * Registra el evento recibido para su seguimiento.
+     */
     public function registrarEvento(int $idCampania, string $evento): void
     {
         if ($idCampania <= 0 || !$this->conexionDisponible() || !in_array($evento, ['view', 'click'], true)) {
@@ -102,6 +128,7 @@ final class CampaniaServicio
     }
 
     /**
+     * Comprueba que los datos cumplan las reglas antes de continuar.
      * @param array<string, mixed> $datos
      * @return array<string, mixed>
      */

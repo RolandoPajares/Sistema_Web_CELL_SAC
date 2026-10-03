@@ -10,7 +10,11 @@ use PHPUnit\Framework\TestCase;
 
 final class CatalogoInterfacesTest extends TestCase
 {
-    /** @return array<string, array{string, string}> */
+    /**
+     * Devuelve los perfiles disponibles para las recomendaciones de productos.
+     *
+     * @return array<string, array{string, string}>
+     */
     public static function perfiles(): array
     {
         return [
@@ -24,6 +28,9 @@ final class CatalogoInterfacesTest extends TestCase
         ];
     }
 
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testCadaRolTieneUnTableroDiferenciado`.
+     */
     #[DataProvider('perfiles')]
     public function testCadaRolTieneUnTableroDiferenciado(string $rol, string $titulo): void
     {
@@ -33,7 +40,11 @@ final class CatalogoInterfacesTest extends TestCase
         self::assertGreaterThanOrEqual(4, count($interfaz['metricas']));
     }
 
-    /** @return array<string, array{string, string}> */
+    /**
+     * Devuelve los módulos habilitados para la navegación o configuración.
+     *
+     * @return array<string, array{string, string}>
+     */
     public static function modulos(): array
     {
         return [
@@ -47,6 +58,9 @@ final class CatalogoInterfacesTest extends TestCase
         ];
     }
 
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testLosModulosUsanComposicionesVisualesEspecificas`.
+     */
     #[DataProvider('modulos')]
     public function testLosModulosUsanComposicionesVisualesEspecificas(string $modulo, string $tipo): void
     {

@@ -59,7 +59,7 @@
   color: #fff;
   font-size: 1.25rem;
   font-weight: 900;
-  box-shadow: 0 12px 25px rgba(0,0,0,.2);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
 }
 .watch-shape {
   width: 78px;
@@ -68,10 +68,10 @@
   place-items: center;
   border: 9px solid #172033;
   border-radius: 24px;
-  background: linear-gradient(145deg,#1766df,#071a48);
+  background: linear-gradient(145deg, #1766df, #071a48);
   color: #fff;
   font-weight: 900;
-  box-shadow: 0 12px 25px rgba(0,0,0,.2);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
 }
 .badge {
   position: absolute;
@@ -122,7 +122,6 @@
   border-radius: 16px;
 }
 
-
 body.modulo-catalog {
   --catalog-blue: #075ee8;
   --catalog-blue-dark: #0649b7;
@@ -135,7 +134,7 @@ body.modulo-catalog {
 body.modulo-catalog .site-header {
   background: #fff;
   border-bottom-color: var(--catalog-line);
-  box-shadow: 0 3px 16px rgba(16, 32, 68, .04);
+  box-shadow: 0 3px 16px rgba(16, 32, 68, 0.04);
 }
 
 body.modulo-catalog .site-header .navlinks a {
@@ -173,7 +172,7 @@ body.modulo-catalog .catalog-breadcrumbs {
   gap: 10px;
   margin: 0 0 24px;
   color: var(--catalog-muted);
-  font-size: .84rem;
+  font-size: 0.84rem;
 }
 
 body.modulo-catalog .catalog-breadcrumbs a {
@@ -206,14 +205,14 @@ body.modulo-catalog .catalog-sidebar {
   border: 1px solid var(--catalog-line);
   border-radius: 14px;
   background: #fff;
-  box-shadow: 0 4px 14px rgba(16, 32, 68, .035);
+  box-shadow: 0 4px 14px rgba(16, 32, 68, 0.035);
 }
 
 body.modulo-catalog .catalog-filter-section h2,
 body.modulo-catalog .catalog-price-filter h2 {
   margin: 0 0 10px;
   color: var(--catalog-ink);
-  font-size: .95rem;
+  font-size: 0.95rem;
   font-weight: 800;
 }
 
@@ -227,7 +226,7 @@ body.modulo-catalog .catalog-filter-list a {
   padding: 8px 10px;
   border-radius: 8px;
   color: #33435f;
-  font-size: .88rem;
+  font-size: 0.88rem;
 }
 
 body.modulo-catalog .catalog-filter-list a:hover {
@@ -250,7 +249,7 @@ body.modulo-catalog .catalog-price-filter {
 
 body.modulo-catalog .catalog-price-filter label {
   color: var(--catalog-muted);
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 body.modulo-catalog .catalog-price-filter .input,
@@ -287,13 +286,13 @@ body.modulo-catalog .catalog-heading h1 {
   color: var(--catalog-ink);
   font-size: clamp(1.65rem, 2.5vw, 2rem);
   font-weight: 850;
-  letter-spacing: -.035em;
+  letter-spacing: -0.035em;
 }
 
 body.modulo-catalog .catalog-heading p {
   margin: 4px 0 0;
   color: var(--catalog-muted);
-  font-size: .92rem;
+  font-size: 0.92rem;
 }
 
 body.modulo-catalog .catalog-search {
@@ -333,14 +332,17 @@ body.modulo-catalog .catalog-product-card {
   border: 1px solid #e2e7ef;
   border-radius: 14px;
   background: #fff;
-  box-shadow: 0 4px 15px rgba(16, 32, 68, .055);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  box-shadow: 0 4px 15px rgba(16, 32, 68, 0.055);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
 }
 
 body.modulo-catalog .catalog-product-card:hover {
   transform: translateY(-3px);
   border-color: #c8d8f1;
-  box-shadow: 0 12px 25px rgba(16, 32, 68, .1);
+  box-shadow: 0 12px 25px rgba(16, 32, 68, 0.1);
 }
 
 body.modulo-catalog .catalog-product-art {
@@ -358,7 +360,7 @@ body.modulo-catalog .catalog-product-art .badge {
   padding: 6px 10px;
   border-radius: 999px;
   background: #0759ed;
-  font-size: .72rem;
+  font-size: 0.72rem;
 }
 
 body.modulo-catalog .catalog-product-photo {
@@ -392,7 +394,7 @@ body.modulo-catalog .catalog-accessory-shape {
   border: 5px solid #172033;
   border-radius: 25px;
   background: linear-gradient(145deg, #1766df, #071a48);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, .2);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
   color: #fff;
   font-size: 2.3rem;
 }
@@ -409,7 +411,7 @@ body.modulo-catalog .catalog-product-meta {
   display: flex;
   justify-content: space-between;
   color: var(--catalog-muted);
-  font-size: .82rem;
+  font-size: 0.82rem;
 }
 
 body.modulo-catalog .catalog-product-card h2 {
@@ -424,7 +426,7 @@ body.modulo-catalog .catalog-product-card h2 {
 body.modulo-catalog .catalog-product-specs {
   min-height: 1.35em;
   color: #718198;
-  font-size: .82rem;
+  font-size: 0.82rem;
   line-height: 1.35;
 }
 
@@ -437,7 +439,7 @@ body.modulo-catalog .catalog-product-pricing {
 
 body.modulo-catalog .catalog-product-pricing del {
   color: #718198;
-  font-size: .96rem;
+  font-size: 0.96rem;
   font-weight: 650;
 }
 
@@ -446,7 +448,7 @@ body.modulo-catalog .catalog-product-pricing span {
   border-radius: 8px;
   background: #ff565e;
   color: #fff;
-  font-size: .76rem;
+  font-size: 0.76rem;
   font-weight: 800;
 }
 
@@ -459,7 +461,7 @@ body.modulo-catalog .catalog-product-card .price {
 }
 
 body.modulo-catalog .catalog-product-stock {
-  font-size: .78rem;
+  font-size: 0.78rem;
 }
 
 body.modulo-catalog .catalog-product-actions {
@@ -484,7 +486,7 @@ body.modulo-catalog .catalog-details-button {
   margin: 0;
   padding: 8px;
   border-radius: 9px;
-  font-size: .76rem;
+  font-size: 0.76rem;
   font-weight: 750;
   line-height: 1.2;
   white-space: nowrap;
@@ -504,7 +506,7 @@ body.modulo-catalog .catalog-details-button:hover {
 
 body.modulo-catalog .catalog-buy-button:disabled {
   cursor: not-allowed;
-  opacity: .62;
+  opacity: 0.62;
 }
 
 body.modulo-catalog .pagination {
@@ -548,11 +550,11 @@ body.modulo-catalog .catalog-modal {
   border-radius: 18px;
   background: #fff;
   color: var(--catalog-ink);
-  box-shadow: 0 24px 80px rgba(8, 22, 48, .28);
+  box-shadow: 0 24px 80px rgba(8, 22, 48, 0.28);
 }
 
 body.modulo-catalog .catalog-modal::backdrop {
-  background: rgba(11, 20, 35, .66);
+  background: rgba(11, 20, 35, 0.66);
   backdrop-filter: blur(3px);
 }
 
@@ -563,7 +565,7 @@ body.modulo-catalog [hidden] {
 body.modulo-catalog .catalog-modal-panel {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(310px, .92fr);
+  grid-template-columns: minmax(0, 1.08fr) minmax(310px, 0.92fr);
   gap: 30px;
   max-height: min(90vh, 860px);
   padding: 30px;
@@ -598,6 +600,10 @@ body.modulo-catalog .catalog-modal-thumbnails {
   flex-direction: column;
   align-content: start;
   gap: 9px;
+}
+
+body.modulo-catalog .catalog-modal-gallery.is-without-thumbnails {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 body.modulo-catalog .catalog-modal-thumb {
@@ -650,7 +656,7 @@ body.modulo-catalog .catalog-modal-image-button img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  transition: transform .22s ease;
+  transition: transform 0.22s ease;
 }
 
 body.modulo-catalog .catalog-modal-image-button.is-zoomed {
@@ -683,13 +689,17 @@ body.modulo-catalog .catalog-gallery-arrow {
   transform: translateY(-50%);
   border: 0;
   border-radius: 50%;
-  background: rgba(20, 34, 54, .84);
+  background: rgba(20, 34, 54, 0.84);
   color: #fff;
   cursor: pointer;
 }
 
-body.modulo-catalog .catalog-gallery-arrow.is-prev { left: 10px; }
-body.modulo-catalog .catalog-gallery-arrow.is-next { right: 10px; }
+body.modulo-catalog .catalog-gallery-arrow.is-prev {
+  left: 10px;
+}
+body.modulo-catalog .catalog-gallery-arrow.is-next {
+  right: 10px;
+}
 
 body.modulo-catalog .catalog-modal-details {
   align-self: center;
@@ -699,7 +709,7 @@ body.modulo-catalog .catalog-modal-details {
 body.modulo-catalog .catalog-modal-brand {
   margin: 0 0 4px;
   color: var(--catalog-muted);
-  font-size: .88rem;
+  font-size: 0.88rem;
 }
 
 body.modulo-catalog .catalog-modal-details h2 {
@@ -720,7 +730,7 @@ body.modulo-catalog .catalog-modal-price {
 body.modulo-catalog .catalog-modal-description {
   margin: 0 0 20px;
   color: #465570;
-  font-size: .94rem;
+  font-size: 0.94rem;
   line-height: 1.55;
 }
 
@@ -731,14 +741,14 @@ body.modulo-catalog .catalog-modal-attribute {
 body.modulo-catalog .catalog-modal-attribute h3 {
   margin: 0 0 6px;
   color: var(--catalog-ink);
-  font-size: .94rem;
+  font-size: 0.94rem;
   font-weight: 800;
 }
 
 body.modulo-catalog .catalog-modal-attribute p {
   margin: 0;
   color: #465570;
-  font-size: .92rem;
+  font-size: 0.92rem;
 }
 
 body.modulo-catalog .catalog-modal-actions {
@@ -760,6 +770,118 @@ body.modulo-catalog .catalog-modal-actions .btn {
 body.modulo-catalog .catalog-modal-actions > .btn {
   width: auto;
   min-width: 96px;
+}
+
+/* Jerarquía visual de la ficha servida desde el catálogo. */
+body.modulo-catalog .catalog-modal-brand span {
+  color: var(--catalog-blue);
+  font-weight: 800;
+}
+
+body.modulo-catalog .catalog-modal-product-label {
+  margin: 8px 0 0;
+  color: var(--catalog-muted);
+  font-size: 0.82rem;
+}
+
+body.modulo-catalog .catalog-modal-price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0 4px;
+}
+
+body.modulo-catalog .catalog-modal-price-row .catalog-modal-price {
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+}
+
+body.modulo-catalog .catalog-modal-original-price {
+  color: #7b8798;
+  font-weight: 700;
+}
+
+body.modulo-catalog .catalog-modal-discount {
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: #e8f0ff;
+  color: var(--catalog-blue);
+  font-weight: 850;
+}
+
+body.modulo-catalog .catalog-modal-stock {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 17px;
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+body.modulo-catalog .catalog-modal-stock.is-available {
+  color: #16834b;
+}
+body.modulo-catalog .catalog-modal-stock.is-unavailable {
+  color: #bd3440;
+}
+
+body.modulo-catalog .catalog-modal-description h3,
+body.modulo-catalog .catalog-modal-specs h3 {
+  margin: 0 0 9px;
+  color: var(--catalog-ink);
+  font-size: 1rem;
+  font-weight: 850;
+}
+
+body.modulo-catalog .catalog-modal-description p {
+  margin: 0;
+  color: #53627a;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+body.modulo-catalog .catalog-modal-specs {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #e6ebf2;
+}
+
+body.modulo-catalog .catalog-modal-specs dl {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+body.modulo-catalog .catalog-modal-specs dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eef1f5;
+}
+
+body.modulo-catalog .catalog-modal-specs dt {
+  color: #738098;
+}
+
+body.modulo-catalog .catalog-modal-specs dd {
+  margin: 0;
+  color: var(--catalog-ink);
+  font-weight: 750;
+  text-align: right;
+}
+
+body.modulo-catalog .catalog-modal-image-placeholder {
+  border: 0;
+  border-radius: 18px;
+  background: #edf4ff;
+  color: var(--catalog-blue);
+}
+
+body.modulo-catalog .catalog-modal-actions .btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
 }
 
 @media (max-width: 1100px) {

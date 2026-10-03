@@ -10,10 +10,13 @@ use PHPUnit\Framework\TestCase;
 
 final class SolicitudProductoTest extends TestCase
 {
-    public function testCategoryIdIsAcceptedAndStockIsNotPartOfProductEditing(): void
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testCategoryIdIsAcceptedAndStockIsNotPartOfProductEditing`.
+     */
+    public function testAceptaIdCategoriaYSinExistenciasEnEdicion(): void
     {
         $campos = [
-            'brand' => 'Test',
+            'brand' => 'Samsung',
             'name' => 'Cable',
             'category_id' => '3',
             'price' => '19.90',

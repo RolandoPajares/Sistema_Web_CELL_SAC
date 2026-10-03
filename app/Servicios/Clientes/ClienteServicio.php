@@ -12,17 +12,24 @@ final class ClienteServicio
     {
     }
 
+    /**
+     * Devuelve los registros disponibles que cumplen los filtros actuales.
+     */
     public function todos(): array
     {
         return $this->clientes->todos();
     }
 
-    public function buscar(int $id): ?array
+    public function buscar(int $idCliente): ?array
     {
-        return $this->clientes->buscar($id);
+        return $this->clientes->buscar($idCliente);
     }
 
-    /** @return array{total:int,minoristas:int,mayoristas:int,inactivos:int} */
+    /**
+     * Calcula un resumen consolidado de la información solicitada.
+     *
+     * @return array{total:int,minoristas:int,mayoristas:int,inactivos:int}
+     */
     public function resumen(): array
     {
         $clientes = $this->todos();
@@ -35,24 +42,85 @@ final class ClienteServicio
         ];
     }
 
-    public function guardar(array $datos, ?int $id = null): int
+    public function guardar(array $datos, ?int $idCliente = null): int
     {
-        if ($this->clientes->existeDocumento($datos['documento'], $id)) {
-            throw new \DomainException('Ya existe un cliente con ese documento.');
-        }
-        if ($id === null) {
-            return $this->clientes->crear($datos);
-        }
-        if ($this->clientes->buscar($id) === null) {
-            throw new \DomainException('El cliente no existe.');
-        }
-        $this->clientes->actualizar($id, $datos);
-
-        return $id;
+        return $this->guardarConSegmento($datos, $idCliente, null, false);
     }
 
-    public function desactivar(int $id): void
+    /**
+     * Guarda un cliente del segmento autorizado para el módulo de ventas.
+     *
+     * @param array<string, string> $datos
+     */
+    public function guardarParaSegmento(array $datos, string $segmento, ?int $idCliente = null): int
     {
-        $this->clientes->desactivar($id);
+        $this->validarSegmento($segmento);
+        if ($idCliente !== null) {
+            $cliente = $this->clientes->buscar($idCliente);
+            if ($cliente === null) {
+                throw new \DomainException('El cliente no existe.');
+            }
+            if (($cliente['tipo'] ?? null) !== $segmento) {
+                throw new \DomainException('El cliente no pertenece al segmento autorizado.');
+            }
+        }
+
+        $datos['tipo'] = $segmento;
+
+        return $this->guardarConSegmento($datos, $idCliente, $segmento, true);
+    }
+
+    /**
+     * Persiste los datos y aplica el segmento cuando la operación viene del panel de ventas.
+     *
+     * @param array<string, string> $datos
+     */
+    private function guardarConSegmento(
+        array $datos,
+        ?int $idCliente,
+        ?string $segmento,
+        bool $clienteComprobado
+    ): int {
+        if ($this->clientes->existeDocumento($datos['documento'], $idCliente)) {
+            throw new \DomainException('Ya existe un cliente con ese documento.');
+        }
+        if ($idCliente === null) {
+            return $this->clientes->crear($datos);
+        }
+        if (!$clienteComprobado && $this->clientes->buscar($idCliente) === null) {
+            throw new \DomainException('El cliente no existe.');
+        }
+        $this->clientes->actualizar($idCliente, $datos, $segmento);
+
+        return $idCliente;
+    }
+
+    /**
+     * Marca como inactivo el registro seleccionado, sin borrar su historial.
+     */
+    public function desactivar(int $idCliente): void
+    {
+        $this->clientes->desactivar($idCliente);
+    }
+
+    public function desactivarParaSegmento(int $idCliente, string $segmento): void
+    {
+        $this->validarSegmento($segmento);
+        $cliente = $this->clientes->buscar($idCliente);
+        if ($cliente === null) {
+            throw new \DomainException('El cliente no existe.');
+        }
+        if (($cliente['tipo'] ?? null) !== $segmento) {
+            throw new \DomainException('El cliente no pertenece al segmento autorizado.');
+        }
+
+        $this->clientes->desactivar($idCliente, $segmento);
+    }
+
+    private function validarSegmento(string $segmento): void
+    {
+        if (!in_array($segmento, ['minorista', 'mayorista'], true)) {
+            throw new \DomainException('El segmento de cliente no es válido.');
+        }
     }
 }

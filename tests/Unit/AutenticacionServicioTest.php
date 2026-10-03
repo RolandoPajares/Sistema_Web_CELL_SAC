@@ -12,18 +12,27 @@ use PHPUnit\Framework\TestCase;
 
 final class AutenticacionServicioTest extends TestCase
 {
+    /**
+     * Prepara el estado y los recursos necesarios para ejecutar la prueba.
+     */
     protected function setUp(): void
     {
         $_SESSION = [];
     }
 
-    public function testLoginRejectsInvalidPassword(): void
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testLoginRejectsInvalidPassword`.
+     */
+    public function testInicioDeSesionRechazaContrasenaInvalida(): void
     {
         $servicio = new AutenticacionServicio(new class implements RepositorioUsuarioInterfaz {
             public function estaDisponible(): bool
             {
                 return true;
             }
+            /**
+             * Busca el registro usando el criterio «correo».
+             */
             public function buscarPorCorreo(string $correo): ?array
             {
                 if ($correo === '') {
@@ -52,17 +61,22 @@ final class AutenticacionServicioTest extends TestCase
             }
         }, new GestorSesion());
 
-        $this->expectException(ExcepcionAutenticacion::class);
-        $servicio->iniciarSesion('admin@example.com', 'bad-password');
+        $this->expectException(ExcepcionAutenticacion::class);$servicio->iniciarSesion('admin@example.com', 'bad-password');
     }
 
-    public function testLoginRegeneratesAndStoresSafeUserData(): void
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testLoginRegeneratesAndStoresSafeUserData`.
+     */
+    public function testInicioDeSesionRegeneraLaSesionYGuardaDatosPermitidos(): void
     {
         $repositorio = new class implements RepositorioUsuarioInterfaz {
             public function estaDisponible(): bool
             {
                 return true;
             }
+            /**
+             * Busca el registro usando el criterio «correo».
+             */
             public function buscarPorCorreo(string $correo): ?array
             {
                 if ($correo === '') {
@@ -90,15 +104,17 @@ final class AutenticacionServicioTest extends TestCase
                 return 1;
             }
         };
-        $sesion = new GestorSesion();
-        $usuario = (new AutenticacionServicio($repositorio, $sesion))->iniciarSesion('customer@example.com', 'valid-password');
+        $sesion = new GestorSesion();$usuario = (new AutenticacionServicio($repositorio,$sesion))->iniciarSesion('customer@example.com', 'valid-password');
 
         self::assertSame(7, $usuario['id']);
         self::assertArrayNotHasKey('contrasena', $usuario);
-        self::assertSame($usuario, $sesion->obtener('user'));
+        self::assertSame($usuario,$sesion->obtener('user'));
     }
 
-    public function testRegisterHashesPasswordAndForcesCustomerRole(): void
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testRegisterHashesPasswordAndForcesCustomerRole`.
+     */
+    public function testRegistroGeneraHashYAsignaRolDeCliente(): void
     {
         $repositorio = new class implements RepositorioUsuarioInterfaz {
             /** @var array<string, mixed> */
@@ -113,7 +129,7 @@ final class AutenticacionServicioTest extends TestCase
             }
             public function crear(array $datos): int
             {
-                $this->creado = $datos;
+                $this->creado =$datos;
                 return 9;
             }
             public function todos(): array
@@ -125,19 +141,20 @@ final class AutenticacionServicioTest extends TestCase
                 return 0;
             }
         };
-        $servicio = new AutenticacionServicio($repositorio, new GestorSesion());
-        $servicio->registrar(['nombre' => 'Nuevo usuario', 'correo' => 'new@example.com', 'contrasena' => 'plain-password']);
+        $servicio = new AutenticacionServicio($repositorio, new GestorSesion());$servicio->registrar(['nombre' => 'Nuevo usuario', 'correo' => 'new@example.com', 'contrasena' => 'plain-password']);
 
         self::assertSame('cliente_minorista', $repositorio->creado['rol']);
         self::assertNotSame('plain-password', $repositorio->creado['contrasena']);
         self::assertTrue(password_verify('plain-password', (string) $repositorio->creado['contrasena']));
     }
 
-    public function testLogoutDestroysSessionData(): void
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testLogoutDestroysSessionData`.
+     */
+    public function testCerrarSesionDestruyeLosDatosDeSesion(): void
     {
         $sesion = new GestorSesion();
-        $sesion->guardar('user', ['id' => 1]);
-        $repositorio = new class implements RepositorioUsuarioInterfaz {
+        $sesion->guardar('user', ['id' => 1]);$repositorio = new class implements RepositorioUsuarioInterfaz {
             public function estaDisponible(): bool
             {
                 return true;
@@ -160,7 +177,7 @@ final class AutenticacionServicioTest extends TestCase
             }
         };
 
-        (new AutenticacionServicio($repositorio, $sesion))->cerrarSesion();
+        (new AutenticacionServicio($repositorio,$sesion))->cerrarSesion();
 
         self::assertFalse($sesion->tiene('user'));
     }

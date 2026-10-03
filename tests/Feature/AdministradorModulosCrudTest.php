@@ -13,6 +13,9 @@ use App\Servicios\Compra\ProcesoCompraServicio;
 use PDO;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Pruebas de integración de extremo a extremo para los módulos CRUD, inventario y pedidos del administrador.
+ */
 final class AdministradorModulosCrudTest extends TestCase
 {
     private Conexion $conexion;
@@ -20,103 +23,220 @@ final class AdministradorModulosCrudTest extends TestCase
     private Enrutador $enrutador;
     private string $csrf;
 
+    /**
+     * Prepara el estado y los recursos necesarios para ejecutar la prueba.
+     */
     protected function setUp(): void
     {
         $this->conexion = Aplicacion::obtener(Conexion::class);
+        
         if ($this->conexion->pdo() === null) {
             self::markTestSkipped('La prueba de módulos administrativos requiere MySQL.');
         }
+        
         $this->pdo = $this->conexion->pdoObligatorio();
         $this->pdo->beginTransaction();
-        $_SESSION = ['user' => ['id' => 1, 'nombre' => 'Admin Test', 'rol' => 'administrador']];
+        
+        $_SESSION = [
+            'user' => [
+                'id' => 1, 
+                'nombre' => 'Admin Test', 
+                'rol' => 'administrador'
+            ]
+        ];
+        
         $this->csrf = Aplicacion::obtener(GestorTokenCsrf::class)->token();
         $this->enrutador = Aplicacion::obtener(Enrutador::class);
     }
 
+    /**
+     * Libera los recursos utilizados por la prueba y restaura el estado.
+     */
     protected function tearDown(): void
     {
         if ($this->pdo->inTransaction()) {
             $this->pdo->rollBack();
         }
+        
         $_SESSION = [];
     }
 
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba testCrudEInventarioYPedidosFuncionanDeExtremoAExtremo.
+     */
     public function testCrudEInventarioYPedidosFuncionanDeExtremoAExtremo(): void
     {
         $sufijo = bin2hex(random_bytes(4));
 
-        $this->post('/admin/categories', ['nombre' => 'Tablets ' . $sufijo, 'descripcion' => 'Categoría de prueba']);
+        // Gestión de categorías
+        $this->enviarPost('/admin/categories', [
+            'nombre' => 'Tablets ' . $sufijo, 
+            'descripcion' => 'Categoría de prueba'
+        ]);
+        
         $categoria = $this->fila('SELECT * FROM categorias WHERE nombre = :valor', 'Tablets ' . $sufijo);
         self::assertNotNull($categoria);
-        $categoriaId = (int) $categoria['id'];
-        $this->post('/admin/categories/' . $categoriaId, ['nombre' => 'Tablets Pro ' . $sufijo, 'descripcion' => 'Actualizada']);
-
-        $this->post('/admin/products', [
-            'brand' => 'Marca Test', 'name' => 'Tablet ' . $sufijo, 'category_id' => (string) $categoriaId,
-            'price' => '799.90', 'storage' => '128 GB', 'color' => 'Negro', 'badge' => '', 'description' => 'Prueba',
+        
+        $idCategoria = (int) $categoria['id'];
+        
+        $this->enviarPost('/admin/categories/' . $idCategoria, [
+            'nombre' => 'Tablets Pro ' . $sufijo, 
+            'descripcion' => 'Actualizada'
         ]);
+
+        // Gestión de productos
+        $this->enviarPost('/admin/products', [
+            'brand' => 'Samsung',
+            'name' => 'Tablet ' . $sufijo, 
+            'category_id' => (string) $idCategoria,
+            'price' => '799.90', 
+            'storage' => '128 GB', 
+            'color' => 'Negro', 
+            'badge' => '', 
+            'description' => 'Prueba',
+        ]);
+        
         $producto = $this->fila('SELECT * FROM productos WHERE nombre = :valor', 'Tablet ' . $sufijo);
         self::assertNotNull($producto);
-        self::assertSame($categoriaId, (int) $producto['categoria_id']);
+        self::assertSame($idCategoria, (int) $producto['categoria_id']);
         self::assertSame('Tablets Pro ' . $sufijo, $producto['categoria']);
         self::assertSame(0, (int) $producto['existencias']);
-        $productoId = (int) $producto['id'];
+        
+        $idProducto = (int) $producto['id'];
 
-        $this->post('/admin/inventory', ['producto_id' => (string) $productoId, 'tipo_movimiento' => 'entrada', 'cantidad' => '10', 'notas' => 'Ingreso de prueba']);
-        $this->post('/admin/inventory', ['producto_id' => (string) $productoId, 'tipo_movimiento' => 'salida', 'cantidad' => '3', 'notas' => 'Salida de prueba']);
-        $this->post('/admin/inventory', ['producto_id' => (string) $productoId, 'tipo_movimiento' => 'ajuste', 'cantidad' => '4', 'notas' => 'Ajuste de prueba']);
-        self::assertSame(4, (int) $this->valor('SELECT existencias FROM productos WHERE id = :id', $productoId));
-        self::assertSame(3, (int) $this->valor('SELECT COUNT(*) FROM movimientos_inventario WHERE producto_id = :id', $productoId));
+        // Movimientos de inventario
+        $this->enviarPost('/admin/inventory', [
+            'producto_id' => (string) $idProducto, 
+            'tipo_movimiento' => 'entrada', 
+            'cantidad' => '10', 
+            'notas' => 'Ingreso de prueba'
+        ]);
+        
+        $this->enviarPost('/admin/inventory', [
+            'producto_id' => (string) $idProducto, 
+            'tipo_movimiento' => 'salida', 
+            'cantidad' => '3', 
+            'notas' => 'Salida de prueba'
+        ]);
+        
+        $this->enviarPost('/admin/inventory', [
+            'producto_id' => (string) $idProducto, 
+            'tipo_movimiento' => 'ajuste', 
+            'cantidad' => '4', 
+            'notas' => 'Ajuste de prueba'
+        ]);
+        
+        self::assertSame(4, (int) $this->valor('SELECT existencias FROM productos WHERE id = :id', $idProducto));
+        self::assertSame(3, (int) $this->valor('SELECT COUNT(*) FROM movimientos_inventario WHERE producto_id = :id', $idProducto));
 
+        // Gestión de proveedores
         $ruc = '20' . str_pad((string) random_int(0, 999999999), 9, '0', STR_PAD_LEFT);
-        $this->post('/admin/suppliers', ['nombre' => 'Proveedor ' . $sufijo, 'ruc' => $ruc, 'correo' => $sufijo . '@proveedor.test', 'telefono' => '987654321', 'ciudad' => 'Lima']);
+        
+        $this->enviarPost('/admin/suppliers', [
+            'nombre' => 'Proveedor ' . $sufijo, 
+            'ruc' => $ruc, 
+            'correo' => $sufijo . '@proveedor.test', 
+            'telefono' => '987654321', 
+            'ciudad' => 'Lima'
+        ]);
+        
         $proveedor = $this->fila('SELECT * FROM proveedores WHERE ruc = :valor', $ruc);
         self::assertNotNull($proveedor);
-        $this->post('/admin/suppliers/' . $proveedor['id'], ['nombre' => 'Proveedor actualizado ' . $sufijo, 'ruc' => $ruc, 'correo' => $sufijo . '@proveedor.test', 'telefono' => '987654320', 'ciudad' => 'Bagua']);
-        $this->post('/admin/suppliers/' . $proveedor['id'] . '/deactivate');
+        
+        $this->enviarPost('/admin/suppliers/' . $proveedor['id'], [
+            'nombre' => 'Proveedor actualizado ' . $sufijo, 
+            'ruc' => $ruc, 
+            'correo' => $sufijo . '@proveedor.test', 
+            'telefono' => '987654320', 
+            'ciudad' => 'Bagua'
+        ]);
+        
+        $this->enviarPost('/admin/suppliers/' . $proveedor['id'] . '/deactivate');
         self::assertSame(0, (int) $this->valor('SELECT activo FROM proveedores WHERE id = :id', (int) $proveedor['id']));
 
+        // Gestión de clientes
         $documento = str_pad((string) random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
-        $this->post('/admin/customers', ['tipo' => 'minorista', 'documento' => $documento, 'empresa' => '', 'contacto' => 'Cliente ' . $sufijo, 'correo' => $sufijo . '@cliente.test', 'telefono' => '912345678', 'ciudad' => 'Bagua']);
+        
+        $this->enviarPost('/admin/customers', [
+            'tipo' => 'minorista', 
+            'documento' => $documento, 
+            'empresa' => '', 
+            'contacto' => 'Cliente ' . $sufijo, 
+            'correo' => $sufijo . '@cliente.test', 
+            'telefono' => '912345678', 
+            'ciudad' => 'Bagua'
+        ]);
+        
         $cliente = $this->fila('SELECT * FROM clientes WHERE documento = :valor', $documento);
         self::assertNotNull($cliente);
-        $this->post('/admin/customers/' . $cliente['id'], ['tipo' => 'mayorista', 'documento' => $documento, 'empresa' => 'Empresa ' . $sufijo, 'contacto' => 'Cliente ' . $sufijo, 'correo' => $sufijo . '@cliente.test', 'telefono' => '912345678', 'ciudad' => 'Lima']);
-        $this->post('/admin/customers/' . $cliente['id'] . '/deactivate');
+        
+        $this->enviarPost('/admin/customers/' . $cliente['id'], [
+            'tipo' => 'mayorista', 
+            'documento' => $documento, 
+            'empresa' => 'Empresa ' . $sufijo, 
+            'contacto' => 'Cliente ' . $sufijo, 
+            'correo' => $sufijo . '@cliente.test', 
+            'telefono' => '912345678', 
+            'ciudad' => 'Lima'
+        ]);
+        
+        $this->enviarPost('/admin/customers/' . $cliente['id'] . '/deactivate');
         self::assertSame(0, (int) $this->valor('SELECT activo FROM clientes WHERE id = :id', (int) $cliente['id']));
 
-        $_SESSION['cart'] = [$productoId => 1];
-        $pedidoId = Aplicacion::obtener(ProcesoCompraServicio::class)->procesarCompra(6);
-        self::assertSame(3, (int) $this->valor('SELECT existencias FROM productos WHERE id = :id', $productoId));
-        self::assertSame(4, (int) $this->valor('SELECT COUNT(*) FROM movimientos_inventario WHERE producto_id = :id', $productoId));
-        $detalle = $this->enrutador->despachar(new Solicitud('GET', '/admin/orders/' . $pedidoId, [], [], []));
+        // Procesamiento de pedidos y estados
+        $_SESSION['cart'] = [$idProducto => 1];
+        
+        $idPedido = Aplicacion::obtener(ProcesoCompraServicio::class)->procesarCompra(6);
+        self::assertSame(3, (int) $this->valor('SELECT existencias FROM productos WHERE id = :id', $idProducto));
+        self::assertSame(4, (int) $this->valor('SELECT COUNT(*) FROM movimientos_inventario WHERE producto_id = :id', $idProducto));
+        
+        $detalle = $this->enrutador->despachar(new Solicitud('GET', '/admin/orders/' . $idPedido, [], [], []));
         self::assertSame(200, $detalle->estado());
         self::assertStringContainsString('Tablet ' . $sufijo, $detalle->contenido());
-        $this->post('/admin/orders/' . $pedidoId . '/status', ['estado' => 'En proceso']);
-        self::assertSame('En proceso', $this->valor('SELECT estado FROM pedidos WHERE id = :id', $pedidoId));
+        
+        $this->enviarPost('/admin/orders/' . $idPedido . '/status', [
+            'estado' => 'En proceso'
+        ]);
+        
+        self::assertSame('En proceso', $this->valor('SELECT estado FROM pedidos WHERE id = :id', $idPedido));
 
-        $this->post('/admin/products/' . $productoId . '/deactivate');
-        self::assertSame(0, (int) $this->valor('SELECT activo FROM productos WHERE id = :id', $productoId));
-        $this->post('/admin/categories/' . $categoriaId . '/deactivate');
-        self::assertSame(0, (int) $this->valor('SELECT activo FROM categorias WHERE id = :id', $categoriaId));
+        // Desactivación final de producto y categoría
+        $this->enviarPost('/admin/products/' . $idProducto . '/deactivate');
+        self::assertSame(0, (int) $this->valor('SELECT activo FROM productos WHERE id = :id', $idProducto));
+        
+        $this->enviarPost('/admin/categories/' . $idCategoria . '/deactivate');
+        self::assertSame(0, (int) $this->valor('SELECT activo FROM categorias WHERE id = :id', $idCategoria));
     }
 
-    private function post(string $ruta, array $datos = []): void
+    // Envía una petición POST simulada a la ruta indicada.
+    private function enviarPost(string $ruta, array $datos = []): void
     {
-        $respuesta = $this->enrutador->despachar(new Solicitud('POST', $ruta, [], ['csrf' => $this->csrf] + $datos, ['REMOTE_ADDR' => '127.0.0.1']));
+        $respuesta = $this->enrutador->despachar(new Solicitud(
+            'POST', 
+            $ruta, 
+            [], 
+            ['csrf' => $this->csrf] + $datos, 
+            ['REMOTE_ADDR' => '127.0.0.1']
+        ));
+        
         self::assertSame(302, $respuesta->estado(), $ruta);
     }
 
+    // Obtiene un registro mediante la consulta SQL y el valor indicados.
     private function fila(string $sql, string $valor): ?array
     {
         $sentencia = $this->pdo->prepare($sql);
         $sentencia->execute([':valor' => $valor]);
+        
         return $sentencia->fetch() ?: null;
     }
 
-    private function valor(string $sql, int $id): mixed
+    // Obtiene un valor escalar mediante la consulta SQL indicada.
+    private function valor(string $sql, int $idRegistro): mixed
     {
         $sentencia = $this->pdo->prepare($sql);
-        $sentencia->execute([':id' => $id]);
+        $sentencia->execute([':id' => $idRegistro]);
+        
         return $sentencia->fetchColumn();
     }
 }

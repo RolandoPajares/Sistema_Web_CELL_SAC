@@ -9,7 +9,10 @@ final class Entorno
     /** @var array<string, string> */
     private static array $valores = [];
 
-    public static function load(string $ruta): void
+    /**
+     * Carga las variables de entorno desde el archivo indicado sin reemplazar valores existentes.
+     */
+    public static function cargarDesdeArchivo(string $ruta): void
     {
         if (!is_file($ruta)) {
             return;
@@ -48,6 +51,9 @@ final class Entorno
         }
     }
 
+    /**
+     * Devuelve un valor de entorno o el valor predeterminado indicado.
+     */
     public static function obtener(string $clave, ?string $predeterminado = null): ?string
     {
         $valor = self::$valores[$clave] ?? $_ENV[$clave] ?? getenv($clave);
@@ -55,7 +61,10 @@ final class Entorno
         return $valor === false ? $predeterminado : $valor;
     }
 
-    public static function bool(string $clave, bool $predeterminado = false): bool
+    /**
+     * Interpreta el valor de configuración recibido como un valor booleano.
+     */
+    public static function leerBooleano(string $clave, bool $predeterminado = false): bool
     {
         $valor = self::obtener($clave);
 

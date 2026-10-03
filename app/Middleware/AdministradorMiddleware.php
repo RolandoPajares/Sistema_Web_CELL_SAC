@@ -10,14 +10,17 @@ use App\Soporte\Autorizacion\AccesoRol;
 
 final class AdministradorMiddleware
 {
+    /**
+     * Restringe el acceso al módulo a usuarios con rol de administrador.
+     */
     public function manejar(Solicitud $solicitud, callable $siguiente): Respuesta
     {
-        $usuario = current_user();
+        $usuario = usuario_actual();
         if (!$usuario) {
-            return redirect('login');
+            return redirigir('login');
         }
-        if (AccesoRol::normalize((string) ($usuario['rol'] ?? '')) !== 'administrador') {
-            return response('No tienes autorización para acceder a este módulo.', 403);
+        if (AccesoRol::normalizarRol((string) ($usuario['rol'] ?? '')) !== 'administrador') {
+            return respuesta_http('No tienes autorización para acceder a este módulo.', 403);
         }
 
         return $siguiente($solicitud);

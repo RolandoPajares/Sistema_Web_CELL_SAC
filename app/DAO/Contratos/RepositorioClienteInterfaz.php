@@ -6,19 +6,37 @@ namespace App\DAO\Contratos;
 
 interface RepositorioClienteInterfaz
 {
-    /** @return array<int, array<string, mixed>> */
+    /**
+     * Devuelve todos los clientes registrados.
+     * @return array<int, array<string, mixed>>
+     */
     public function todos(): array;
 
-    /** @return array<string, mixed>|null */
-    public function buscar(int $id): ?array;
+    /**
+     * Busca un cliente por su identificador.
+     * @return array<string, mixed>|null
+     */
+    public function buscar(int $idCliente): ?array;
 
+    /**
+     * Comprueba si otro cliente ya utiliza el documento indicado.
+     */
     public function existeDocumento(string $documento, ?int $idExcluido = null): bool;
 
-    /** @param array<string, string> $datos */
+    /**
+     * Crea un cliente con los datos validados por el servicio.
+     * @param array<string, string> $datos
+     */
     public function crear(array $datos): int;
 
-    /** @param array<string, string> $datos */
-    public function actualizar(int $id, array $datos): void;
+    /**
+     * Actualiza los datos del cliente indicado.
+     * @param array<string, string> $datos
+     */
+    public function actualizar(int $idCliente, array $datos, ?string $segmentoPermitido = null): void;
 
-    public function desactivar(int $id): void;
+    /**
+     * Marca como inactivo el registro seleccionado, sin borrar su historial.
+     */
+    public function desactivar(int $idCliente, ?string $segmentoPermitido = null): void;
 }

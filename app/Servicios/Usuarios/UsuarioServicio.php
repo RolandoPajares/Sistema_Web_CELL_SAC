@@ -12,18 +12,28 @@ final class UsuarioServicio
     {
     }
 
-    /** @return array<int, array<string, mixed>> */
+    /**
+     * Devuelve los registros disponibles que cumplen los filtros actuales.
+     * @return array<int, array<string, mixed>>
+     */
     public function todos(): array
     {
         return $this->usuarios->todos();
     }
 
+    /**
+     * Cuenta los elementos que cumplen las condiciones recibidas.
+     */
     public function contar(): int
     {
         return $this->usuarios->contar();
     }
 
-    /** @return array{total:int,administradores:int,otros_roles:int,por_rol:array<string,int>} */
+    /**
+     * Calcula un resumen consolidado de la información solicitada.
+     *
+     * @return array{total:int,administradores:int,otros_roles:int,por_rol:array<string,int>}
+     */
     public function resumen(): array
     {
         $porRol = [];

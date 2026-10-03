@@ -24,16 +24,46 @@ final class CuentaAdministradorController
     ) {
     }
 
+    /**
+     * Prepara los datos de la página y muestra el listado principal del módulo.
+     */
     public function indice(Solicitud $solicitud): Respuesta
     {
+        $usuarioCuenta = $this->cuenta->perfil($this->idActual());
+        $nombreActual = trim((string) ($usuarioCuenta['nombre'] ?? ''));
+        $iniciales = '';
+
+        foreach (preg_split('/\s+/u', $nombreActual, -1, PREG_SPLIT_NO_EMPTY) ?: [] as $parte) {
+            $iniciales .= mb_strtoupper(mb_substr($parte, 0, 1));
+            if (mb_strlen($iniciales) >= 2) {
+                break;
+            }
+        }
+
+        $rolActual = ucfirst(str_replace('_', ' ', (string) ($usuarioCuenta['rol'] ?? '')));
+        $fechaRegistro = strtotime((string) ($usuarioCuenta['creado_en'] ?? ''));
+        $fechaRegistroVista = $fechaRegistro !== false ? date('d/m/Y', $fechaRegistro) : '';
+
         return $this->vista->renderizar('roles.internos.administrador.cuenta.indice', [
             'tituloPagina' => 'Mi cuenta',
-            'usuarioCuenta' => $this->cuenta->perfil($this->idActual()),
+            'usuarioCuenta' => $usuarioCuenta,
+            'nombreActual' => $nombreActual,
+            'iniciales' => $iniciales,
+            'atributoInicialesOculto' => $iniciales !== '' ? '' : 'hidden',
+            'atributoIconoAvatarOculto' => $iniciales === '' ? '' : 'hidden',
+            'rolActual' => $rolActual,
+            'atributoRolOculto' => $rolActual !== '' ? '' : 'hidden',
+            'fechaRegistroVista' => $fechaRegistroVista,
+            'atributoFechaRegistroOculto' => $fechaRegistroVista !== '' ? '' : 'hidden',
+            'atributoResumenCuentaOculto' => $rolActual !== '' || $fechaRegistroVista !== '' ? '' : 'hidden',
             'error' => $this->mensajes->extraer('error'),
             'exito' => $this->mensajes->extraer('success'),
         ], 'administrador');
     }
 
+    /**
+     * Actualiza la información relacionada con «perfil».
+     */
     public function actualizarPerfil(Solicitud $solicitud): Respuesta
     {
         try {
@@ -56,9 +86,12 @@ final class CuentaAdministradorController
             $this->mensajes->error('No se pudo actualizar la información de la cuenta.');
         }
 
-        return redirect('admin/account');
+        return redirigir('admin/account');
     }
 
+    /**
+     * Valida la solicitud y actualiza la contraseña de la cuenta.
+     */
     public function cambiarContrasena(Solicitud $solicitud): Respuesta
     {
         try {
@@ -77,16 +110,19 @@ final class CuentaAdministradorController
             $this->mensajes->error('No se pudo actualizar la contraseña.');
         }
 
-        return redirect('admin/account');
+        return redirigir('admin/account');
     }
 
+    /**
+     * Obtiene el identificador asociado al usuario o contexto actual.
+     */
     private function idActual(): int
     {
-        $id = filter_var(current_user()['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        if ($id === false) {
+        $idUsuario = filter_var(usuario_actual()['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if ($idUsuario === false) {
             throw new \RuntimeException('La sesión del administrador no es válida.');
         }
 
-        return (int) $id;
+        return (int) $idUsuario;
     }
 }

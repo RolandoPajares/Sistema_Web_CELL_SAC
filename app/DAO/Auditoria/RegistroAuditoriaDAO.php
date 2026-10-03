@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\DAO\Auditoria;
 
+use App\DAO\Contratos\RepositorioAuditoriaInterfaz;
 use App\Nucleo\BaseDatos\Conexion;
 
-final class RegistroAuditoriaDAO
+final class RegistroAuditoriaDAO implements RepositorioAuditoriaInterfaz
 {
     public function __construct(private Conexion $conexion)
     {
     }
 
     /**
+     * Guarda una acción auditada con los valores anteriores y nuevos.
      * @param array<string, mixed>|null $valoresAnteriores
      * @param array<string, mixed>|null $valoresNuevos
      */
@@ -40,8 +42,11 @@ final class RegistroAuditoriaDAO
         ]);
     }
 
-    /** @return array<int, array<string, mixed>> */
-    public function listar(string $desde, string $hasta, string $entidad = '', int $usuarioId = 0): array
+    /**
+     * Devuelve los registros disponibles que cumplen los filtros actuales.
+     * @return array<int, array<string, mixed>>
+     */
+    public function listar(string $desde, string $hasta, string $entidad = '', int $idUsuario = 0): array
     {
         $condiciones = ['DATE(a.creado_en) BETWEEN :desde AND :hasta'];
         $parametros = [':desde' => $desde, ':hasta' => $hasta];
@@ -49,9 +54,9 @@ final class RegistroAuditoriaDAO
             $condiciones[] = 'a.entidad = :entidad';
             $parametros[':entidad'] = $entidad;
         }
-        if ($usuarioId > 0) {
+        if ($idUsuario > 0) {
             $condiciones[] = 'a.usuario_id = :usuario';
-            $parametros[':usuario'] = $usuarioId;
+            $parametros[':usuario'] = $idUsuario;
         }
         $sentencia = $this->conexion->pdoObligatorio()->prepare(
             'SELECT a.id, a.creado_en, COALESCE(u.nombre, "Sistema") AS usuario,
@@ -67,7 +72,11 @@ final class RegistroAuditoriaDAO
         return $sentencia->fetchAll();
     }
 
-    /** @return array{hoy:int,total:int,usuarios:int,entidades:int} */
+    /**
+     * Calcula un resumen consolidado de la información solicitada.
+     *
+     * @return array{hoy:int,total:int,usuarios:int,entidades:int}
+     */
     public function resumen(): array
     {
         $fila = $this->conexion->pdoObligatorio()->query(
@@ -86,7 +95,11 @@ final class RegistroAuditoriaDAO
         ];
     }
 
-    /** @return array<int, array{entidad:string,total:int}> */
+    /**
+     * Agrupa los registros de actividad por entidad para el reporte.
+     *
+     * @return array<int, array{entidad:string,total:int}>
+     */
     public function actividadPorEntidad(): array
     {
         return $this->conexion->pdoObligatorio()->query(

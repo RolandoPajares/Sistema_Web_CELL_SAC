@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace App\Servicios\Usuarios;
 
-use App\DAO\Usuarios\UsuarioDAO;
+use App\DAO\Contratos\RepositorioCuentaAdministradorInterfaz;
 
 final class CuentaAdministradorServicio
 {
-    public function __construct(private UsuarioDAO $usuarios)
+    public function __construct(private RepositorioCuentaAdministradorInterfaz $usuarios)
     {
     }
 
-    /** @return array<string, mixed> */
-    public function perfil(int $id): array
+    /**
+     * Obtiene los datos del perfil relacionado con la solicitud.
+     *
+     * @return array<string, mixed>
+     */
+    public function perfil(int $idUsuario): array
     {
-        $usuario = $id > 0 ? $this->usuarios->buscarPorId($id) : null;
+        $usuario = $idUsuario > 0 ? $this->usuarios->buscarPorId($idUsuario) : null;
         if ($usuario === null || ($usuario['rol'] ?? '') !== 'administrador') {
             throw new \RuntimeException('No se encontró la cuenta del administrador autenticado.');
         }
@@ -23,8 +27,11 @@ final class CuentaAdministradorServicio
         return $usuario;
     }
 
-    /** @return array<string, mixed> */
-    public function actualizarPerfil(int $id, mixed $nombreEntrada, mixed $correoEntrada): array
+    /**
+     * Actualiza la información relacionada con «perfil».
+     * @return array<string, mixed>
+     */
+    public function actualizarPerfil(int $idUsuario, mixed $nombreEntrada, mixed $correoEntrada): array
     {
         $nombre = is_scalar($nombreEntrada) ? trim((string) $nombreEntrada) : '';
         $correo = is_scalar($correoEntrada) ? trim((string) $correoEntrada) : '';
@@ -35,24 +42,28 @@ final class CuentaAdministradorServicio
         if ($correo === '' || mb_strlen($correo) > 160 || filter_var($correo, FILTER_VALIDATE_EMAIL) === false) {
             throw new \InvalidArgumentException('Ingresa un correo electrónico válido de hasta 160 caracteres.');
         }
-        $this->perfil($id);
-        if ($this->usuarios->correoEnUso($correo, $id)) {
+        $this->perfil($idUsuario);
+        if ($this->usuarios->correoEnUso($correo, $idUsuario)) {
             throw new \InvalidArgumentException('Ese correo ya está en uso por otra cuenta.');
         }
 
-        $this->usuarios->actualizarPerfil($id, $nombre, $correo);
+        $this->usuarios->actualizarPerfil($idUsuario, $nombre, $correo);
 
-        return $this->perfil($id);
+        return $this->perfil($idUsuario);
     }
 
-    public function cambiarContrasena(int $id, mixed $actualEntrada, mixed $nuevaEntrada, mixed $confirmacionEntrada): void
+    /**
+     * Valida la solicitud y actualiza la contraseña de la cuenta.
+     */
+    public function cambiarContrasena(int $idUsuario, mixed $actualEntrada, mixed $nuevaEntrada, mixed $confirmacionEntrada): void
     {
         $actual = is_string($actualEntrada) ? $actualEntrada : '';
         $nueva = is_string($nuevaEntrada) ? $nuevaEntrada : '';
         $confirmacion = is_string($confirmacionEntrada) ? $confirmacionEntrada : '';
-        $this->perfil($id);
+        $this->perfil($idUsuario);
 
-        $hashActual = $this->usuarios->hashContrasena($id);
+        $hashActual = $this->usuarios->hashContrasena($idUsuario);
+        // password_verify compara la contraseña actual con el hash almacenado.
         if ($hashActual === null || !password_verify($actual, $hashActual)) {
             throw new \InvalidArgumentException('La contraseña actual no es correcta.');
         }
@@ -63,6 +74,7 @@ final class CuentaAdministradorServicio
             throw new \InvalidArgumentException('La confirmación no coincide con la nueva contraseña.');
         }
 
-        $this->usuarios->actualizarContrasena($id, password_hash($nueva, PASSWORD_DEFAULT));
+        // password_hash genera el hash que se almacenará para la nueva contraseña.
+        $this->usuarios->actualizarContrasena($idUsuario, password_hash($nueva, PASSWORD_DEFAULT));
     }
 }

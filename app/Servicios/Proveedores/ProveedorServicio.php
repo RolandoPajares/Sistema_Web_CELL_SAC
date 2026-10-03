@@ -12,17 +12,24 @@ final class ProveedorServicio
     {
     }
 
+    /**
+     * Devuelve los registros disponibles que cumplen los filtros actuales.
+     */
     public function todos(): array
     {
         return $this->proveedores->todos();
     }
 
-    public function buscar(int $id): ?array
+    public function buscar(int $idProveedor): ?array
     {
-        return $this->proveedores->buscar($id);
+        return $this->proveedores->buscar($idProveedor);
     }
 
-    /** @return array{total:int,activos:int,inactivos:int,ciudades:int} */
+    /**
+     * Calcula un resumen consolidado de la información solicitada.
+     *
+     * @return array{total:int,activos:int,inactivos:int,ciudades:int}
+     */
     public function resumen(): array
     {
         $proveedores = $this->todos();
@@ -39,24 +46,27 @@ final class ProveedorServicio
         ];
     }
 
-    public function guardar(array $datos, ?int $id = null): int
+    public function guardar(array $datos, ?int $idProveedor = null): int
     {
-        if ($this->proveedores->existeRuc($datos['ruc'], $id)) {
+        if ($this->proveedores->existeRuc($datos['ruc'], $idProveedor)) {
             throw new \DomainException('Ya existe un proveedor con ese RUC.');
         }
-        if ($id === null) {
+        if ($idProveedor === null) {
             return $this->proveedores->crear($datos);
         }
-        if ($this->proveedores->buscar($id) === null) {
+        if ($this->proveedores->buscar($idProveedor) === null) {
             throw new \DomainException('El proveedor no existe.');
         }
-        $this->proveedores->actualizar($id, $datos);
+        $this->proveedores->actualizar($idProveedor, $datos);
 
-        return $id;
+        return $idProveedor;
     }
 
-    public function desactivar(int $id): void
+    /**
+     * Marca como inactivo el registro seleccionado, sin borrar su historial.
+     */
+    public function desactivar(int $idProveedor): void
     {
-        $this->proveedores->desactivar($id);
+        $this->proveedores->desactivar($idProveedor);
     }
 }

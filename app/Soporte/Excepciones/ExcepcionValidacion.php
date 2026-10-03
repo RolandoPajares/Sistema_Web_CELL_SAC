@@ -6,13 +6,19 @@ namespace App\Soporte\Excepciones;
 
 final class ExcepcionValidacion extends \RuntimeException
 {
-    /** @param array<string, string> $errores */
+    /**
+     * @param array<string, string> $errores
+     */
     public function __construct(private array $errores)
     {
         parent::__construct('Los datos proporcionados no son válidos.');
     }
 
-    /** @return array<string, string> */
+    /**
+     * Devuelve los errores de validación en un formato listo para presentar.
+     *
+     * @return array<string, string>
+     */
     public function errores(): array
     {
         return $this->errores;

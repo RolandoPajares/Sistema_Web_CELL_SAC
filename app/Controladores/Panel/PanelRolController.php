@@ -4,60 +4,95 @@ declare(strict_types=1);
 
 namespace App\Controladores\Panel;
 
-use App\DAO\Panel\ModuloDAO;
 use App\Nucleo\Http\Solicitud;
 use App\Validacion\Panel\SolicitudModulo;
 use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Presentacion\Vista;
+use App\Nucleo\Presentacion\Panel\PresentadorPanelRol;
 use App\Soporte\Registros\RegistradorArchivo;
 use App\Soporte\Mensajes\MensajeFlashServicio;
 use App\Soporte\Autorizacion\AccesoRol;
 use App\Soporte\Excepciones\ExcepcionValidacion;
 use App\Soporte\Presentacion\CatalogoInterfaces;
+use App\Soporte\Presentacion\DatosDemostracionPanel;
+use App\Validacion\Inventario\SolicitudMovimientoInventario;
+use App\Servicios\Panel\PanelModuloServicio;
 
 final class PanelRolController
 {
     public function __construct(
         private Vista $vista,
-        private ModuloDAO $modulos,
+        private PanelModuloServicio $panel,
         private MensajeFlashServicio $mensajes,
-        private RegistradorArchivo $registro,
+        private RegistradorArchivo $registro
     ) {
     }
 
+    /**
+     * Prepara los datos que se muestran en el tablero del módulo.
+     */
     public function tablero(Solicitud $solicitud): Respuesta
     {
-        $usuario = current_user() ?? [];
-        $resumen = $this->consultaSegura(fn (): array => $this->modulos->resumen(), []);
-        $rol = AccesoRol::normalize((string) ($usuario['rol'] ?? ''));
+        $usuario = usuario_actual() ?? [];
+        $rol = AccesoRol::normalizarRol((string) ($usuario['rol'] ?? ''));
 
         if ($rol === 'administrador') {
-            return redirect('admin');
+            return redirigir('admin');
         }
 
         if (str_starts_with($rol, 'cliente_')) {
-            return $this->vista->renderizar('modulos.cuenta.panel', [
+            $resumen = [];
+            $datosCuenta = array_merge(
+                PresentadorPanelRol::prepararDatosCuenta($usuario, $rol), [
                 'tituloPagina' => 'Mi cuenta',
                 'modulo' => 'dashboard',
                 'interfaz' => CatalogoInterfaces::tablero($rol, $resumen),
-                'usuarioCuenta' => $usuario,
+                'pedidosCuenta' => PresentadorPanelRol::presentarPedidosCuenta(
+                    array_slice(DatosDemostracionPanel::pedidosCuenta(), 0, 3)
+                ),
             ]);
+
+            return $this->renderizarPanelCuenta('dashboard', $datosCuenta);
         }
 
+        $resumen = $this->panel->resumen();
+
         return $this->vista->renderizar('modulos.panel.tablero', [
-            'tituloPagina' => 'Panel ' . AccesoRol::label((string) ($usuario['rol'] ?? '')),
+            'tituloPagina' => 'Panel ' . AccesoRol::etiqueta((string) ($usuario['rol'] ?? '')),
             'resumen' => $resumen,
             'interfaz' => CatalogoInterfaces::tablero($rol, $resumen),
-            'navegacionRol' => AccesoRol::navigation((string) ($usuario['rol'] ?? '')),
         ], 'interno');
     }
 
+    /**
+     * Prepara los datos de la página y muestra el listado principal del módulo.
+     */
     public function indice(Solicitud $solicitud): Respuesta
     {
         $modulo = (string) $solicitud->parametroRuta('module');
-        $configuracion = $this->configuracion($modulo);
-        $rol = AccesoRol::normalize((string) (current_user()['rol'] ?? ''));
-        $registros = $this->consultaSegura(fn (): array => $this->modulos->listar($modulo), []);
+        $configuracion = $this->panel->configuracion($modulo);
+        $rol = AccesoRol::normalizarRol((string) (usuario_actual()['rol'] ?? ''));
+        $interfaz = CatalogoInterfaces::modulo($modulo, $rol);
+        $datosDemostracion = DatosDemostracionPanel::preparar($interfaz);
+
+        if (str_starts_with($rol, 'cliente_')) {
+            $usuarioCuenta = usuario_actual() ?? [];
+            $datosCuenta = array_merge(
+                PresentadorPanelRol::prepararDatosCuenta($usuarioCuenta, $rol), [
+                'tituloPagina' => $configuracion['titulo'],
+                'modulo' => $modulo,
+                'interfaz' => $interfaz,
+                'datosDemostracion' => $datosDemostracion,
+                'usuarioCuenta' => $usuarioCuenta,
+                'pedidosCuenta' => PresentadorPanelRol::presentarPedidosCuenta(
+                    array_slice(DatosDemostracionPanel::pedidosCuenta(), 0, 5)
+                ),
+            ]);
+
+            return $this->renderizarPanelCuenta($modulo, $datosCuenta);
+        }
+
+        $registros = $this->panel->listar($modulo);
         $edicion = null;
         $idEdicion = filter_var($solicitud->consulta('edit'), FILTER_VALIDATE_INT);
         if ($idEdicion) {
@@ -69,172 +104,166 @@ final class PanelRolController
             }
         }
 
-        if (str_starts_with($rol, 'cliente_')) {
-            return $this->vista->renderizar('modulos.cuenta.panel', [
-                'tituloPagina' => $configuracion['titulo'],
-                'modulo' => $modulo,
-                'interfaz' => CatalogoInterfaces::modulo($modulo, $rol),
-                'usuarioCuenta' => current_user() ?? [],
-            ]);
-        }
+        $campos = (array) ($configuracion['campos'] ?? []);
+        $puedeCrear = $this->panel->puedeOperar($rol, $modulo, 'crear');
+        $puedeActualizar = $this->panel->puedeOperar(
+            $rol,
+            $modulo,
+            $this->panel->operacionActualizacion($modulo)
+        );
+        $puedeDesactivar = $this->panel->puedeOperar($rol, $modulo, 'desactivar');
+        $usarInterfazDavid = in_array($rol, ['compras_logistica', 'marketing'], true);
+        $opciones = $this->panel->opciones($modulo);
 
-        return $this->vista->renderizar('modulos.panel.indice', [
-            'tituloPagina' => $configuracion['titulo'],
+        $presentacion = PresentadorPanelRol::prepararIndiceModulo(
+            $modulo,
+            $configuracion,
+            $interfaz,
+            $datosDemostracion,
+            $registros,
+            $edicion,
+            $opciones,
+            $this->panel->resumen(),
+            $puedeCrear,
+            $puedeActualizar,
+            $puedeDesactivar,
+            $usarInterfazDavid
+        );
+
+        $presentacion['camposFormulario'] = array_map(function (array $campo): array {
+            $vistaControl = match ($campo['tipo']) {
+                'textarea' => 'textarea',
+                'select' => 'select',
+                'select-data' => 'select-data',
+                default => 'entrada',
+            };
+            $campo['controlHtml'] = $this->vista->renderizar(
+                'modulos.panel._parciales.controles.' . $vistaControl,
+                $campo,
+                '',
+            )->contenido();
+
+            return $campo;
+        }, $presentacion['camposFormulario']);
+
+        $datosVista = array_merge($presentacion, [
             'modulo' => $modulo,
-            'configuracionModulo' => $configuracion,
-            'interfaz' => CatalogoInterfaces::modulo($modulo, $rol),
+            'interfaz' => $interfaz,
             'registros' => $registros,
-            'registroEdicion' => $edicion,
-            'resumen' => $this->consultaSegura(fn (): array => $this->modulos->resumen(), []),
-            'opciones' => $this->opciones($modulo),
             'exito' => $this->mensajes->extraer('success'),
             'error' => $this->mensajes->extraer('error'),
-        ], 'interno');
+        ]);
+        $vistaModulo = $usarInterfazDavid
+            ? 'modulos.panel._parciales.david.indice'
+            : 'modulos.panel.indice';
+
+        return $this->vista->renderizar($vistaModulo, $datosVista, 'interno');
+    }
+
+    /**
+     * Renderiza solo el bloque correspondiente al módulo de cuenta seleccionado.
+     *
+     * @param array<string, mixed> $datosCuenta
+     */
+    private function renderizarPanelCuenta(string $modulo, array $datosCuenta): Respuesta
+    {
+        $datosCuenta['modulo'] = $modulo;
+        $datosCuenta['atributoCuentaBreadcrumbModuloOculto'] = $modulo === 'dashboard' ? 'hidden' : '';
+        $vistaContenido = PresentadorPanelRol::vistaContenidoCuenta($modulo);
+        $datosCuenta['contenidoCuentaHtml'] = $this->vista->renderizar(
+            $vistaContenido,
+            $datosCuenta,
+            '',
+        )->contenido();
+
+        return $this->vista->renderizar('modulos.cuenta.panel', $datosCuenta);
     }
 
     public function guardar(Solicitud $solicitud): Respuesta
     {
         $modulo = (string) $solicitud->parametroRuta('module');
+        $rol = AccesoRol::normalizarRol((string) (usuario_actual()['rol'] ?? ''));
+        if (!$this->panel->puedeOperar($rol, $modulo, 'crear')) {
+            $this->mensajes->error('No tienes autorización para crear registros en este módulo.');
+            return redirigir('panel/' . $modulo);
+        }
+
         try {
-            $configuracion = $this->configuracion($modulo);
-            if (($configuracion['crud'] ?? false) !== true) {
-                throw new \RuntimeException('Este módulo es de consulta en la primera unidad.');
-            }
-            $datos = SolicitudModulo::validar($solicitud, (array) $configuracion['campos']);
-            $this->modulos->crear($modulo, $datos, (int) (current_user()['id'] ?? 0));
+            $configuracion = $this->panel->configuracion($modulo);
+            $datos = $modulo === 'inventario'
+                ? SolicitudMovimientoInventario::validar($solicitud)
+                : SolicitudModulo::validar($solicitud, (array) $configuracion['campos']);
+            $this->panel->crear($modulo, $datos, (int) (usuario_actual()['id'] ?? 0));
             $this->mensajes->exito('Registro guardado correctamente.');
         } catch (ExcepcionValidacion $excepcion) {
             $errores = $excepcion->errores();
             $this->mensajes->error(reset($errores) ?: 'Revisa los datos ingresados.');
+        } catch (\DomainException $excepcion) {
+            $this->mensajes->error($excepcion->getMessage());
         } catch (\Throwable $excepcion) {
             $this->registro->error('No se pudo crear el registro del módulo.', ['module' => $modulo, 'message' => $excepcion->getMessage()]);
             $this->mensajes->error($excepcion instanceof \RuntimeException ? $excepcion->getMessage() : 'No se pudo guardar el registro.');
         }
 
-        return redirect('panel/' . $modulo);
+        return redirigir('panel/' . $modulo);
     }
 
     public function actualizar(Solicitud $solicitud): Respuesta
     {
         $modulo = (string) $solicitud->parametroRuta('module');
-        $id = filter_var($solicitud->parametroRuta('id'), FILTER_VALIDATE_INT);
+        $idRegistro = filter_var($solicitud->parametroRuta('id'), FILTER_VALIDATE_INT);
+        $rol = AccesoRol::normalizarRol((string) (usuario_actual()['rol'] ?? ''));
+        if (!$this->panel->puedeOperar($rol, $modulo, $this->panel->operacionActualizacion($modulo))) {
+            $this->mensajes->error('No tienes autorización para actualizar registros en este módulo.');
+            return redirigir('panel/' . $modulo);
+        }
+
         try {
-            if (!$id) {
+            if (!$idRegistro) {
                 throw new \RuntimeException('El identificador recibido no es válido.');
             }
-            $configuracion = $this->configuracion($modulo);
+            $configuracion = $this->panel->configuracion($modulo);
             $datos = SolicitudModulo::validar($solicitud, (array) $configuracion['campos']);
-            $this->modulos->actualizar($modulo, (int) $id, $datos);
+            $this->panel->actualizar($modulo, (int) $idRegistro, $datos);
             $this->mensajes->exito('Registro actualizado correctamente.');
         } catch (ExcepcionValidacion $excepcion) {
             $errores = $excepcion->errores();
             $this->mensajes->error(reset($errores) ?: 'Revisa los datos ingresados.');
+        } catch (\DomainException $excepcion) {
+            $this->mensajes->error($excepcion->getMessage());
         } catch (\Throwable $excepcion) {
             $this->registro->error('No se pudo actualizar el registro del módulo.', ['module' => $modulo, 'message' => $excepcion->getMessage()]);
             $this->mensajes->error($excepcion instanceof \RuntimeException ? $excepcion->getMessage() : 'No se pudo actualizar el registro.');
         }
 
-        return redirect('panel/' . $modulo);
+        return redirigir('panel/' . $modulo);
     }
 
+    /**
+     * Marca como inactivo el registro seleccionado, sin borrar su historial.
+     */
     public function desactivar(Solicitud $solicitud): Respuesta
     {
         $modulo = (string) $solicitud->parametroRuta('module');
-        $id = filter_var($solicitud->parametroRuta('id'), FILTER_VALIDATE_INT);
+        $idRegistro = filter_var($solicitud->parametroRuta('id'), FILTER_VALIDATE_INT);
+        $rol = AccesoRol::normalizarRol((string) (usuario_actual()['rol'] ?? ''));
+        if (!$this->panel->puedeOperar($rol, $modulo, 'desactivar')) {
+            $this->mensajes->error('No tienes autorización para desactivar registros en este módulo.');
+            return redirigir('panel/' . $modulo);
+        }
+
         try {
-            if (!$id) {
+            if (!$idRegistro) {
                 throw new \RuntimeException('El identificador recibido no es válido.');
             }
-            $this->modulos->desactivar($modulo, (int) $id);
+            $this->panel->desactivar($modulo, (int) $idRegistro);
             $this->mensajes->exito('Registro desactivado correctamente.');
         } catch (\Throwable $excepcion) {
             $this->registro->advertencia('No se pudo desactivar el registro.', ['module' => $modulo, 'message' => $excepcion->getMessage()]);
             $this->mensajes->error($excepcion->getMessage());
         }
 
-        return redirect('panel/' . $modulo);
+        return redirigir('panel/' . $modulo);
     }
 
-    /** @return array<string, mixed> */
-    private function configuracion(string $modulo): array
-    {
-        $texto = ['type' => 'text', 'max' => 160];
-        $requerido = ['type' => 'text', 'required' => true, 'max' => 160];
-        $configuraciones = [
-            'categorias' => ['titulo' => 'Gestión de categorías', 'descripcion' => 'Organiza el catálogo y conserva una clasificación coherente.', 'crud' => true, 'campos' => ['nombre' => $requerido + ['label' => 'Nombre'], 'descripcion' => ['type' => 'textarea', 'label' => 'Descripción', 'max' => 500]]],
-            'proveedores' => ['titulo' => 'Proveedores', 'descripcion' => 'Gestiona datos de contacto y abastecimiento.', 'crud' => true, 'campos' => ['nombre' => $requerido + ['label' => 'Nombre'], 'ruc' => $requerido + ['label' => 'RUC', 'max' => 20], 'correo' => ['type' => 'email', 'label' => 'Correo', 'required' => true, 'max' => 160], 'telefono' => $texto + ['label' => 'Teléfono', 'max' => 30], 'ciudad' => $texto + ['label' => 'Ciudad', 'max' => 80]]],
-            'clientes' => ['titulo' => 'Gestión de clientes', 'descripcion' => 'Administra clientes minoristas y mayoristas.', 'crud' => true, 'campos' => $this->camposCliente()],
-            'clientes-mayoristas' => ['titulo' => 'Clientes mayoristas', 'descripcion' => 'Gestiona la cartera comercial B2B.', 'crud' => true, 'campos' => $this->camposCliente(false)],
-            'cotizaciones' => ['titulo' => 'Cotizaciones', 'descripcion' => 'Crea propuestas y controla su estado comercial.', 'crud' => true, 'campos' => ['cliente_id' => ['type' => 'select-data', 'label' => 'Cliente', 'required' => true], 'total' => ['type' => 'number', 'label' => 'Total', 'required' => true, 'min' => 0], 'estado' => ['type' => 'select', 'label' => 'Estado', 'required' => true, 'options' => ['Borrador' => 'Borrador', 'Enviada' => 'Enviada', 'Aprobada' => 'Aprobada', 'Rechazada' => 'Rechazada']], 'notas' => ['type' => 'textarea', 'label' => 'Notas', 'max' => 500]]],
-            'compras' => ['titulo' => 'Gestión de compras', 'descripcion' => 'Registra órdenes de compra a proveedores.', 'crud' => true, 'campos' => ['proveedor_id' => ['type' => 'select-data', 'label' => 'Proveedor', 'required' => true], 'total' => ['type' => 'number', 'label' => 'Total', 'required' => true, 'min' => 0], 'estado' => ['type' => 'select', 'label' => 'Estado', 'required' => true, 'options' => ['Pendiente' => 'Pendiente', 'Aprobada' => 'Aprobada', 'Recibida' => 'Recibida', 'Cancelada' => 'Cancelada']], 'fecha' => ['type' => 'date', 'label' => 'Fecha', 'required' => true]]],
-            'inventario' => ['titulo' => 'Control de inventario', 'descripcion' => 'Consulta existencias y registra entradas, salidas o ajustes mediante transacciones.', 'crud' => true, 'create_only' => true, 'campos' => ['producto_id' => ['type' => 'select-data', 'label' => 'Producto', 'required' => true], 'tipo_movimiento' => ['type' => 'select', 'label' => 'Movimiento', 'required' => true, 'options' => ['entrada' => 'Entrada', 'salida' => 'Salida', 'ajuste' => 'Ajuste']], 'cantidad' => ['type' => 'number', 'label' => 'Cantidad', 'required' => true, 'min' => 1], 'notas' => ['type' => 'textarea', 'label' => 'Motivo', 'required' => true, 'max' => 500]]],
-            'pedidos' => ['titulo' => 'Pedidos', 'descripcion' => 'Consulta pedidos y actualiza su estado.', 'crud' => true, 'update_only' => true, 'campos' => ['estado' => ['type' => 'select', 'label' => 'Estado', 'required' => true, 'options' => ['Pendiente' => 'Pendiente', 'En proceso' => 'En proceso', 'Enviado' => 'Enviado', 'Entregado' => 'Entregado', 'Cancelado' => 'Cancelado']]]],
-            'pedidos-mayoristas' => ['titulo' => 'Pedidos mayoristas', 'descripcion' => 'Seguimiento de pedidos B2B.', 'crud' => true, 'update_only' => true, 'campos' => ['estado' => ['type' => 'select', 'label' => 'Estado', 'required' => true, 'options' => ['Pendiente' => 'Pendiente', 'En proceso' => 'En proceso', 'Enviado' => 'Enviado', 'Entregado' => 'Entregado', 'Cancelado' => 'Cancelado']]]],
-        ];
-
-        if (isset($configuraciones[$modulo])) {
-            return $configuraciones[$modulo];
-        }
-
-        $titulos = [
-            'productos' => 'Productos', 'ventas' => 'Ventas', 'publicidad' => 'Publicidad y campañas', 'campanias' => 'MD Ads y campañas',
-            'usuarios' => 'Usuarios y roles', 'reportes' => 'Reportes gerenciales', 'auditoria' => 'Auditoría e historial',
-            'preparacion-pedidos' => 'Preparación de pedidos', 'alertas-stock' => 'Alertas de stock', 'seguimiento-comercial' => 'Seguimiento comercial',
-            'garantias' => 'Gestión de garantías', 'devoluciones' => 'Gestión de devoluciones', 'reclamaciones' => 'Gestión de reclamaciones',
-            'contenido' => 'Contenido digital', 'promociones' => 'Promociones', 'destacados' => 'Productos destacados', 'segmentacion' => 'Segmentación',
-            'leads' => 'Gestión de leads', 'analitica' => 'Analítica visual', 'perfil' => 'Mi perfil', 'historial' => 'Historial',
-            'direcciones' => 'Mis direcciones', 'favoritos' => 'Favoritos', 'catalogo-b2b' => 'Catálogo B2B',
-            'recepciones' => 'Recepciones', 'almacenes' => 'Almacenes', 'configuracion' => 'Configuración',
-            'marketing-b2b' => 'Marketing B2B', 'audiencias' => 'Audiencias', 'redes-sociales' => 'Redes sociales',
-            'automatizaciones' => 'Automatizaciones', 'integraciones' => 'Integraciones',
-        ];
-
-        return ['titulo' => $titulos[$modulo] ?? ucfirst(str_replace('-', ' ', $modulo)), 'descripcion' => 'Interfaz preparada y navegable, alineada con el flujo del rol.', 'crud' => false, 'campos' => []];
-    }
-
-    /** @return array<string, array<string, mixed>> */
-    private function camposCliente(bool $incluirTipo = true): array
-    {
-        $campos = [];
-        if ($incluirTipo) {
-            $campos['tipo'] = ['type' => 'select', 'label' => 'Tipo', 'required' => true, 'options' => ['minorista' => 'Minorista', 'mayorista' => 'Mayorista']];
-        }
-        $campos += [
-            'documento' => ['type' => 'text', 'label' => 'DNI o RUC', 'required' => true, 'max' => 20],
-            'empresa' => ['type' => 'text', 'label' => 'Empresa', 'max' => 160],
-            'contacto' => ['type' => 'text', 'label' => 'Contacto', 'required' => true, 'max' => 160],
-            'correo' => ['type' => 'email', 'label' => 'Correo', 'required' => true, 'max' => 160],
-            'telefono' => ['type' => 'text', 'label' => 'Teléfono', 'max' => 30],
-            'ciudad' => ['type' => 'text', 'label' => 'Ciudad', 'max' => 80],
-        ];
-
-        return $campos;
-    }
-
-    /** @return array<string, array<int, array{id:int,etiqueta:string}>> */
-    private function opciones(string $modulo): array
-    {
-        $resultado = [];
-        $tipos = match ($modulo) {
-            'inventario' => ['productos'],
-            'compras' => ['proveedores'],
-            'cotizaciones' => ['clientes'],
-            default => [],
-        };
-        foreach ($tipos as $tipo) {
-            $resultado[$tipo] = $this->consultaSegura(fn (): array => $this->modulos->opciones($tipo), []);
-        }
-
-        return $resultado;
-    }
-
-    private function consultaSegura(callable $consulta, mixed $predeterminado): mixed
-    {
-        try {
-            return $consulta();
-        } catch (\Throwable $excepcion) {
-            $this->registro->advertencia('Consulta del panel no disponible.', ['message' => $excepcion->getMessage()]);
-            return $predeterminado;
-        }
-    }
 }

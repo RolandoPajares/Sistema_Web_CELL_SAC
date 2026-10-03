@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Servicios\ComercioInteligente;
 
+use App\Modelos\Productos\Producto;
 use App\Servicios\Productos\ProductoServicio;
 
 final class ComercioInteligenteServicio
@@ -12,7 +13,11 @@ final class ComercioInteligenteServicio
     {
     }
 
-    /** @return array<int,array<string,mixed>> */
+    /**
+     * Genera recomendaciones de productos según el presupuesto, uso y prioridad recibidos.
+     *
+     * @return array<int,array<string,mixed>>
+     */
     public function recomendar(float $presupuesto, string $uso, string $prioridad): array
     {
         $pesos = [
@@ -28,9 +33,10 @@ final class ComercioInteligenteServicio
 
         $resultados = [];
         foreach ($this->celulares() as $producto) {
-            if ($presupuesto > 0 && (float) $producto['precio'] > $presupuesto) {
+            if ($presupuesto > 0 && $this->precioEfectivo($producto) > $presupuesto) {
                 continue;
             }
+            $producto['precio'] = $this->precioEfectivo($producto);
             $puntajes = $this->puntajes($producto);
             $totalPonderado = 0.0;
             $divisor = 0.0;
@@ -52,6 +58,7 @@ final class ComercioInteligenteServicio
     }
 
     /**
+     * Prepara la comparación de los productos seleccionados y sus indicadores.
      * @param array<int, int> $idsProductos
      * @return array<int, array<string, mixed>>
      */
@@ -61,6 +68,7 @@ final class ComercioInteligenteServicio
         foreach (array_slice(array_values(array_unique($idsProductos)), 0, 3) as $idProducto) {
             $producto = $this->productos->buscarActivo((int) $idProducto);
             if ($producto && stripos((string) $producto['categoria'], 'cel') !== false) {
+                $producto['precio'] = $this->precioEfectivo($producto);
                 $producto['puntajes_inteligentes'] = $this->puntajes($producto);
                 $resultado[] = $producto;
             }
@@ -69,7 +77,11 @@ final class ComercioInteligenteServicio
         return $resultado;
     }
 
-    /** @return array<string,mixed> */
+    /**
+     * Calcula una combinación de productos que se ajusta al presupuesto y objetivo indicados.
+     *
+     * @return array<string,mixed>
+     */
     public function optimizar(float $presupuesto, string $objetivo): array
     {
         $presupuesto = max(0, $presupuesto);
@@ -77,7 +89,8 @@ final class ComercioInteligenteServicio
         usort(
             $celulares,
             static fn (array $productoA, array $productoB): int =>
-                ((float) $productoA['precio']) <=> ((float) $productoB['precio'])
+                Producto::desdeRegistro($productoA)->precioEfectivo()
+                <=> Producto::desdeRegistro($productoB)->precioEfectivo()
         );
         if ($objetivo === 'margin') {
             usort(
@@ -89,7 +102,8 @@ final class ComercioInteligenteServicio
             usort(
                 $celulares,
                 static fn (array $productoA, array $productoB): int =>
-                    ((float) $productoB['precio']) <=> ((float) $productoA['precio'])
+                    Producto::desdeRegistro($productoB)->precioEfectivo()
+                    <=> Producto::desdeRegistro($productoA)->precioEfectivo()
             );
         }
 
@@ -100,7 +114,7 @@ final class ComercioInteligenteServicio
         while ($iteracion++ < 60 && $celulares) {
             $agregado = false;
             foreach ($celulares as $producto) {
-                $precio = (float) $producto['precio'];
+                $precio = $this->precioEfectivo($producto);
                 if ($precio <= 0 || $invertido + $precio > $presupuesto) {
                     continue;
                 }
@@ -109,6 +123,7 @@ final class ComercioInteligenteServicio
                 }
                 $idProducto = (int) $producto['id'];
                 if (!isset($lineas[$idProducto])) {
+                    $producto['precio'] = $precio;
                     $lineas[$idProducto] = ['producto' => $producto, 'cantidad' => 0, 'subtotal' => 0.0];
                 }
                 $lineas[$idProducto]['cantidad']++;
@@ -141,6 +156,8 @@ final class ComercioInteligenteServicio
     }
 
     /**
+     * Sugiere productos complementarios a los artículos del carrito.
+     *
      * @param array<int, array<string, mixed>> $articulosCarrito
      * @return array<int, array<string, mixed>>
      */
@@ -188,7 +205,11 @@ final class ComercioInteligenteServicio
         return array_slice($sugerencias, 0, 4);
     }
 
-    /** @return array<string,mixed> */
+    /**
+     * Genera una respuesta para el mensaje recibido usando el servicio correspondiente.
+     *
+     * @return array<string,mixed>
+     */
     public function responder(string $mensaje): array
     {
         $texto = strtolower(trim($mensaje));
@@ -241,7 +262,7 @@ final class ComercioInteligenteServicio
         }
 
         $marca = null;
-        foreach (['samsung', 'xiaomi', 'honor', 'motorola', 'iphone', 'apple', 'oppo', 'realme'] as $candidata) {
+        foreach (['samsung', 'xiaomi', 'honor', 'iphone', 'apple', 'oppo', 'jbl', 'beats'] as $candidata) {
             if (str_contains($textoNormalizado, $candidata)) {
                 $marca = $candidata === 'apple' ? 'iphone' : $candidata;
                 break;
@@ -268,7 +289,8 @@ final class ComercioInteligenteServicio
             usort(
                 $productos,
                 static fn (array $productoA, array $productoB): int =>
-                    ((float) $productoA['precio']) <=> ((float) $productoB['precio'])
+                    Producto::desdeRegistro($productoA)->precioEfectivo()
+                    <=> Producto::desdeRegistro($productoB)->precioEfectivo()
             );
         }
 
@@ -289,10 +311,14 @@ final class ComercioInteligenteServicio
             $criterios[] = 'de ' . ucfirst($marca);
         }
         $descripcionCriterios = $criterios ? ' ' . implode(' y ', $criterios) : '';
+        foreach ($productos as &$producto) {
+            $producto['precio'] = $this->precioEfectivo($producto);
+        }
+        unset($producto);
         $principal = $productos[0];
         $respuesta = 'Encontré opciones' . $descripcionCriterios . ' orientadas a ' . $this->etiquetaUso($uso) . '. ';
         $respuesta .= 'Mi primera sugerencia es ' . ($principal['marca'] ?? '') . ' ' . ($principal['nombre'] ?? '');
-        $respuesta .= ' por ' . number_format((float) ($principal['precio'] ?? 0), 2) . ' soles, con ';
+        $respuesta .= ' por ' . number_format($this->precioEfectivo($principal), 2) . ' soles, con ';
         $respuesta .= (int) ($principal['coincidencia'] ?? 0) . '% de coincidencia según tus criterios.';
         $respuesta .= ' Puedes seguir preguntándome para cambiar presupuesto, marca o prioridad.';
 
@@ -300,12 +326,14 @@ final class ComercioInteligenteServicio
     }
 
     /**
+     * Calcula los puntajes usados para ordenar o comparar los productos.
+     *
      * @param array<string, mixed> $producto
      * @return array<string, int>
      */
     public function puntajes(array $producto): array
     {
-        $precio = (float) ($producto['precio'] ?? 0);
+        $precio = $this->precioEfectivo($producto);
         $almacenamiento = (string) ($producto['almacenamiento'] ?? '');
         $nombre = strtolower(
             (string) ($producto['marca'] ?? '') . ' ' . (string) ($producto['nombre'] ?? '')
@@ -346,7 +374,17 @@ final class ComercioInteligenteServicio
         ];
     }
 
-    /** @return array<int,array<string,mixed>> */
+    /**
+     * Devuelve los celulares que cumplen los criterios de recomendación.
+     *
+     * @return array<int,array<string,mixed>>
+     */
+    /** Usa el precio de dominio para recomendaciones y presupuestos. */
+    private function precioEfectivo(array $producto): float
+    {
+        return Producto::desdeRegistro($producto)->precioEfectivo();
+    }
+
     private function celulares(): array
     {
         return array_values(array_filter(
@@ -357,6 +395,8 @@ final class ComercioInteligenteServicio
     }
 
     /**
+     * Explica los criterios que justifican la recomendación obtenida.
+     *
      * @param array<string, int> $puntajes
      * @return array<int, string>
      */
@@ -377,6 +417,9 @@ final class ComercioInteligenteServicio
         return $razones;
     }
 
+    /**
+     * Convierte el código de uso recibido en una etiqueta comprensible.
+     */
     private function etiquetaUso(string $uso): string
     {
         return [

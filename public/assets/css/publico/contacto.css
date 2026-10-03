@@ -285,10 +285,20 @@ html {
   background-color: #e5ecf5;
   background-image:
     linear-gradient(transparent 56%, #fde68a 56%, #fde68a 61%, transparent 61%),
-    linear-gradient(90deg, transparent 30%, #ffffff 30%, #ffffff 34%, transparent 34%),
+    linear-gradient(
+      90deg,
+      transparent 30%,
+      #ffffff 30%,
+      #ffffff 34%,
+      transparent 34%
+    ),
     linear-gradient(#ffffff 6px, transparent 6px),
     linear-gradient(90deg, #ffffff 6px, transparent 6px);
-  background-size: 100% 100%, 100% 100%, 60px 60px, 60px 60px; /* avenida, calle y manzanas */
+  background-size:
+    100% 100%,
+    100% 100%,
+    60px 60px,
+    60px 60px; /* avenida, calle y manzanas */
 }
 
 /* marcador de la tienda */

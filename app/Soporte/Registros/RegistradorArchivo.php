@@ -10,25 +10,41 @@ final class RegistradorArchivo
     {
     }
 
-    /** @param array<string, mixed> $contexto */
+    /**
+     * Construye una respuesta informativa con el mensaje indicado.
+     *
+     * @param array<string, mixed> $contexto
+     */
     public function info(string $mensaje, array $contexto = []): void
     {
         $this->escribir('INFO', $mensaje, $contexto);
     }
 
-    /** @param array<string, mixed> $contexto */
+    /**
+     * Construye una respuesta de advertencia con el mensaje indicado.
+     *
+     * @param array<string, mixed> $contexto
+     */
     public function advertencia(string $mensaje, array $contexto = []): void
     {
         $this->escribir('WARNING', $mensaje, $contexto);
     }
 
-    /** @param array<string, mixed> $contexto */
+    /**
+     * Construye una respuesta de error con el mensaje y estado adecuados.
+     *
+     * @param array<string, mixed> $contexto
+     */
     public function error(string $mensaje, array $contexto = []): void
     {
         $this->escribir('ERROR', $mensaje, $contexto);
     }
 
-    /** @param array<string, mixed> $contexto */
+    /**
+     * Guarda el mensaje y el contexto recibidos en el registro correspondiente.
+     *
+     * @param array<string, mixed> $contexto
+     */
     private function escribir(string $nivel, string $mensaje, array $contexto): void
     {
         unset($contexto['contrasena'], $contexto['token'], $contexto['csrf']);

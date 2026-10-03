@@ -6,12 +6,23 @@ namespace App\DAO\Contratos;
 
 interface RepositorioInventarioInterfaz
 {
-    /** @return array<int, array<string, mixed>> */
+    /**
+     * Obtiene la cantidad disponible para el producto o variante solicitada.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function existencias(): array;
 
-    /** @return array<int, array<string, mixed>> */
+    /**
+     * Devuelve los movimientos de inventario registrados para el periodo solicitado.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function movimientos(): array;
 
-    /** @param array{producto_id:int,tipo_movimiento:string,cantidad:int,notas:string} $datos */
-    public function registrarMovimiento(array $datos, int $usuarioId): int;
+    /**
+     * Crea o guarda la información relacionada con «movimiento».
+     * @param array{producto_id:int,tipo_movimiento:string,cantidad:int,notas:string} $datos
+     */
+    public function registrarMovimiento(array $datos, int $idUsuario): int;
 }

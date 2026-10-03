@@ -14,20 +14,26 @@ final class InventarioDAO implements RepositorioInventarioInterfaz
     {
     }
 
+    /**
+     * Obtiene la cantidad disponible para el producto o variante solicitada.
+     */
     public function existencias(): array
     {
         return $this->pdo()->query(
-            "SELECT p.id, p.marca, p.nombre AS producto, p.categoria, p.existencias,
+            "SELECT p.id, p.marca, p.nombre AS producto, p.categoria, p.url_imagen, p.existencias,
                     MAX(m.creado_en) AS ultimo_movimiento,
                     CASE WHEN p.existencias <= 3 THEN 'Crítico' WHEN p.existencias <= 8 THEN 'Bajo' ELSE 'Disponible' END AS estado
              FROM productos p
              LEFT JOIN movimientos_inventario m ON m.producto_id = p.id
              WHERE p.activo = 1
-             GROUP BY p.id, p.marca, p.nombre, p.categoria, p.existencias
+             GROUP BY p.id, p.marca, p.nombre, p.categoria, p.url_imagen, p.existencias
              ORDER BY p.existencias, p.nombre"
         )->fetchAll();
     }
 
+    /**
+     * Devuelve los movimientos de inventario registrados para el periodo solicitado.
+     */
     public function movimientos(): array
     {
         return $this->pdo()->query(
@@ -40,9 +46,12 @@ final class InventarioDAO implements RepositorioInventarioInterfaz
         )->fetchAll();
     }
 
-    public function registrarMovimiento(array $datos, int $usuarioId): int
+    /**
+     * Crea o guarda la información relacionada con «movimiento».
+     */
+    public function registrarMovimiento(array $datos, int $idUsuario): int
     {
-        return (int) $this->conexion->transaccion(function () use ($datos, $usuarioId): int {
+        return (int) $this->conexion->transaccion(function () use ($datos, $idUsuario): int {
             $pdo = $this->pdo();
             $consulta = $pdo->prepare('SELECT existencias FROM productos WHERE id = :id AND activo = 1 FOR UPDATE');
             $consulta->execute([':id' => $datos['producto_id']]);
@@ -65,7 +74,7 @@ final class InventarioDAO implements RepositorioInventarioInterfaz
                 'INSERT INTO movimientos_inventario(producto_id, usuario_id, tipo_movimiento, cantidad, notas)
                  VALUES(:producto, :usuario, :tipo, :cantidad, :notas)'
             );
-            $movimiento->execute([':producto' => $datos['producto_id'], ':usuario' => $usuarioId,
+            $movimiento->execute([':producto' => $datos['producto_id'], ':usuario' => $idUsuario,
                 ':tipo' => $datos['tipo_movimiento'], ':cantidad' => $datos['cantidad'], ':notas' => $datos['notas']]);
             $idMovimiento = (int) $pdo->lastInsertId();
 
@@ -76,6 +85,9 @@ final class InventarioDAO implements RepositorioInventarioInterfaz
         });
     }
 
+    /**
+     * Obtiene la conexión PDO y detiene la operación si no está disponible.
+     */
     private function pdo(): PDO
     {
         return $this->conexion->pdoObligatorio();

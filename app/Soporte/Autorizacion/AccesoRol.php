@@ -7,7 +7,7 @@ namespace App\Soporte\Autorizacion;
 final class AccesoRol
 {
     /** @var array<string, array<int, string>> */
-    private const ACCESS = [
+    private const ACCESOS = [
         'cliente_minorista' => [
             'dashboard', 'perfil', 'pedidos', 'historial', 'direcciones', 'smartcommerce',
             'recomendador', 'comparador', 'asistente',
@@ -38,8 +38,27 @@ final class AccesoRol
         ],
     ];
 
+    /** @var array<string, array<string, array<int, string>>> Permisos de escritura por rol, módulo y operación. */
+    private const ACCESOS_POR_OPERACION = [
+        'administrador' => ['*' => ['*']],
+        'compras_logistica' => [
+            'inventario' => ['crear'],
+            'proveedores' => ['crear', 'editar', 'desactivar'],
+            'compras' => ['crear', 'editar', 'desactivar'],
+        ],
+        'ventas_mayoristas' => [
+            'clientes-mayoristas' => ['crear', 'editar', 'desactivar'],
+            'cotizaciones' => ['crear', 'editar', 'desactivar'],
+            'pedidos-mayoristas' => ['cambiar_estado'],
+        ],
+        'ventas_minoristas' => [
+            'clientes' => ['crear', 'editar', 'desactivar'],
+            'pedidos' => ['cambiar_estado'],
+        ],
+    ];
+
     /** @var array<string, array<int, array{slug:string,label:string,icon:string}>> */
-    private const NAVIGATION = [
+    private const NAVEGACION = [
         'cliente_minorista' => [
             ['slug' => 'dashboard', 'label' => 'Mi cuenta', 'icon' => 'bi-person-circle'],
             ['slug' => 'catalogo', 'label' => 'Catálogo', 'icon' => 'bi-grid'],
@@ -126,26 +145,54 @@ final class AccesoRol
         ],
     ];
 
-    public static function normalize(string $rol): string
+    /**
+     * Normaliza el texto recibido para facilitar su comparación.
+     */
+    public static function normalizarRol(string $rol): string
     {
         return $rol;
     }
 
-    public static function can(string $rol, string $modulo): bool
+    /**
+     * Indica si el rol puede consultar el módulo indicado.
+     */
+    public static function puedeAcceder(string $rol, string $modulo): bool
     {
-        $permitidos = self::ACCESS[self::normalize($rol)] ?? [];
+        $permitidos = self::ACCESOS[self::normalizarRol($rol)] ?? [];
         return in_array('*', $permitidos, true) || in_array($modulo, $permitidos, true);
     }
 
-    /** @return array<int, array{slug:string,label:string,icon:string}> */
-    public static function navigation(string $rol): array
+    /** Comprueba permisos de escritura explícitos, independientes del acceso de lectura al módulo. */
+    public static function puedeOperar(string $rol, string $modulo, string $operacion): bool
     {
-        return self::NAVIGATION[self::normalize($rol)] ?? [];
+        if (!self::puedeAcceder($rol, $modulo)) {
+            return false;
+        }
+
+        $permisosRol = self::ACCESOS_POR_OPERACION[self::normalizarRol($rol)] ?? [];
+        if (in_array('*', $permisosRol['*'] ?? [], true)) {
+            return true;
+        }
+
+        return in_array($operacion, $permisosRol[$modulo] ?? [], true);
     }
 
-    public static function label(string $rol): string
+    /**
+     * Prepara las opciones de navegación disponibles para el usuario.
+     *
+     * @return array<int, array{slug:string,label:string,icon:string}>
+     */
+    public static function navegacion(string $rol): array
     {
-        return match (self::normalize($rol)) {
+        return self::NAVEGACION[self::normalizarRol($rol)] ?? [];
+    }
+
+    /**
+     * Devuelve la etiqueta visible correspondiente al valor recibido.
+     */
+    public static function etiqueta(string $rol): string
+    {
+        return match (self::normalizarRol($rol)) {
             'administrador' => 'Administrador / Gerente General',
             'compras_logistica' => 'Compras y Logística',
             'ventas_mayoristas' => 'Ejecutivo de Ventas Mayoristas',
@@ -156,9 +203,12 @@ final class AccesoRol
         };
     }
 
+    /**
+     * Valida y normaliza el destino solicitado antes de generar su enlace.
+     */
     public static function destino(string $rol, string $modulo): string
     {
-        $rol = self::normalize($rol);
+        $rol = self::normalizarRol($rol);
         if ($modulo === 'dashboard') {
             return $rol === 'administrador' ? 'admin' : 'panel';
         }

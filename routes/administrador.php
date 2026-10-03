@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
+// organización de rutas para el panel de administración
 use App\Controladores\Panel\PanelAdministradorController;
 use App\Controladores\Panel\AdministradorFuturoController;
 use App\Controladores\Campanias\AdministradorCampaniaController;
@@ -17,42 +17,76 @@ use App\Middleware\AdministradorMiddleware;
 use App\Middleware\CsrfMiddleware;
 use App\Nucleo\Enrutamiento\Enrutador;
 
+/**
+ * Definición de rutas del panel de administración
+ * Registra los endpoints protegidos por middlewares de autenticación y protección CSRF.
+ */
 return static function (Enrutador $enrutador): void {
     $administrador = [AdministradorMiddleware::class];
     $administradorPost = [AdministradorMiddleware::class, CsrfMiddleware::class];
+
+
+    // 1. PANEL PRINCIPAL Y CUENTA
 
     $enrutador->obtener('/admin', [PanelAdministradorController::class, 'indice'], $administrador);
     $enrutador->obtener('/admin/account', [CuentaAdministradorController::class, 'indice'], $administrador);
     $enrutador->post('/admin/account/profile', [CuentaAdministradorController::class, 'actualizarPerfil'], $administradorPost);
     $enrutador->post('/admin/account/password', [CuentaAdministradorController::class, 'cambiarContrasena'], $administradorPost);
     $enrutador->post('/admin/assistant', [PanelAdministradorController::class, 'respuestaAsistente'], $administradorPost);
+
+   
+    // 2. GESTIÓN DE CAMPAÑAS
+   
     $enrutador->obtener('/admin/campaigns', [AdministradorCampaniaController::class, 'indice'], $administrador);
     $enrutador->post('/admin/campaigns', [AdministradorCampaniaController::class, 'guardar'], $administradorPost);
     $enrutador->post('/admin/campaigns/{id}/deactivate', [AdministradorCampaniaController::class, 'desactivar'], $administradorPost);
+
+    
+    // 3. GESTIÓN DE PRODUCTOS
+   
     $enrutador->obtener('/admin/products', [AdministradorProductoController::class, 'indice'], $administrador);
     $enrutador->obtener('/admin/products/{id}/edit', [AdministradorProductoController::class, 'editar'], $administrador);
     $enrutador->post('/admin/products', [AdministradorProductoController::class, 'guardar'], $administradorPost);
     $enrutador->post('/admin/products/{id}', [AdministradorProductoController::class, 'actualizar'], $administradorPost);
     $enrutador->post('/admin/products/{id}/deactivate', [AdministradorProductoController::class, 'eliminar'], $administradorPost);
+
+    // 4. GESTIÓN DE PEDIDOS
+  
     $enrutador->obtener('/admin/orders', [AdministradorPedidoController::class, 'indice'], $administrador);
     $enrutador->obtener('/admin/orders/{id}', [AdministradorPedidoController::class, 'detalle'], $administrador);
     $enrutador->post('/admin/orders/{id}/status', [AdministradorPedidoController::class, 'actualizarEstado'], $administradorPost);
+
+  
+    // 5. GESTIÓN DE USUARIOS Y CATEGORÍAS
+   
     $enrutador->obtener('/admin/users', [AdministradorUsuarioController::class, 'indice'], $administrador);
     $enrutador->obtener('/admin/categories', [CategoriaController::class, 'indice'], $administrador);
     $enrutador->obtener('/admin/categories/{id}/edit', [CategoriaController::class, 'editar'], $administrador);
     $enrutador->post('/admin/categories', [CategoriaController::class, 'guardar'], $administradorPost);
     $enrutador->post('/admin/categories/{id}', [CategoriaController::class, 'actualizar'], $administradorPost);
     $enrutador->post('/admin/categories/{id}/deactivate', [CategoriaController::class, 'desactivar'], $administradorPost);
+
+
+    // 6. GESTIÓN DE PROVEEDORES
+  
     $enrutador->obtener('/admin/suppliers', [ProveedorController::class, 'indice'], $administrador);
     $enrutador->obtener('/admin/suppliers/{id}/edit', [ProveedorController::class, 'editar'], $administrador);
     $enrutador->post('/admin/suppliers', [ProveedorController::class, 'guardar'], $administradorPost);
     $enrutador->post('/admin/suppliers/{id}', [ProveedorController::class, 'actualizar'], $administradorPost);
     $enrutador->post('/admin/suppliers/{id}/deactivate', [ProveedorController::class, 'desactivar'], $administradorPost);
+
+
+    // 7. GESTIÓN DE CLIENTES
+ 
     $enrutador->obtener('/admin/customers', [ClienteController::class, 'indice'], $administrador);
     $enrutador->obtener('/admin/customers/{id}/edit', [ClienteController::class, 'editar'], $administrador);
     $enrutador->post('/admin/customers', [ClienteController::class, 'guardar'], $administradorPost);
     $enrutador->post('/admin/customers/{id}', [ClienteController::class, 'actualizar'], $administradorPost);
     $enrutador->post('/admin/customers/{id}/deactivate', [ClienteController::class, 'desactivar'], $administradorPost);
+
+
+    // 8. INVENTARIO Y REPORTES
+  
     $enrutador->obtener('/admin/inventory', [InventarioController::class, 'indice'], $administrador);
     $enrutador->post('/admin/inventory', [InventarioController::class, 'guardar'], $administradorPost);
     $enrutador->obtener('/admin/reports', [AdministradorFuturoController::class, 'reportes'], $administrador);

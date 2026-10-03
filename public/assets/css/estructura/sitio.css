@@ -9,7 +9,10 @@
 }
 .site-footer .footer-grid {
   display: grid;
-  grid-template-columns: minmax(340px, 1.35fr) minmax(220px, 0.9fr) minmax(220px, 0.9fr) minmax(280px, 1.1fr);
+  grid-template-columns: minmax(340px, 1.35fr) minmax(220px, 0.9fr) minmax(
+      220px,
+      0.9fr
+    ) minmax(280px, 1.1fr);
   gap: 0;
   padding: 56px 0 52px;
 }
@@ -72,7 +75,10 @@
   border-radius: 50%;
   color: #258dff;
   font-size: 1.45rem;
-  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
 }
 .site-footer .footer-social-link:hover {
   transform: translateY(-2px);
@@ -235,3 +241,7 @@
 .to-top.show {
   display: block;
 }
+[hidden] {
+  display: none !important;
+}
+

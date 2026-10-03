@@ -7,6 +7,7 @@ namespace App\Controladores\Panel;
 use App\Nucleo\Http\Solicitud;
 use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Presentacion\Vista;
+use App\Nucleo\Presentacion\Administracion\PresentadorTableroAdministrador;
 use App\Servicios\Panel\PanelAdministradorServicio;
 use App\Servicios\ComercioInteligente\InteligenciaNegocioServicio;
 use App\Servicios\Panel\AsistenteAdministradorServicio;
@@ -21,17 +22,37 @@ final class PanelAdministradorController
     ) {
     }
 
+    /**
+     * Prepara los datos de la página y muestra el listado principal del módulo.
+     */
     public function indice(Solicitud $solicitud): Respuesta
     {
-        return $this->vista->renderizar('roles.internos.administrador.tablero', [
+        $estadisticas = $this->panel->estadisticas();
+        $inteligencia = $this->inteligencia->resumenActual();
+        $ventasMensuales = $this->inteligencia->ventasMensuales();
+        $pedidosRecientes = $this->inteligencia->pedidosRecientes();
+        $presentacion = PresentadorTableroAdministrador::presentar(
+            $estadisticas,
+            $ventasMensuales,
+            $pedidosRecientes,
+            $inteligencia
+        );
+
+        $datosVista = array_merge($presentacion, [
             'tituloPagina' => 'Panel administrativo',
-            'estadisticas' => $this->panel->estadisticas(),
-            'inteligencia' => $this->inteligencia->resumenActual(),
-            'ventasMensuales' => $this->inteligencia->ventasMensuales(),
-            'pedidosRecientes' => $this->inteligencia->pedidosRecientes(),
-        ], 'administrador');
+            'estadisticas' => $estadisticas,
+        ]);
+
+        return $this->vista->renderizar(
+            'roles.internos.administrador.tablero',
+            $datosVista,
+            'administrador'
+        );
     }
 
+    /**
+     * Construye la respuesta del asistente a partir del resultado de la consulta.
+     */
     public function respuestaAsistente(Solicitud $solicitud): Respuesta
     {
         $consulta = is_scalar($solicitud->entrada('consulta')) ? trim((string) $solicitud->entrada('consulta')) : '';

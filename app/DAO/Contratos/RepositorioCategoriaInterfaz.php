@@ -6,28 +6,58 @@ namespace App\DAO\Contratos;
 
 interface RepositorioCategoriaInterfaz
 {
-    /** @return array<int, array<string, mixed>> */
+    /**
+     * Devuelve todos los registros de la entidad administrada por el repositorio.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function todas(): array;
 
-    /** @return array<int, array<string, mixed>> */
+    /**
+     * Devuelve únicamente los registros activos de la entidad.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function activas(): array;
 
-    /** @return array<string, mixed>|null */
-    public function buscar(int $id): ?array;
+    /**
+     * Busca una categoría por su identificador.
+     * @return array<string, mixed>|null
+     */
+    public function buscar(int $idCategoria): ?array;
 
-    /** @return array<string, mixed>|null */
-    public function buscarActiva(int $id): ?array;
+    /**
+     * Busca el registro que coincide con el identificador y verifica que siga activo.
+     *
+     * @return array<string, mixed>|null
+     */
+    public function buscarActiva(int $idCategoria): ?array;
 
-    /** @return array<string, mixed>|null */
+    /**
+     * Busca el registro usando el criterio «nombre».
+     * @return array<string, mixed>|null
+     */
     public function buscarPorNombre(string $nombre): ?array;
 
+    /**
+     * Comprueba si otra categoría ya utiliza el nombre indicado.
+     */
     public function existeNombre(string $nombre, ?int $idExcluido = null): bool;
 
-    /** @param array{nombre:string,descripcion:string} $datos */
+    /**
+     * Crea una categoría con los datos validados por el servicio.
+     * @param array{nombre:string,descripcion:string} $datos
+     */
     public function crear(array $datos): int;
 
-    /** @param array{nombre:string,descripcion:string} $datos */
-    public function actualizar(int $id, array $datos): void;
+    /**
+     * Actualiza los datos de la categoría indicada.
+     * @param array{nombre:string,descripcion:string} $datos
+     */
+    public function actualizar(int $idCategoria, array $datos): void;
 
-    public function desactivar(int $id): void;
+    /**
+     * Marca como inactivo el registro seleccionado, sin borrar su historial.
+     */
+    public function desactivar(int $idCategoria): void;
 }

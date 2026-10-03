@@ -14,16 +14,25 @@ final class MensajeFlashServicio
     {
     }
 
+    /**
+     * Construye una respuesta satisfactoria con el contenido indicado.
+     */
     public function exito(string $mensaje): void
     {
         $this->guardar('success', $mensaje);
     }
 
+    /**
+     * Construye una respuesta de error con el mensaje y estado adecuados.
+     */
     public function error(string $mensaje): void
     {
         $this->guardar('error', $mensaje);
     }
 
+    /**
+     * Extrae el valor solicitado de los datos recibidos.
+     */
     public function extraer(string $tipo, string $predeterminado = ''): string
     {
         $mensajes = (array) $this->sesion->obtener(self::KEY, []);

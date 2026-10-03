@@ -6,7 +6,9 @@ namespace App\Nucleo\Http;
 
 class Respuesta
 {
-    /** @param array<string, string> $encabezados */
+    /**
+     * @param array<string, string> $encabezados
+     */
     public function __construct(
         protected string $contenido = '',
         protected int $estado = 200,
@@ -14,6 +16,9 @@ class Respuesta
     ) {
     }
 
+    /**
+     * Envía el contenido y los encabezados de la respuesta HTTP al cliente.
+     */
     public function enviar(): void
     {
         if ($this->estado === 419) {
@@ -30,22 +35,35 @@ class Respuesta
         echo $this->contenido;
     }
 
+    /**
+     * Devuelve el estado actual del recurso o proceso consultado.
+     */
     public function estado(): int
     {
         return $this->estado;
     }
 
+    /**
+     * Devuelve el contenido configurado para la respuesta HTTP.
+     */
     public function contenido(): string
     {
         return $this->contenido;
     }
 
-    /** @return array<string, string> */
+    /**
+     * Devuelve los encabezados configurados para la respuesta HTTP.
+     *
+     * @return array<string, string>
+     */
     public function encabezados(): array
     {
         return $this->encabezados;
     }
 
+    /**
+     * Crea una respuesta con el encabezado HTTP adicional indicado.
+     */
     public function conEncabezado(string $nombre, string $valor): self
     {
         $this->encabezados[$nombre] = $valor;

@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace App\Servicios\ComercioInteligente;
 
-use App\DAO\ComercioInteligente\InteligenciaNegocioDAO;
+use App\DAO\Contratos\RepositorioInteligenciaNegocioInterfaz;
 
 final class InteligenciaNegocioServicio
 {
-    public function __construct(private InteligenciaNegocioDAO $inteligencia)
+    public function __construct(private RepositorioInteligenciaNegocioInterfaz $inteligencia)
     {
     }
 
-    /** @return array<string,mixed> */
+    /**
+     * Calcula un resumen de la actividad correspondiente al periodo actual.
+     *
+     * @return array<string,mixed>
+     */
     public function resumenActual(): array
     {
         $resumen = $this->inteligencia->resumenActual();
@@ -33,19 +37,31 @@ final class InteligenciaNegocioServicio
         return $resumen + ['promedio_unidades_diarias' => $promedio];
     }
 
-    /** @return array<int, array<string, mixed>> */
+    /**
+     * Agrupa las ventas por mes para generar el reporte solicitado.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function ventasMensuales(int $meses = 12): array
     {
         return $this->inteligencia->ventasMensuales($meses);
     }
 
-    /** @return array<int, array<string, mixed>> */
+    /**
+     * Devuelve los pedidos más recientes para mostrarlos en el panel.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function pedidosRecientes(int $limite = 6): array
     {
         return $this->inteligencia->pedidosRecientes($limite);
     }
 
-    /** @return array{tipo:string,desde:string,hasta:string,indicadores:array<int,array<string,string>>,serie:array<int,array<string,mixed>>,detalle:array<int,array<string,mixed>>} */
+    /**
+     * Prepara el contenido del reporte solicitado.
+     *
+     * @return array{tipo:string,desde:string,hasta:string,indicadores:array<int,array<string,string>>,serie:array<int,array<string,mixed>>,detalle:array<int,array<string,mixed>>}
+     */
     public function reporte(string $tipo, string $desde, string $hasta): array
     {
         $tipos = ['ventas', 'pedidos', 'inventario', 'productos', 'clientes'];
@@ -74,8 +90,11 @@ final class InteligenciaNegocioServicio
         ];
     }
 
-    /** @param array<int, array<string, mixed>> $detalle
-     *  @return array<int, array<string, string>>
+    /**
+     * Calcula los indicadores resumidos que acompañan al reporte.
+     *
+     * @param array<int, array<string, mixed>> $detalle
+     * @return array<int, array<string, string>>
      */
     private function indicadoresReporte(string $tipo, array $detalle, string $desde, string $hasta): array
     {
@@ -83,7 +102,7 @@ final class InteligenciaNegocioServicio
             $resumen = $this->inteligencia->resumenPeriodo($desde, $hasta);
 
             return [
-                ['etiqueta' => 'Total de ventas', 'valor' => money($resumen['ventas']), 'detalle' => 'Pedidos no cancelados del rango', 'icono' => 'bi-cart3', 'tono' => 'azul'],
+                ['etiqueta' => 'Total de ventas', 'valor' => formatear_dinero($resumen['ventas']), 'detalle' => 'Pedidos no cancelados del rango', 'icono' => 'bi-cart3', 'tono' => 'azul'],
                 ['etiqueta' => 'Total de pedidos', 'valor' => (string) $resumen['pedidos'], 'detalle' => 'Pedidos no cancelados', 'icono' => 'bi-file-earmark-text', 'tono' => 'verde'],
                 ['etiqueta' => 'Productos vendidos', 'valor' => (string) $resumen['productos_vendidos'], 'detalle' => 'Unidades del rango', 'icono' => 'bi-box-seam', 'tono' => 'violeta'],
                 ['etiqueta' => 'Clientes atendidos', 'valor' => (string) $resumen['clientes'], 'detalle' => 'Usuarios distintos con pedido', 'icono' => 'bi-people', 'tono' => 'rojo'],
@@ -95,7 +114,7 @@ final class InteligenciaNegocioServicio
 
             return [
                 ['etiqueta' => 'Pedidos', 'valor' => (string) count($detalle), 'detalle' => 'Pedidos del rango seleccionado', 'icono' => 'bi-file-earmark-text', 'tono' => 'azul'],
-                ['etiqueta' => 'Monto registrado', 'valor' => money(array_sum(array_map(static fn (array $fila): float => (float) $fila['total'], $detalle))), 'detalle' => 'Incluye los estados registrados', 'icono' => 'bi-cash-stack', 'tono' => 'verde'],
+                ['etiqueta' => 'Monto registrado', 'valor' => formatear_dinero(array_sum(array_map(static fn (array $fila): float => (float) $fila['total'], $detalle))), 'detalle' => 'Incluye los estados registrados', 'icono' => 'bi-cash-stack', 'tono' => 'verde'],
                 ['etiqueta' => 'Clientes', 'valor' => (string) count($clientes), 'detalle' => 'Clientes con pedido en el rango', 'icono' => 'bi-people', 'tono' => 'violeta'],
                 ['etiqueta' => 'Pendientes', 'valor' => (string) count(array_filter($detalle, static fn (array $fila): bool => $fila['estado'] === 'Pendiente')), 'detalle' => 'Estado actual de los pedidos', 'icono' => 'bi-hourglass-split', 'tono' => 'rojo'],
             ];
@@ -127,6 +146,9 @@ final class InteligenciaNegocioServicio
         ];
     }
 
+    /**
+     * Comprueba que la fecha recibida tenga un formato válido.
+     */
     private function fechaValida(string $fecha): ?\DateTimeImmutable
     {
         $valor = \DateTimeImmutable::createFromFormat('!Y-m-d', $fecha);

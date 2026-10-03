@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+/**
+ * Funciones auxiliares globales de la aplicación.
+ */
+
 use App\Nucleo\Http\RespuestaRedireccion;
 use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Aplicacion;
@@ -11,155 +15,298 @@ use App\Soporte\GeneradorUrl;
 use App\Soporte\Sesion\GestorSesion;
 use App\Soporte\Autorizacion\AccesoRol;
 
-function app(?string $abstracto = null): mixed
+/**
+ * Devuelve el contenedor o resuelve el servicio solicitado.
+ */
+function resolver_servicio(?string $abstracto = null): mixed
 {
-    return $abstracto === null ? Aplicacion::contenedor() : Aplicacion::obtener($abstracto);
+    return $abstracto === null
+        ? Aplicacion::contenedor()
+        : Aplicacion::obtener($abstracto);
 }
 
-function config(string $clave, mixed $predeterminado = null): mixed
+/**
+ * Obtiene un valor de configuración o devuelve el valor alternativo.
+ */
+function configuracion(string $clave, mixed $predeterminado = null): mixed
 {
-    return app(RepositorioConfiguracion::class)->obtener($clave, $predeterminado);
+    $repositorioConfiguracion = resolver_servicio(RepositorioConfiguracion::class);
+
+    return $repositorioConfiguracion->obtener($clave, $predeterminado);
 }
 
+/**
+ * Escapa un valor para mostrarlo de forma segura en HTML.
+ */
 function e(mixed $valor): string
 {
-    return htmlspecialchars((string) $valor, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $valorCadena = (string) $valor;
+
+    return htmlspecialchars(
+        $valorCadena,
+        ENT_QUOTES | ENT_SUBSTITUTE,
+        'UTF-8'
+    );
 }
 
-function money(mixed $valor): string
+/**
+ * Formatea un importe con la moneda configurada para la aplicación.
+ */
+function formatear_dinero(mixed $valor): string
 {
-    return (string) config('app.currency', 'S/') . ' ' . number_format((float) $valor, 2);
+    $monedaConfigurada = (string) configuracion('app.currency', 'S/');
+    $valorNumerico = (float) $valor;
+    $importeFormateado = number_format($valorNumerico, 2);
+
+    return $monedaConfigurada . ' ' . $importeFormateado;
 }
 
-function url(string $ruta = ''): string
+/**
+ * Genera la URL interna correspondiente a la ruta indicada.
+ */
+function url_interna(string $ruta = ''): string
 {
-    return app(GeneradorUrl::class)->generar($ruta);
+    $generadorUrl = resolver_servicio(GeneradorUrl::class);
+
+    return $generadorUrl->generar($ruta);
 }
 
-function asset(string $ruta): string
+/**
+ * Genera la URL pública de un recurso estático.
+ */
+function url_recurso_estatico(string $ruta): string
 {
-    return app(GeneradorUrl::class)->asset($ruta);
+    $generadorUrl = resolver_servicio(GeneradorUrl::class);
+
+    return $generadorUrl->urlRecursoEstatico($ruta);
 }
 
-function product_image_url(string $ruta): string
+/**
+ * Convierte una ruta de imagen de producto en una URL pública válida.
+ */
+function url_imagen_producto(string $ruta): string
 {
-    $ruta = trim($ruta);
-    $esquema = strtolower((string) parse_url($ruta, PHP_URL_SCHEME));
-    if ($ruta === '') {
+    $rutaLimpia = trim($ruta);
+    $esquema = strtolower((string) parse_url($rutaLimpia, PHP_URL_SCHEME));
+
+    if ($rutaLimpia === '') {
         return '';
     }
+
     if (in_array($esquema, ['http', 'https'], true)) {
-        return filter_var($ruta, FILTER_VALIDATE_URL) ? $ruta : '';
+        return filter_var($rutaLimpia, FILTER_VALIDATE_URL) ? $rutaLimpia : '';
     }
 
-    $rutaRelativa = ltrim($ruta, '/');
-    if (
-        !preg_match('#^assets/[A-Za-z0-9_./-]+$#D', $rutaRelativa)
-        || str_contains($rutaRelativa, '..')
-        || !is_file(dirname(__DIR__) . '/public/' . $rutaRelativa)
-    ) {
+    $rutaRelativa = ltrim($rutaLimpia, '/');
+    $archivoPublico = dirname(__DIR__) . '/public/' . $rutaRelativa;
+
+    $esRutaValida = preg_match('#^assets/[A-Za-z0-9_./-]+$#D', $rutaRelativa) === 1;
+    $contieneSaltoDirectorio = str_contains($rutaRelativa, '..');
+    $existeArchivo = is_file($archivoPublico);
+
+    if (!$esRutaValida || $contieneSaltoDirectorio || !$existeArchivo) {
         return '';
     }
 
-    return asset($rutaRelativa);
+    return url_recurso_estatico($rutaRelativa);
 }
 
-function redirect(string $ruta): RespuestaRedireccion
+/**
+ * Devuelve el icono correspondiente a la categorÃ­a de un producto.
+ */
+function icono_categoria_producto(string $categoria): string
 {
-    return new RespuestaRedireccion(url($ruta));
+    if (stripos($categoria, 'audio') !== false) {
+        return 'bi-headphones';
+    }
+
+    if (stripos($categoria, 'celular') !== false) {
+        return 'bi-phone';
+    }
+
+    return 'bi-box-seam';
 }
 
-function response(string $contenido = '', int $estado = 200, array $encabezados = []): Respuesta
+/**
+ * Prepara una redirección a la ruta indicada.
+ */
+function redirigir(string $ruta): RespuestaRedireccion
 {
-    return new Respuesta($contenido, $estado, $encabezados);
+    $urlDestino = url_interna($ruta);
+
+    return new RespuestaRedireccion($urlDestino);
 }
 
+/**
+ * Crea una respuesta HTTP con contenido, estado y encabezados.
+ */
+function respuesta_http(string $contenido = '', int $estado = 200, array $encabezados = []): Respuesta
+{
+    return new Respuesta(
+        $contenido,
+        $estado,
+        $encabezados
+    );
+}
+
+/**
+ * Obtiene el token de seguridad de la sesión actual.
+ */
 function csrf_token(): string
 {
-    return app(GestorTokenCsrf::class)->token();
+    $gestorCsrf = resolver_servicio(GestorTokenCsrf::class);
+
+    return $gestorCsrf->token();
 }
 
+/**
+ * Genera el campo oculto con el token CSRF para un formulario.
+ */
+// function csrf_field(): string para generar el campo oculto con el token CSRF para un formulario
 function csrf_field(): string
 {
-    return app(GestorTokenCsrf::class)->campo();
+    $gestorCsrf = resolver_servicio(GestorTokenCsrf::class); // Devuelve el campo oculto con el token CSRF para un formulario
+
+    return $gestorCsrf->campo(); // Devuelve el campo oculto con el token CSRF para un formulario
 }
 
-function current_user(): ?array
+/**
+ * Devuelve los datos del usuario autenticado o null si no hay sesión.
+ */
+function usuario_actual(): ?array
 {
-    $usuario = app(GestorSesion::class)->obtener('user');
+    $gestorSesion = resolver_servicio(GestorSesion::class); // Devuelve los datos del usuario autenticado o null si no hay sesión
+    $usuario = $gestorSesion->obtener('user');
 
     return is_array($usuario) ? $usuario : null;
 }
 
-function is_admin(): bool
+/**
+ * Indica si el usuario actual tiene permisos de administrador.
+ */
+function es_administrador(): bool
 {
-    return AccesoRol::normalize((string) (current_user()['rol'] ?? '')) === 'administrador';
+    $usuario = usuario_actual();
+    $rolCrudo = (string) ($usuario['rol'] ?? '');
+    $rolNormalizado = AccesoRol::normalizarRol($rolCrudo);
+
+    return $rolNormalizado === 'administrador';
 }
 
-function user_role(): string
+/**
+ * Obtiene el rol asignado al usuario actual.
+ */
+function rol_usuario_actual(): string
 {
-    return AccesoRol::normalize((string) (current_user()['rol'] ?? 'visitante'));
+    $usuario = usuario_actual();
+    $rolCrudo = (string) ($usuario['rol'] ?? 'visitante');
+
+    return AccesoRol::normalizarRol($rolCrudo);
 }
 
-function user_can(string $modulo): bool
+/**
+ * Comprueba si el usuario puede acceder al módulo indicado.
+ */
+function usuario_puede_acceder(string $modulo): bool
 {
-    return AccesoRol::can(user_role(), $modulo);
+    $rolActual = rol_usuario_actual();
+
+    return AccesoRol::puedeAcceder($rolActual, $modulo);
 }
 
-function cart_count(): int
+/**
+ * Cuenta las unidades que contiene el carrito actual.
+ */
+function unidades_carrito(): int
 {
-    return array_sum((array) app(GestorSesion::class)->obtener('cart', []));
+    $gestorSesion = resolver_servicio(GestorSesion::class);
+    $carrito = (array) $gestorSesion->obtener('cart', []);
+
+    return array_sum($carrito);
 }
 
-function product_visual(string $marca): string
+/**
+ * Devuelve la representación visual asociada a la marca indicada.
+ */
+function representacion_visual_marca(string $marca): string
 {
     $mapa = [
-        'Samsung' => 'S',
-        'Apple' => 'A',
-        'OPPO' => 'O',
-        'Xiaomi' => 'MI',
-        'HONOR' => 'H',
-        'JBL' => 'JBL',
-        'Beats' => 'b',
+        'samsung' => 'S',
+        'apple'   => 'A',
+        'oppo'    => 'O',
+        'xiaomi'  => 'MI',
+        'honor'   => 'H',
+        'jbl'     => 'JBL',
+        'beats'   => 'b',
     ];
 
-    return $mapa[$marca] ?? 'MD';
+    $marcaLimpia = trim($marca);
+    $marcaNormalizada = mb_strtolower($marcaLimpia, 'UTF-8');
+    $subcadenaAlternativa = mb_substr($marcaLimpia, 0, 2, 'UTF-8');
+
+    return $mapa[$marcaNormalizada]
+        ?? ($subcadenaAlternativa !== '' ? $subcadenaAlternativa : 'MD');
 }
 
-/** @return array<string, array<string, mixed>> */
-function active_campaigns(): array
+/**
+ * Devuelve las campañas activas disponibles.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function campanias_activas(): array
 {
     try {
-        return app(\App\Servicios\Campanias\CampaniaServicio::class)->ubicacionesActivas();
+        $servicioCampania = resolver_servicio(\App\Servicios\Campanias\CampaniaServicio::class);
+
+        return $servicioCampania->ubicacionesActivas();
     } catch (\Throwable $excepcion) {
-        app(\App\Soporte\Registros\RegistradorArchivo::class)->error('Falló la consulta de campañas.', [
+        $registradorArchivo = resolver_servicio(\App\Soporte\Registros\RegistradorArchivo::class);
+        $registradorArchivo->error('Falló la consulta de campañas.', [
             'message' => $excepcion->getMessage(),
         ]);
+
         return [];
     }
 }
-function campaign_url(string $destino): string
+
+/**
+ * Genera la URL pública del destino de una campaña.
+ */
+function url_campania(string $destino): string
 {
-    $destino = trim($destino);
-    if ($destino === '') {
-        return url('catalog');
-    }
-    if (preg_match('#^https?://#i', $destino) === 1) {
-        return $destino;
+    $destinoLimpio = trim($destino);
+
+    if ($destinoLimpio === '') {
+        return url_interna('catalog');
     }
 
-    return url(ltrim($destino, '/'));
+    $esUrlExterna = preg_match('#^https?://#i', $destinoLimpio) === 1;
+    if ($esUrlExterna) {
+        return $destinoLimpio;
+    }
+
+    $rutaLimpia = ltrim($destinoLimpio, '/');
+
+    return url_interna($rutaLimpia);
 }
 
-function campaign_image(?string $ruta): string
+/**
+ * Prepara la URL de imagen de una campaña, si está disponible.
+ */
+function url_imagen_campania(?string $ruta): string
 {
-    $ruta = trim((string) $ruta);
-    if ($ruta === '') {
-        return asset('assets/img/publico/inicio/banners/exhibicion1.jpg');
-    }
-    if (preg_match('#^https?://#i', $ruta) === 1) {
-        return $ruta;
+    $rutaLimpia = trim((string) $ruta);
+
+    if ($rutaLimpia === '') {
+        return url_recurso_estatico('assets/img/publico/inicio/banners/exhibicion1.jpg');
     }
 
-    return asset(ltrim($ruta, '/'));
+    $esUrlExterna = preg_match('#^https?://#i', $rutaLimpia) === 1;
+    if ($esUrlExterna) {
+        return $rutaLimpia;
+    }
+
+    $rutaRelativa = ltrim($rutaLimpia, '/');
+
+    return url_recurso_estatico($rutaRelativa);
 }

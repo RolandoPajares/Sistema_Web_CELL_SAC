@@ -7,6 +7,7 @@ namespace App\Controladores\Panel;
 use App\Nucleo\Http\Solicitud;
 use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Presentacion\Vista;
+use App\Nucleo\Presentacion\Administracion\PresentadorInformesAdministrador;
 use App\Servicios\Auditoria\AuditoriaServicio;
 use App\Servicios\ComercioInteligente\InteligenciaNegocioServicio;
 use App\Servicios\Usuarios\UsuarioServicio;
@@ -28,29 +29,36 @@ final class AdministradorFuturoController
             is_scalar($solicitud->consulta('desde')) ? (string) $solicitud->consulta('desde') : '',
             is_scalar($solicitud->consulta('hasta')) ? (string) $solicitud->consulta('hasta') : ''
         );
+        $presentacion = PresentadorInformesAdministrador::presentarReporte($reporte);
 
-        return $this->vista->renderizar('roles.internos.administrador.reportes.indice', [
-            'tituloPagina' => 'Reportes',
-            'reporte' => $reporte,
-        ], 'administrador');
+        return $this->vista->renderizar(
+            'roles.internos.administrador.reportes.indice',
+            array_merge($presentacion, ['tituloPagina' => 'Reportes']),
+            'administrador'
+        );
     }
 
     public function auditoria(Solicitud $solicitud): Respuesta
     {
-        $usuarioId = filter_var($solicitud->consulta('usuario'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $idUsuario = filter_var($solicitud->consulta('usuario'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $consulta = $this->auditoria->consulta(
             is_scalar($solicitud->consulta('desde')) ? (string) $solicitud->consulta('desde') : '',
             is_scalar($solicitud->consulta('hasta')) ? (string) $solicitud->consulta('hasta') : '',
             is_scalar($solicitud->consulta('entidad')) ? (string) $solicitud->consulta('entidad') : '',
-            $usuarioId === false ? 0 : (int) $usuarioId
+            $idUsuario === false ? 0 : (int) $idUsuario
         );
-
-        return $this->vista->renderizar('roles.internos.administrador.auditoria.indice', [
+        $presentacion = PresentadorInformesAdministrador::presentarAuditoria($consulta);
+        $datosVista = array_merge($presentacion, [
             'tituloPagina' => 'Auditoría',
-            'consultaAuditoria' => $consulta,
             'usuarios' => $this->usuarios->todos(),
             'entidadSeleccionada' => is_scalar($solicitud->consulta('entidad')) ? (string) $solicitud->consulta('entidad') : '',
-            'usuarioSeleccionado' => $usuarioId === false ? 0 : (int) $usuarioId,
-        ], 'administrador');
+            'usuarioSeleccionado' => $idUsuario === false ? 0 : (int) $idUsuario,
+        ]);
+
+        return $this->vista->renderizar(
+            'roles.internos.administrador.auditoria.indice',
+            $datosVista,
+            'administrador'
+        );
     }
 }

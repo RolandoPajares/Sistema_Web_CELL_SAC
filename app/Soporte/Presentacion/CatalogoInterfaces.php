@@ -7,6 +7,8 @@ namespace App\Soporte\Presentacion;
 final class CatalogoInterfaces
 {
     /**
+     * Prepara los datos que se muestran en el tablero del módulo.
+     *
      * @param array<string, int|float> $resumen
      * @return array<string, mixed>
      */
@@ -15,54 +17,87 @@ final class CatalogoInterfaces
         $ventas = 'S/ ' . number_format((float) ($resumen['ventas'] ?? 124580), 2, '.', ',');
         $perfiles = [
             'administrador' => ['Dashboard ejecutivo', 'Resumen general de la operación de MD Technology Cell', [
-                ['Ventas de hoy', 'S/ 8,450.00', 'bi-bar-chart-line', 'azul'],
-                ['Pedidos', (string) ($resumen['pedidos'] ?? 28), 'bi-cart-check', 'verde'],
-                ['Stock bajo', (string) ($resumen['stock_bajo'] ?? 14), 'bi-box-seam', 'ambar'],
-                ['Clientes nuevos', '12', 'bi-people', 'violeta'],
-                ['Cotizaciones activas', '8', 'bi-file-earmark-text', 'celeste'],
+                ['etiqueta' => 'Ventas de hoy', 'valor' => 'S/ 8,450.00', 'icono' => 'bi-bar-chart-line', 'tono' => 'azul'],
+                ['etiqueta' => 'Pedidos', 'valor' => (string) ($resumen['pedidos'] ?? 28), 'icono' => 'bi-cart-check', 'tono' => 'verde'],
+                ['etiqueta' => 'Stock bajo', 'valor' => (string) ($resumen['stock_bajo'] ?? 14), 'icono' => 'bi-box-seam', 'tono' => 'ambar'],
+                ['etiqueta' => 'Clientes nuevos', 'valor' => '12', 'icono' => 'bi-people', 'tono' => 'violeta'],
+                ['etiqueta' => 'Cotizaciones activas', 'valor' => '8', 'icono' => 'bi-file-earmark-text', 'tono' => 'celeste'],
             ], 'Ventas de los últimos 30 días', 'Ventas por categoría'],
             'compras_logistica' => ['Dashboard de operaciones', 'Gestiona compras, proveedores, recepciones e inventario de forma centralizada.', [
-                ['Órdenes activas', '24', 'bi-file-earmark-check', 'azul'], ['Recepciones pendientes', '12', 'bi-truck', 'verde'],
-                ['Productos por reponer', '38', 'bi-box-seam', 'ambar'], ['Proveedores activos', '28', 'bi-people', 'violeta'],
-                ['Costo estimado', 'S/ 124,580', 'bi-cash-coin', 'celeste'],
+                ['etiqueta' => 'Órdenes activas', 'valor' => '24', 'icono' => 'bi-file-earmark-check', 'tono' => 'azul'], ['etiqueta' => 'Recepciones pendientes', 'valor' => '12', 'icono' => 'bi-truck', 'tono' => 'verde'],
+                ['etiqueta' => 'Productos por reponer', 'valor' => '38', 'icono' => 'bi-box-seam', 'tono' => 'ambar'], ['etiqueta' => 'Proveedores activos', 'valor' => '28', 'icono' => 'bi-people', 'tono' => 'violeta'],
+                ['etiqueta' => 'Costo estimado', 'valor' => 'S/ 124,580', 'icono' => 'bi-cash-coin', 'tono' => 'celeste'],
             ], 'Tendencia de compras', 'Desempeño de proveedores'],
             'ventas_mayoristas' => ['Dashboard comercial B2B', 'Gestiona oportunidades, cotizaciones y pedidos de clientes empresariales.', [
-                ['Ventas del mes', 'S/ 124,580', 'bi-cash-coin', 'verde'], ['Cotizaciones activas', '28', 'bi-file-earmark-text', 'azul'],
-                ['Clientes activos', '56', 'bi-buildings', 'violeta'], ['Pedidos B2B', '24', 'bi-box-seam', 'ambar'],
-                ['Conversión comercial', '38%', 'bi-bullseye', 'celeste'],
+                ['etiqueta' => 'Ventas del mes', 'valor' => 'S/ 124,580', 'icono' => 'bi-cash-coin', 'tono' => 'verde'], ['etiqueta' => 'Cotizaciones activas', 'valor' => '28', 'icono' => 'bi-file-earmark-text', 'tono' => 'azul'],
+                ['etiqueta' => 'Clientes activos', 'valor' => '56', 'icono' => 'bi-buildings', 'tono' => 'violeta'], ['etiqueta' => 'Pedidos B2B', 'valor' => '24', 'icono' => 'bi-box-seam', 'tono' => 'ambar'],
+                ['etiqueta' => 'Conversión comercial', 'valor' => '38%', 'icono' => 'bi-bullseye', 'tono' => 'celeste'],
             ], 'Tendencia de ventas B2B', 'Resumen de oportunidades'],
             'ventas_minoristas' => ['Punto de venta / Dashboard B2C', 'Atiende a tus clientes, registra ventas y brinda el mejor servicio.', [
-                ['Ventas del día', 'S/ 8,450', 'bi-cash-coin', 'verde'], ['Ventas del mes', 'S/ 124,580', 'bi-bar-chart', 'azul'],
-                ['Clientes atendidos', '56', 'bi-people', 'violeta'], ['Garantías activas', '28', 'bi-shield-check', 'ambar'],
-                ['Reclamos abiertos', '6', 'bi-exclamation-triangle', 'rojo'],
+                ['etiqueta' => 'Ventas del día', 'valor' => 'S/ 8,450', 'icono' => 'bi-cash-coin', 'tono' => 'verde'], ['etiqueta' => 'Ventas del mes', 'valor' => 'S/ 124,580', 'icono' => 'bi-bar-chart', 'tono' => 'azul'],
+                ['etiqueta' => 'Clientes atendidos', 'valor' => '56', 'icono' => 'bi-people', 'tono' => 'violeta'], ['etiqueta' => 'Garantías activas', 'valor' => '28', 'icono' => 'bi-shield-check', 'tono' => 'ambar'],
+                ['etiqueta' => 'Reclamos abiertos', 'valor' => '6', 'icono' => 'bi-exclamation-triangle', 'tono' => 'rojo'],
             ], 'Ventas diarias', 'Productos más vendidos'],
             'marketing' => ['Dashboard de marketing', 'Analiza el rendimiento de tus campañas, genera más leads y potencia tu marca.', [
-                ['Campañas activas', '12', 'bi-megaphone', 'azul'], ['Alcance total', '256,480', 'bi-people', 'verde'],
-                ['Leads generados', '1,248', 'bi-person-plus', 'violeta'], ['ROAS', '4.2x', 'bi-coin', 'ambar'],
-                ['Engagement', '8.6%', 'bi-heart', 'rojo'],
+                ['etiqueta' => 'Campañas activas', 'valor' => '12', 'icono' => 'bi-megaphone', 'tono' => 'azul'], ['etiqueta' => 'Alcance total', 'valor' => '256,480', 'icono' => 'bi-people', 'tono' => 'verde'],
+                ['etiqueta' => 'Leads generados', 'valor' => '1,248', 'icono' => 'bi-person-plus', 'tono' => 'violeta'], ['etiqueta' => 'ROAS', 'valor' => '4.2x', 'icono' => 'bi-coin', 'tono' => 'ambar'],
+                ['etiqueta' => 'Engagement', 'valor' => '8.6%', 'icono' => 'bi-heart', 'tono' => 'rojo'],
             ], 'Rendimiento de campañas', 'Distribución por canales'],
             'cliente_mayorista' => ['Portal mayorista B2B', 'Cotizaciones, compras por volumen y atención empresarial en un solo lugar.', [
-                ['Cotizaciones', '8', 'bi-file-earmark-text', 'azul'], ['Pedidos activos', '5', 'bi-truck', 'verde'],
-                ['Compras acumuladas', 'S/ 85,420', 'bi-cash-coin', 'violeta'], ['Productos recurrentes', '18', 'bi-box-seam', 'ambar'],
+                ['etiqueta' => 'Cotizaciones', 'valor' => '8', 'icono' => 'bi-file-earmark-text', 'tono' => 'azul'], ['etiqueta' => 'Pedidos activos', 'valor' => '5', 'icono' => 'bi-truck', 'tono' => 'verde'],
+                ['etiqueta' => 'Compras acumuladas', 'valor' => 'S/ 85,420', 'icono' => 'bi-cash-coin', 'tono' => 'violeta'], ['etiqueta' => 'Productos recurrentes', 'valor' => '18', 'icono' => 'bi-box-seam', 'tono' => 'ambar'],
             ], 'Evolución de compras', 'Estado de pedidos'],
             'cliente_minorista' => ['Mi cuenta', 'Consulta tus pedidos, favoritos y datos personales.', [
-                ['Pedidos realizados', '12', 'bi-box-seam', 'azul'], ['Total gastado', 'S/ 3,289', 'bi-cash-coin', 'verde'],
-                ['Productos diferentes', '8', 'bi-grid', 'violeta'], ['Favoritos', '6', 'bi-heart', 'rojo'],
+                ['etiqueta' => 'Pedidos realizados', 'valor' => '12', 'icono' => 'bi-box-seam', 'tono' => 'azul'], ['etiqueta' => 'Total gastado', 'valor' => 'S/ 3,289', 'icono' => 'bi-cash-coin', 'tono' => 'verde'],
+                ['etiqueta' => 'Productos diferentes', 'valor' => '8', 'icono' => 'bi-grid', 'tono' => 'violeta'], ['etiqueta' => 'Favoritos', 'valor' => '6', 'icono' => 'bi-heart', 'tono' => 'rojo'],
             ], 'Historial reciente', 'Recomendado para ti'],
         ];
 
         $perfil = $perfiles[$rol] ?? $perfiles['cliente_minorista'];
         if ($rol === 'administrador' && ($resumen['ventas'] ?? 0) > 0) {
-            $perfil[2][0][1] = $ventas;
+            $perfil[2][0]['valor'] = $ventas;
         }
+        $metricas = array_map(static function (array $metrica, int $indice): array {
+            $metrica['variacion_vista'] = 12 + ($indice * 5);
+
+            return $metrica;
+        }, $perfil[2], array_keys($perfil[2]));
+        $alturasDemo = [42, 58, 50, 72, 65, 91, 76, 96, 82, 100, 88, 112];
 
         return [
-            'titulo' => $perfil[0], 'descripcion' => $perfil[1], 'metricas' => $perfil[2],
+            'titulo' => $perfil[0], 'descripcion' => $perfil[1], 'metricas' => $metricas,
             'grafico_principal' => $perfil[3], 'grafico_secundario' => $perfil[4],
+            'serie_demo' => array_map(static fn (int $altura, int $indice): array => [
+                'altura' => $altura,
+                'mes' => ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'][$indice % 6],
+            ], $alturasDemo, array_keys($alturasDemo)),
+            'leyenda_demo' => [
+                ['etiqueta' => 'Tecnología', 'porcentaje' => '38%', 'color' => 'azul'],
+                ['etiqueta' => 'Accesorios', 'porcentaje' => '26%', 'color' => 'verde'],
+                ['etiqueta' => 'Audio', 'porcentaje' => '18%', 'color' => 'ambar'],
+                ['etiqueta' => 'Otros', 'porcentaje' => '18%', 'color' => 'violeta'],
+            ],
+            'actividad_demo' => [
+                ['codigo' => '#001245', 'responsable' => 'Juan Pérez', 'actividad' => 'Pedido registrado', 'total' => 'S/ 1,299', 'estado' => 'En proceso'],
+                ['codigo' => '#001244', 'responsable' => 'Distribuidora Andina', 'actividad' => 'Cotización enviada', 'total' => 'S/ 5,680', 'estado' => 'Enviada'],
+                ['codigo' => '#001243', 'responsable' => 'María Torres', 'actividad' => 'Venta completada', 'total' => 'S/ 899', 'estado' => 'Completada'],
+                ['codigo' => '#001242', 'responsable' => 'Inversiones R&G', 'actividad' => 'Recepción registrada', 'total' => 'S/ 7,450', 'estado' => 'Entregada'],
+                ['codigo' => '#001241', 'responsable' => 'Carlos Mendoza', 'actividad' => 'Cliente actualizado', 'total' => 'S/ 449', 'estado' => 'Activo'],
+            ],
+            'prioridades_demo' => [
+                ['titulo' => 'Stock crítico de iPhone 15', 'detalle' => '3 unidades disponibles', 'tono' => 'rojo', 'modulo' => 'inventario'],
+                ['titulo' => 'Cotizaciones por vencer', 'detalle' => '6 propuestas pendientes', 'tono' => 'ambar', 'modulo' => 'cotizaciones'],
+                ['titulo' => 'Pedidos listos para envío', 'detalle' => '12 pedidos preparados', 'tono' => 'verde', 'modulo' => 'pedidos'],
+                ['titulo' => 'Nuevos clientes', 'detalle' => '8 registros por revisar', 'tono' => 'azul', 'modulo' => 'clientes'],
+            ],
         ];
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * Obtiene el módulo solicitado y comprueba que esté registrado.
+     *
+     * @return array<string, mixed>
+     */
     public static function modulo(string $modulo, string $rol): array
     {
         $base = self::catalogo()[$modulo] ?? self::generica($modulo);
@@ -72,7 +107,11 @@ final class CatalogoInterfaces
         return $base;
     }
 
-    /** @return array<string, array<string, mixed>> */
+    /**
+     * Prepara los datos del catálogo para la vista solicitada.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     private static function catalogo(): array
     {
         return [
@@ -121,6 +160,8 @@ final class CatalogoInterfaces
     }
 
     /**
+     * Prepara los datos de la ficha del producto solicitado.
+     *
      * @param array<string, string> $metricas
      * @param array<int, string> $columnas
      * @return array<string, mixed>
@@ -132,14 +173,24 @@ final class CatalogoInterfaces
         $tarjetas = [];
         $indice = 0;
         foreach ($metricas as $etiqueta => $valor) {
-            $tarjetas[] = ['etiqueta' => $etiqueta, 'valor' => $valor, 'color' => $colores[$indice % 5], 'icono' => $iconos[$indice % 5]];
+            $tarjetas[] = [
+                'etiqueta' => $etiqueta,
+                'valor' => $valor,
+                'color' => $colores[$indice % 5],
+                'icono' => $iconos[$indice % 5],
+                'variacion_vista' => 12 + ($indice * 4),
+            ];
             $indice++;
         }
 
         return ['titulo' => $titulo, 'descripcion' => $descripcion, 'icono' => $icono, 'metricas' => $tarjetas, 'tipo' => $tipo, 'columnas' => $columnas];
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * Devuelve la representación genérica cuando no hay una imagen específica disponible.
+     *
+     * @return array<string, mixed>
+     */
     private static function generica(string $modulo): array
     {
         $titulo = ucfirst(str_replace('-', ' ', $modulo));

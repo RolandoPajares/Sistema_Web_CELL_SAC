@@ -14,6 +14,7 @@ use App\Nucleo\Http\Solicitud;
 use App\Validacion\Productos\SolicitudProducto;
 use App\Nucleo\Http\Respuesta;
 use App\Nucleo\Presentacion\Vista;
+use App\Nucleo\Presentacion\Administracion\PresentadorCrudAdministrativo;
 use Throwable;
 
 final class AdministradorProductoController
@@ -28,18 +29,24 @@ final class AdministradorProductoController
     ) {
     }
 
+    /**
+     * Prepara los datos de la página y muestra el listado principal del módulo.
+     */
     public function indice(Solicitud $solicitud): Respuesta
     {
         return $this->renderizarIndice();
     }
 
+    /**
+     * Busca el registro solicitado y prepara su formulario de edición.
+     */
     public function editar(Solicitud $solicitud): Respuesta
     {
         $idProducto = filter_var($solicitud->parametroRuta('id'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         if ($idProducto === false) {
             $this->mensajes->error('El ID del producto no es válido.');
 
-            return redirect('admin/products');
+            return redirigir('admin/products');
         }
 
         try {
@@ -55,39 +62,64 @@ final class AdministradorProductoController
                 ? $excepcion->getMessage()
                 : 'No se pudo consultar el producto.');
 
-            return redirect('admin/products');
+            return redirigir('admin/products');
         }
 
         return $this->renderizarIndice($producto);
     }
 
-    /** @param array<string, mixed>|null $productoEdicion */
+    /**
+     * Prepara y muestra «indice» en la vista correspondiente.
+     * @param array<string, mixed>|null $productoEdicion
+     */
     private function renderizarIndice(?array $productoEdicion = null): Respuesta
     {
         $baseDatosDisponible = $this->productos->conexionDisponible();
+        $productos = $baseDatosDisponible ? $this->productos->todosParaAdministrador() : [];
+        $categorias = $baseDatosDisponible ? $this->categorias->activas() : [];
+        $resumen = $baseDatosDisponible
+            ? $this->productos->resumenAdministrativo()
+            : ['total' => 0, 'activos' => 0, 'inactivos' => 0, 'stock_bajo' => 0];
+        $presentacion = PresentadorCrudAdministrativo::presentarProductos(
+            $productos,
+            $categorias,
+            $resumen,
+            $productoEdicion,
+            SolicitudProducto::MARCAS_PERMITIDAS
+        );
 
         return $this->vista->renderizar('roles.internos.administrador.productos.indice', [
             'tituloPagina' => 'Productos',
             'baseDatosDisponible' => $baseDatosDisponible,
-            'productos' => $baseDatosDisponible ? $this->productos->todosParaAdministrador() : [],
-            'resumen' => $baseDatosDisponible ? $this->productos->resumenAdministrativo() : ['total' => 0, 'activos' => 0, 'inactivos' => 0, 'stock_bajo' => 0],
-            'categorias' => $baseDatosDisponible ? $this->categorias->activas() : [],
+            'atributoBaseDatosNoDisponibleOculto' => $baseDatosDisponible ? 'hidden' : '',
+            'atributoContenidoProductosOculto' => $baseDatosDisponible ? '' : 'hidden',
+            'atributoProductosVaciosOculto' => $presentacion['productos'] === [] ? '' : 'hidden',
+            'productos' => $presentacion['productos'],
+            'resumen' => $resumen,
+            'categorias' => $categorias,
+            'categoriasFiltro' => $presentacion['categoriasFiltro'],
+            'tarjetasKpi' => $presentacion['tarjetasKpi'],
+            'marcasPermitidas' => SolicitudProducto::MARCAS_PERMITIDAS,
+            'marcasPermitidasVista' => $presentacion['marcasPermitidasVista'],
             'edicion' => $productoEdicion,
             'error' => $this->mensajes->extraer('error'),
             'exito' => $this->mensajes->extraer('success'),
         ], 'administrador');
     }
 
+    // validación de datos y persistencia de cambios en la base de datos
     public function guardar(Solicitud $solicitud): Respuesta
     {
         try {
             $datos = SolicitudProducto::validar($solicitud);
             $idGuardado = $this->productos->guardar($datos);
+
+            // Registrar la acción de creación en el servicio de auditoría
             $this->auditoria->registrar('product.created', 'product', $idGuardado, null, $datos, $solicitud->direccionIp());
             $this->mensajes->exito('Producto registrado correctamente.');
             $this->registro->info('Producto creado desde la administración.', [
                 'producto_id' => $idGuardado,
-                'usuario_id' => current_user()['id'] ?? null,
+                'usuario_id' => usuario_actual()['id'] ?? null,
             ]);
         } catch (ExcepcionValidacion $excepcion) {
             $errores = $excepcion->errores();
@@ -101,7 +133,7 @@ final class AdministradorProductoController
             $this->mensajes->error('No se pudo registrar el producto.');
         }
 
-        return redirect('admin/products');
+        return redirigir('admin/products'); // Redirige a la página de listado de productos después de guardar
     }
 
     public function actualizar(Solicitud $solicitud): Respuesta
@@ -112,7 +144,7 @@ final class AdministradorProductoController
             if ($idProducto === false) {
                 throw new \DomainException('El ID del producto no es válido.');
             }
-            $datos = SolicitudProducto::validar($solicitud);
+            $datos = SolicitudProducto::validar($solicitud, false);
             $valoresAnteriores = $this->productos->buscarParaAdministrador((int) $idProducto);
             $idGuardado = $this->productos->guardar($datos, (int) $idProducto);
             $this->auditoria->registrar(
@@ -126,7 +158,7 @@ final class AdministradorProductoController
             $this->mensajes->exito('Producto actualizado correctamente.');
             $this->registro->info('Producto actualizado desde la administración.', [
                 'producto_id' => $idGuardado,
-                'usuario_id' => current_user()['id'] ?? null,
+                'usuario_id' => usuario_actual()['id'] ?? null,
             ]);
         } catch (ExcepcionValidacion $excepcion) {
             $errores = $excepcion->errores();
@@ -140,9 +172,12 @@ final class AdministradorProductoController
             $this->mensajes->error('No se pudo actualizar el producto.');
         }
 
-        return redirect('admin/products');
+        return redirigir('admin/products');
     }
 
+    /**
+     * Elimina el producto si no tiene pedidos asociados; si los tiene, lo desactiva.
+     */
     public function eliminar(Solicitud $solicitud): Respuesta
     {
         try {
@@ -167,7 +202,7 @@ final class AdministradorProductoController
             $this->registro->info('Retiro administrativo del producto completado.', [
                 'producto_id' => $idProducto,
                 'result' => $resultado,
-                'usuario_id' => current_user()['id'] ?? null,
+                'usuario_id' => usuario_actual()['id'] ?? null,
             ]);
         } catch (\DomainException $excepcion) {
             $this->mensajes->error($excepcion->getMessage());
@@ -178,6 +213,6 @@ final class AdministradorProductoController
             $this->mensajes->error('No se pudo eliminar u ocultar el producto.');
         }
 
-        return redirect('admin/products');
+        return redirigir('admin/products');
     }
 }

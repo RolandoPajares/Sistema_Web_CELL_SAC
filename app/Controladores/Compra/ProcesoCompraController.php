@@ -25,20 +25,27 @@ final class ProcesoCompraController
     ) {
     }
 
+    /**
+     * Prepara los datos de la página y muestra el listado principal del módulo.
+     */
     public function indice(Solicitud $solicitud): Respuesta
     {
+        $resumen = $this->carrito->resumen();
+
         return $this->vista->renderizar('modulos.compra.checkout.indice', [
             'tituloPagina' => 'Finalizar pedido',
-            'resumen' => $this->carrito->resumen(),
+            'resumen' => $resumen,
             'mensaje' => $this->mensajes->extraer('success'),
             'error' => $this->mensajes->extraer('error'),
+            'atributoCheckoutConArticulosOculto' => $resumen['articulos'] !== [] ? '' : 'hidden',
+            'atributoCheckoutSinArticulosOculto' => $resumen['articulos'] === [] ? '' : 'hidden',
         ]);
     }
 
     public function guardar(Solicitud $solicitud): Respuesta
     {
         try {
-            $idPedido = $this->pago->procesarCompra((int) current_user()['id']);
+            $idPedido = $this->pago->procesarCompra((int) usuario_actual()['id']);
             $this->mensajes->exito(
                 'Pedido registrado correctamente. Código #' . $idPedido . '. El negocio podrá confirmarlo.'
             );
@@ -48,11 +55,11 @@ final class ProcesoCompraController
             $this->registro->error('Falló el procesamiento del pedido.', [
                 'exception' => $excepcion::class,
                 'message' => $excepcion->getMessage(),
-                'usuario_id' => current_user()['id'] ?? null,
+                'usuario_id' => usuario_actual()['id'] ?? null,
             ]);
             $this->mensajes->error('No se pudo completar el pedido. Inténtalo nuevamente.');
         }
 
-        return redirect('checkout');
+        return redirigir('checkout');
     }
 }

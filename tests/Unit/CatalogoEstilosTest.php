@@ -10,7 +10,11 @@ use PHPUnit\Framework\TestCase;
 
 final class CatalogoEstilosTest extends TestCase
 {
-    /** @return array<string, array{string,string,string,string}> */
+    /**
+     * Devuelve los contextos de estilo registrados para el catálogo.
+     *
+     * @return array<string, array{string,string,string,string}>
+     */
     public static function contextos(): array
     {
         return [
@@ -24,6 +28,9 @@ final class CatalogoEstilosTest extends TestCase
         ];
     }
 
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testLosEstilosContextualesExisten`.
+     */
     #[DataProvider('contextos')]
     public function testLosEstilosContextualesExisten(
         string $ruta,
@@ -41,6 +48,9 @@ final class CatalogoEstilosTest extends TestCase
         }
     }
 
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testNoCargaCssAdministrativoEnElCatalogoPublico`.
+     */
     public function testNoCargaCssAdministrativoEnElCatalogoPublico(): void
     {
         $estilos = CatalogoEstilos::para('/catalog', 'aplicacion');
@@ -49,6 +59,9 @@ final class CatalogoEstilosTest extends TestCase
         self::assertNotContains('assets/css/modulos/marketing/campanias.css', $estilos);
     }
 
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testElVisitanteNoIntentaCargarUnaHojaDeRolInexistente`.
+     */
     public function testElVisitanteNoIntentaCargarUnaHojaDeRolInexistente(): void
     {
         $estilos = CatalogoEstilos::para('/login', 'aplicacion', 'visitante');
@@ -56,6 +69,9 @@ final class CatalogoEstilosTest extends TestCase
         self::assertNotContains('assets/css/roles/internos/visitante.css', $estilos);
     }
 
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testNormalizaLaRutaCuandoLaAplicacionViveEnUnaSubcarpeta`.
+     */
     public function testNormalizaLaRutaCuandoLaAplicacionViveEnUnaSubcarpeta(): void
     {
         $scriptAnterior = $_SERVER['SCRIPT_NAME'] ?? null;
@@ -77,6 +93,9 @@ final class CatalogoEstilosTest extends TestCase
         self::assertContains('assets/css/publico/catalogo.css', $estilos);
     }
 
+    /**
+     * Comprueba el comportamiento cubierto por el caso de prueba `testElPerfilCargaRolYModuloSinDuplicados`.
+     */
     public function testElPerfilCargaRolYModuloSinDuplicados(): void
     {
         $estilos = CatalogoEstilos::para('/panel/perfil', 'aplicacion', 'cliente_mayorista', 'perfil');

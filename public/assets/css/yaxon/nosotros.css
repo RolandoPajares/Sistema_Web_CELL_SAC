@@ -1,9 +1,9 @@
 /* Diseño de Nosotros de Yaxon, limitado a /about. */
 body.modulo-about > main .detail-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; 
+  grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  align-items: center; 
+  align-items: center;
 }
 
 body.modulo-about > main .feature-grid {
@@ -13,12 +13,12 @@ body.modulo-about > main .feature-grid {
 
 @media (max-width: 992px) {
   body.modulo-about > main .detail-grid {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
   }
   body.modulo-about > main .hero-card {
-      max-height: 400px;
-      order: -1;
+    max-height: 400px;
+    order: -1;
   }
 }
 
@@ -28,7 +28,7 @@ body.modulo-about > main .hero-card {
   max-height: 550px;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
 body.modulo-about > main .hero-card img {

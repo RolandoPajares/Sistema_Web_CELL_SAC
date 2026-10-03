@@ -9,6 +9,9 @@ use App\Nucleo\Http\Respuesta;
 
 final class EncabezadosSeguridadMiddleware
 {
+    /**
+     * Añade encabezados de seguridad a la respuesta HTTP.
+     */
     public function manejar(Solicitud $solicitud, callable $siguiente): Respuesta
     {
         $respuesta = $siguiente($solicitud);
